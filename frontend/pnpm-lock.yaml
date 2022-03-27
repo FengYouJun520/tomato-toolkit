@@ -6,6 +6,8 @@ specifiers:
   pinia: ^2.0.12
   pinia-plugin-persistedstate-2: ^1.0.0
   prettier: ^2.6.1
+  sass: ^1.49.9
+  tdesign-icons-vue-next: ^0.0.7
   tdesign-vue-next: ^0.11.0
   typescript: ^4.6.3
   unplugin-auto-import: ^0.6.6
@@ -17,6 +19,7 @@ specifiers:
 
 dependencies:
   pinia: 2.0.12_typescript@4.6.3+vue@3.2.31
+  tdesign-icons-vue-next: 0.0.7_vue@3.2.31
   tdesign-vue-next: 0.11.0_vue@3.2.31
   vue: 3.2.31
   vue-router: 4.0.14_vue@3.2.31
@@ -26,10 +29,11 @@ devDependencies:
   '@vitejs/plugin-vue': 2.2.4_vite@2.8.6+vue@3.2.31
   pinia-plugin-persistedstate-2: 1.0.0_pinia@2.0.12
   prettier: 2.6.1
+  sass: 1.49.9
   typescript: 4.6.3
   unplugin-auto-import: 0.6.6_vite@2.8.6
   unplugin-vue-components: 0.18.5_vite@2.8.6+vue@3.2.31
-  vite: 2.8.6
+  vite: 2.8.6_sass@1.49.9
   vue-tsc: 0.29.8_typescript@4.6.3
 
 packages:
@@ -135,7 +139,7 @@ packages:
       vite: ^2.5.10
       vue: ^3.2.25
     dependencies:
-      vite: 2.8.6
+      vite: 2.8.6_sass@1.49.9
       vue: 3.2.31
     dev: true
 
@@ -725,6 +729,10 @@ packages:
       entities: 3.0.1
     dev: true
 
+  /immutable/4.0.0:
+    resolution: {integrity: sha512-zIE9hX70qew5qTUjSS7wi1iwj/l7+m54KWU247nhM3v806UdGj1yDndXj+IOYxxtW9zyLI+xqFNZjTuDaLUqFw==}
+    dev: true
+
   /is-binary-path/2.1.0:
     resolution: {integrity: sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==}
     engines: {node: '>=8'}
@@ -1059,6 +1067,16 @@ packages:
       queue-microtask: 1.2.3
     dev: true
 
+  /sass/1.49.9:
+    resolution: {integrity: sha512-YlYWkkHP9fbwaFRZQRXgDi3mXZShslVmmo+FVK3kHLUELHHEYrCmL1x6IUjC7wLS6VuJSAFXRQS/DxdsC4xL1A==}
+    engines: {node: '>=12.0.0'}
+    hasBin: true
+    dependencies:
+      chokidar: 3.5.3
+      immutable: 4.0.0
+      source-map-js: 1.0.2
+    dev: true
+
   /semver/7.3.5:
     resolution: {integrity: sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==}
     engines: {node: '>=10'}
@@ -1212,7 +1230,7 @@ packages:
         optional: true
     dependencies:
       chokidar: 3.5.3
-      vite: 2.8.6
+      vite: 2.8.6_sass@1.49.9
       webpack-virtual-modules: 0.4.3
     dev: true
 
@@ -1226,7 +1244,7 @@ packages:
     engines: {node: '>= 0.10'}
     dev: false
 
-  /vite/2.8.6:
+  /vite/2.8.6_sass@1.49.9:
     resolution: {integrity: sha512-e4H0QpludOVKkmOsRyqQ7LTcMUDF3mcgyNU4lmi0B5JUbe0ZxeBBl8VoZ8Y6Rfn9eFKYtdXNPcYK97ZwH+K2ug==}
     engines: {node: '>=12.2.0'}
     hasBin: true
@@ -1246,6 +1264,7 @@ packages:
       postcss: 8.4.12
       resolve: 1.22.0
       rollup: 2.70.1
+      sass: 1.49.9
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

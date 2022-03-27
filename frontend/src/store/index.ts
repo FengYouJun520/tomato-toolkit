@@ -8,4 +8,6 @@ export function setupStore(app: App) {
     persist: false,
   })
   pinia.use((context) => installPersistedStatePlugin(context))
+
+  app.use(pinia)
 }

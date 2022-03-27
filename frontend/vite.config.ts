@@ -22,12 +22,13 @@ export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
+      imports: ['vue'],
       resolvers: [
         TDesignResolver({
           library: 'vue-next',
         }),
       ],
-      dts: resolve(__dirname, 'src/types/auto-imports.d.ts'),
+      dts: false,
     }),
     Components({
       resolvers: [
@@ -35,7 +36,7 @@ export default defineConfig({
           library: 'vue-next',
         }),
       ],
-      dts: resolve(__dirname, 'src/types/global-components.d.ts'),
+      dts: false,
     }),
   ],
 })
