@@ -1,7 +1,7 @@
 {
   "name": "tomato-toolkit",
   "assetdir": "frontend/dist",
-  "frontend:build": "pnpm build",
+  "frontend:build": "",
   "frontend:install": "pnpm install",
   "frontend:dev": "",
   "frontend:dev:watcher": "pnpm build:watch",
