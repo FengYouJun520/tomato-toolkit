@@ -1,0 +1,32 @@
+{
+  "name": "tomato-toolkit",
+  "assetdir": "frontend/dist",
+  "frontend:build": "pnpm build",
+  "frontend:install": "pnpm install",
+  "frontend:dev": "",
+  "frontend:dev:watcher": "pnpm build:watch",
+  "wailsjsdir": "frontend/src",
+  "version": "2",
+  "Path": "",
+  "BuildDir": "",
+  "outputfilename": "tomato-toolkit.exe",
+  "OutputType": "",
+  "Platform": "",
+  "runNonNativeBuildHooks": false,
+  "postBuildHooks": null,
+  "Author": {
+    "name": "FengYouJun",
+    "email": "845225187@qq.com"
+  },
+  "Info": {
+    "companyName": "tomato-toolkit",
+    "productName": "tomato-toolkit",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright.........",
+    "comments": "Built using Wails (https://wails.app)"
+  },
+  "debounceMS": 100,
+  "devserverurl": "http://localhost:34115",
+  "appargs": "",
+  "nsisType": ""
+}

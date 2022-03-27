@@ -1,0 +1,26 @@
+{
+  "name": "tomato-toolkit",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "build:watch": "vue-tsc --noEmit && vite build --watch",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "pinia": "^2.0.12",
+    "pinia-plugin-persistedstate-2": "^1.0.0",
+    "vue": "^3.2.31",
+    "vue-router": "^4.0.14"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.21",
+    "@vitejs/plugin-vue": "^2.2.4",
+    "prettier": "^2.6.0",
+    "sass": "^1.47.0",
+    "typescript": "^4.6.2",
+    "vite": "^2.9.0-beta.9",
+    "vue-tsc": "^0.33.2"
+  },
+  "author": "FengYouJun"
+}
