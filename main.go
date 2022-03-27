@@ -19,7 +19,7 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:             "tomato-toolkit",
+		Title:             "番茄工具包",
 		Width:             1200,
 		Height:            800,
 		MinWidth:          720,
