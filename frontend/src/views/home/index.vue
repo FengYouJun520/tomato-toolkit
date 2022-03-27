@@ -5,6 +5,7 @@
     <t-button @click="themeStore.toggleTheme">切换主题</t-button>
     <t-button theme="success">success</t-button>
     <t-button theme="warning">warning</t-button>
+    <t-button theme="danger">danger</t-button>
   </div>
 </template>
 <script setup lang="ts">

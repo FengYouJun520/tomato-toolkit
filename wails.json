@@ -9,7 +9,7 @@
   "version": "2",
   "Path": "",
   "BuildDir": "",
-  "outputfilename": "tomato-toolkit.exe",
+  "outputfilename": "tomato-toolkit",
   "OutputType": "",
   "Platform": "",
   "runNonNativeBuildHooks": false,
