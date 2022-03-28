@@ -1,18 +1,18 @@
 <template>
   <t-layout class="w-full h-full">
-    <LayoutAside />
+    <to-aside />
     <t-layout>
-      <LayoutHeader />
-      <LayoutContent />
-      <LayoutFooter />
+      <to-header />
+      <to-content />
+      <to-footer />
     </t-layout>
   </t-layout>
 </template>
 <script setup lang="ts">
-import LayoutAside from './components/LayoutAside/index.vue'
-import LayoutContent from './components/LayoutContent/index.vue'
-import LayoutFooter from './components/LayoutFooter/index.vue'
-import LayoutHeader from './components/LayoutHeader/index.vue'
+import ToAside from './components/ToAside/index.vue'
+import ToContent from './components/ToContent/index.vue'
+import ToFooter from './components/ToFooter/index.vue'
+import ToHeader from './components/ToHeader/index.vue'
 </script>
 
 <style scoped></style>

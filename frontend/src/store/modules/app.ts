@@ -11,8 +11,8 @@ export const useAppStore = defineStore('app', {
     }
   },
   actions: {
-    onCollapsed(collapse: boolean) {
-      this.collapse = collapse
+    toggleCollapsed() {
+      this.collapse = !this.collapse
     },
   },
 })

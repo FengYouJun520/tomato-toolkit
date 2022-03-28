@@ -10,7 +10,7 @@
           <template #title>
             {{ route.meta?.title }}
           </template>
-          <menu-bar-item :routes="route.children" />
+          <to-menu-item :routes="route.children" />
         </t-submenu>
       </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <t-footer>footer</t-footer>
+  <t-footer> Copyright @ 2022-{{ new Date().getFullYear() }} FengYouJun </t-footer>
 </template>
 <script setup lang="ts"></script>
 
