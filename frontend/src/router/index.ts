@@ -14,7 +14,7 @@ export const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: '/home',
+        path: 'home',
         name: 'Home',
         component: () => import('@/views/home/index.vue'),
         meta: {
@@ -35,7 +35,7 @@ export const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: '/mybatis-plus/code-generate',
+        path: 'code-generate',
         name: 'MybatisPlusCodeGenerate',
         component: () => import('@/views/mybatis-plus/generator/index.vue'),
         meta: {
@@ -55,7 +55,7 @@ export const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: '/json/json2ts',
+        path: 'json2ts',
         name: 'Json2Ts',
         component: () => import('@/views/json/json2ts/index.vue'),
         meta: {

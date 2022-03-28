@@ -1,5 +1,5 @@
 <template>
-  <template v-for="route in routes" :key="route.path">
+  <template v-for="route in menus" :key="route.path">
     <template v-if="!route.meta?.hidden">
       <!-- submenu -->
       <template v-if="route.children && route.children.length">
@@ -37,7 +37,27 @@ interface MenuBarProps {
   routes: RouteRecordRaw[]
 }
 
-defineProps<MenuBarProps>()
+const props = defineProps<MenuBarProps>()
+
+const getMenus = (routes: RouteRecordRaw[], parent: string = ''): RouteRecordRaw[] => {
+  const res: RouteRecordRaw[] = []
+  routes.forEach((route) => {
+    let path = parent + '/' + route.path
+
+    path = path.endsWith('/') ? path.slice(0, path.length - 1) : path
+    path = path.replace(/\/{2,}/, '/')
+
+    const finalRoute = { ...route, path: path }
+    res.push(finalRoute)
+
+    if (route.children && route.children.length) {
+      finalRoute.children = getMenus(route.children, parent + route.path)
+    }
+  })
+  return res
+}
+
+const menus = getMenus(props.routes)
 </script>
 
 <style lang="scss" scoped></style>
