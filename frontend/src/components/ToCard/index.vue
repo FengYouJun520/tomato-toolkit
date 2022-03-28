@@ -1,26 +1,23 @@
 <template>
   <div class="to-card" :class="classes">
     <div class="to-card__inner">
-      <div class="to-card__title" v-if="$slots.title || title">
+      <div class="to-card__title" :class="[titleClass]" v-if="$slots.title || title">
         <slot name="title">
           {{ title }}
         </slot>
       </div>
-      <div class="to-card__content">
+      <div class="to-card__content" :class="contentClass">
         <slot name="default" />
       </div>
-      <div class="to-card__footer" v-if="$slots.footer || title">
+      <div class="to-card__footer" :class="footerClass" v-if="$slots.footer || title">
         <slot name="footer">
           {{ footer }}
         </slot>
       </div>
-      <div class="to-card-extract-left" v-if="$slots.extractLeft">
-        <slot name="extract-left" />
+      <div class="to-card__extract" :class="extractClass" v-if="$slots.extract">
+        <slot name="extract" />
       </div>
-      <div class="to-card-extract-right" v-if="$slots.extractRight">
-        <slot name="extract-right" />
-      </div>
-      <div class="to-card-operation" v-if="$slots.operation">
+      <div class="to-card-operation" :class="operationClass" v-if="$slots.operation">
         <slot name="operation" />
       </div>
     </div>
@@ -32,6 +29,11 @@ interface CardProps {
   shadow?: boolean
   title?: string
   footer?: string
+  titleClass?: string
+  contentClass?: string
+  footerClass?: string
+  operationClass?: string
+  extractClass?: string
 }
 
 const props = withDefaults(defineProps<CardProps>(), {
@@ -41,13 +43,13 @@ const props = withDefaults(defineProps<CardProps>(), {
 
 const classes = reactive({
   'shadow-lg': props.trigger === 'always' && props.shadow,
-  'hover:shadow-lg': props.trigger === 'hover' && props.shadow,
+  'hover:shadow-lg hover:duration-200': props.trigger === 'hover' && props.shadow,
 })
 </script>
 
 <style lang="scss" scoped>
 .to-card {
-  @apply w-full h-full duration-200 rounded;
+  @apply w-full h-full rounded;
   color: var(--td-text-color-secondary);
   background-color: white;
 
@@ -68,13 +70,12 @@ const classes = reactive({
     @apply flex items-center;
   }
 
-  &-extract-left {
-  }
-
-  &-extract-right {
+  &__extract {
+    @apply absolute right-3 top-3 flex items-center;
   }
 
   &-operation {
+    @apply flex items-center;
   }
 }
 
