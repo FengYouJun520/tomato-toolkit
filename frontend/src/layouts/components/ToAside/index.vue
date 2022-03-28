@@ -13,7 +13,7 @@ const appStore = useAppStore()
 </script>
 
 <style scoped>
-.t-aside {
+.t-layout__sider {
   @apply duration-200 ease-linear;
 }
 </style>

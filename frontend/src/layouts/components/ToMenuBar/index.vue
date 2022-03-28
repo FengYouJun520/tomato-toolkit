@@ -43,7 +43,7 @@ const handleChange = (active: MenuValue) => {
 </script>
 
 <style lang="scss" scoped>
-.t-menu {
+.t-default-menu {
   @apply fixed top-0 bottom-0 z-50 min-h-full duration-200 ease-linear;
 }
 </style>
