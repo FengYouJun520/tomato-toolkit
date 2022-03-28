@@ -81,7 +81,7 @@ const classes = reactive({
 
 html[theme-mode='dark'] {
   .to-card {
-    background-color: var(--td-bg-color-secondarycontainer) !important;
+    background-color: var(--td-bg-color-container) !important;
   }
 
   .to-card__title {
