@@ -2,17 +2,25 @@ import LAYOUT from '@/layouts/index.vue'
 import { App } from 'vue'
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
-const routes: RouteRecordRaw[] = [
+export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Root',
     redirect: '/home',
     component: LAYOUT,
+    meta: {
+      title: '首页',
+      icon: 'dashboard',
+    },
     children: [
       {
         path: '/home',
         name: 'Home',
         component: () => import('@/views/home/index.vue'),
+        meta: {
+          title: '首页',
+          icon: 'dashboard',
+        },
       },
     ],
   },
@@ -21,11 +29,39 @@ const routes: RouteRecordRaw[] = [
     name: 'MybatisPlus',
     redirect: '/mybatis-plus/code-generate',
     component: LAYOUT,
+    meta: {
+      title: 'MybatisPlus',
+      icon: 'server',
+    },
     children: [
       {
         path: '/mybatis-plus/code-generate',
         name: 'MybatisPlusCodeGenerate',
-        component: () => import('@/views/mybatis-plus/index.vue'),
+        component: () => import('@/views/mybatis-plus/generator/index.vue'),
+        meta: {
+          title: 'MybatisPlus代码生成器',
+        },
+      },
+    ],
+  },
+  {
+    path: '/json',
+    name: 'Json',
+    redirect: '/json/json2ts',
+    component: LAYOUT,
+    meta: {
+      title: 'json管理',
+      icon: 'control-platform',
+    },
+    children: [
+      {
+        path: '/json/json2ts',
+        name: 'Json2Ts',
+        component: () => import('@/views/json/json2ts/index.vue'),
+        meta: {
+          title: 'json转ts',
+          icon: 'precise-monitor',
+        },
       },
     ],
   },

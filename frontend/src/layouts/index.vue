@@ -1,5 +1,5 @@
 <template>
-  <t-layout>
+  <t-layout class="w-full h-full">
     <LayoutAside />
     <t-layout>
       <LayoutHeader />
@@ -15,9 +15,4 @@ import LayoutFooter from './components/LayoutFooter/index.vue'
 import LayoutHeader from './components/LayoutHeader/index.vue'
 </script>
 
-<style lang="scss" scoped>
-.t-layout {
-  height: 100%;
-  width: 100%;
-}
-</style>
+<style scoped></style>

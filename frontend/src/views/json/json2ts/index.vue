@@ -1,5 +1,5 @@
 <template>
-  <div>mybatis-plus code generate</div>
+  <div>json2ts</div>
 </template>
 <script setup lang="ts"></script>
 
