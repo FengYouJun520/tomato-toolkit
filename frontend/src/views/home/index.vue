@@ -9,7 +9,7 @@
 
     <t-divider />
 
-    <!-- <t-table
+    <t-table
       row-key="tid"
       :columns="columns"
       :data="data"
@@ -28,7 +28,7 @@
         <a class="link" @click="rehandleClickOp(slotProps)">管理</a>
         <a class="link" @click="rehandleClickOp(slotProps)">删除</a>
       </template>
-    </t-table> -->
+    </t-table>
 
     <template #extract>
       <t-button theme="warning">warning</t-button>

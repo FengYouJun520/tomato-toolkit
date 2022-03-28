@@ -1,7 +1,7 @@
 <template>
   <t-layout class="w-full h-full">
     <to-aside />
-    <t-layout class="flex-1">
+    <t-layout class="flex-1 overflow-x-hidden">
       <to-header />
       <to-content />
       <to-footer />
