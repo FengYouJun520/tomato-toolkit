@@ -7,6 +7,6 @@
 
 <style scoped>
 .t-layout__content {
-  padding: 24px;
+  @apply p-6 duration-200;
 }
 </style>

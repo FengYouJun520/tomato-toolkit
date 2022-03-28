@@ -1,5 +1,5 @@
 <template>
-  <to-card :shadow="true" trigger="hover">
+  <to-card :shadow="false">
     <template #title v-if="title || $slots.title">
       <slot name="title"> {{ title }} </slot>
     </template>
