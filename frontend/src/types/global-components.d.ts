@@ -50,6 +50,8 @@ declare module 'vue' {
     TRadioButton: typeof import('tdesign-vue-next')['RadioButton']
     TRadioGroup: typeof import('tdesign-vue-next')['RadioGroup']
     TSelect: typeof import('tdesign-vue-next')['Select']
+    TOption: typeof import('tdesign-vue-next')['Option']
+    TOptionGroup: typeof import('tdesign-vue-next')['OptionGroup']
     TSelectInput: typeof import('tdesign-vue-next')['SelectInput']
     TSlider: typeof import('tdesign-vue-next')['Slider']
     TSliderButton: typeof import('tdesign-vue-next')['SliderButton']

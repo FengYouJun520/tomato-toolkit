@@ -67,7 +67,6 @@ const classes = reactive({
   }
 
   &__footer {
-    @apply flex items-center;
   }
 
   &__extract {
@@ -75,7 +74,6 @@ const classes = reactive({
   }
 
   &-operation {
-    @apply flex items-center;
   }
 }
 

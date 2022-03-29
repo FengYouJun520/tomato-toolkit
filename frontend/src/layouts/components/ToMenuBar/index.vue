@@ -7,12 +7,9 @@
     @change="handleChange"
   >
     <template #logo>
-      <img
-        class="ml-2"
-        width="136"
-        src="https://www.tencent.com/img/index/menu_logo_hover.png"
-        alt="logo"
-      />
+      <div v-if="!appStore.collapse" class="flex items-center overflow-hidden">
+        <div class="ml-4 overflow-hidden text-2xl">番茄工具包</div>
+      </div>
     </template>
 
     <to-menu-item :routes="routes" />
