@@ -3,17 +3,26 @@
     <t-row :gutter="[24, 24]">
       <t-col :xs="12" :lg="6">
         <t-form-item label="数据库类型">
-          <t-select>
-            <t-option v-for="option in databaseOptions" :key="option.value" :value="option.value">
+          <t-select default-value="mysql" clearable>
+            <t-option
+              v-for="option in databaseOptions"
+              :key="option.value"
+              :value="option.value"
+              :disabled="option.disabled"
+            >
               <div class="flex items-center gap-6">
                 <component :is="option.icon" class="w-6 h-6" />
                 {{ option.label }}
               </div>
             </t-option>
-            <template #valueDisplay="{ value, label, icon }">
-              <t-tag>
-                {{ value }}
-              </t-tag>
+            <template #valueDisplay="{ value }">
+              <div class="flex items-center gap-3">
+                <component
+                  :is="databaseOptions.find((database) => database.value === value)?.icon"
+                  class="w-6 h-6"
+                />
+                <t-tag theme="success" variant="light"> {{ value }} </t-tag>
+              </div>
             </template>
           </t-select>
         </t-form-item>
@@ -74,11 +83,13 @@ const databaseOptions = [
     label: 'sqlite',
     value: 'sqlite',
     icon: Sqlite,
+    disabled: true,
   },
   {
     label: 'postgresql',
     value: 'postgresql',
     icon: Postgresql,
+    disabled: true,
   },
 ]
 </script>

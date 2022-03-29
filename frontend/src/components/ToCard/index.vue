@@ -54,7 +54,7 @@ const classes = reactive({
   background-color: white;
 
   &__inner {
-    @apply p-3 w-full h-full relative flex flex-col gap-3;
+    @apply p-3 w-full h-full relative flex flex-col gap-6;
   }
 
   &__title {

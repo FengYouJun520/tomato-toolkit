@@ -1,5 +1,5 @@
 <template>
-  <t-row>
+  <t-row :gutter="24">
     <t-col :xs="12" :lg="6">
       <strategy-left />
     </t-col>

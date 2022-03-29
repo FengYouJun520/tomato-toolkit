@@ -29,9 +29,9 @@
       </t-tabs>
     </div>
 
-    <template #extract>
+    <template #footer>
       <div class="flex justify-center">
-        <t-button size="large">生成</t-button>
+        <t-button block>生成</t-button>
       </div>
     </template>
   </to-page>
