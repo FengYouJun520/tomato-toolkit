@@ -72,18 +72,22 @@ const tableList = [
   {
     label: '文章表',
     value: 'sys_article',
+    comment: '文章表',
   },
   {
     label: '分类表',
     value: 'sys_category',
+    comment: '分类表',
   },
   {
     label: '标签表',
     value: 'sys_tag',
+    comment: '标签表',
   },
   {
     label: '用户表',
     value: 'sys_user',
+    comment: '用户表',
   },
 ]
 </script>

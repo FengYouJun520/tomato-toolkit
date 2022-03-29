@@ -1,6 +1,6 @@
 <template>
   <div class="mr-4">
-    <t-drawer v-model:visible="visible" header="页面设置" :confirm-btn="null" :cancel-btn="null">
+    <t-drawer v-model:visible="visible" header="页面设置" :footer="false">
       <t-form>
         <div class="setting-title">主题设置</div>
         <t-radio-group class="gap-x-3" :value="themeStore.theme" @change="handleThemeChange">

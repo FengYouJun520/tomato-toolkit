@@ -18,13 +18,41 @@
         </t-col>
         <t-col :xs="12" :md="6" :lg="4">
           <t-form-item label="禁用模板">
-            <t-select disabled></t-select>
+            <t-select disabled :options="disableTemplateOptions" />
           </t-form-item>
         </t-col>
       </t-row>
     </t-form>
   </div>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const disableTemplateOptions = [
+  {
+    label: 'entity',
+    value: 'ENTITY',
+    disabled: false,
+  },
+  {
+    label: 'service',
+    value: 'SERVICE',
+  },
+  {
+    label: 'service-impl',
+    value: 'SERVICEIMPL',
+  },
+  {
+    label: 'controller',
+    value: 'CONTROLLER',
+  },
+  {
+    label: 'mapper',
+    value: 'MAPPER',
+  },
+  {
+    label: 'mapper-xml',
+    value: 'XML',
+  },
+]
+</script>
 
 <style lang="scss" scoped></style>

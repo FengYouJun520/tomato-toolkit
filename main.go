@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"log"
+	"tomoto/codegen"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"
@@ -13,9 +14,15 @@ import (
 //go:embed frontend/dist
 var assets embed.FS
 
+//go:embed templates
+var templates embed.FS
+
 func main() {
+
 	// Create an instance of the app structure
 	app := NewApp()
+	// Create an instance of the app structure
+	manager := codegen.NewManager(templates)
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -39,6 +46,7 @@ func main() {
 		OnShutdown:        app.shutdown,
 		Bind: []interface{}{
 			app,
+			manager,
 		},
 		// Windows platform specific options
 		Windows: &windows.Options{

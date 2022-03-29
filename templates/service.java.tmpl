@@ -1,0 +1,20 @@
+package {{ .Package.Service }};
+
+import {{ .Package.Entity }}.{{ .Entity }};
+import {{ .SuperServiceClassPackage }};
+
+/**
+ * <p>
+ *  {{ .Table.Comment }} 服务类
+ * </p>
+ *
+ * @author {{ .Author }}
+ * @since {{ .Date }}
+ */
+{{- if .Kotlin }}
+interface {{ .Table.ServiceName }} : {{ .SuperServiceClass }}<{{ .Entity }}>
+{{- else }}
+public interface {{ .Table.ServiceName }} extends {{ .SuperServiceClass }}<{{ .Entity }}> {
+
+}
+{{- end }}

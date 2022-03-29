@@ -1,0 +1,37 @@
+package {{ .Package.Controller }};
+
+import org.springframework.web.bind.annotation.RequestMapping;
+{{- if .RestControllerStyle }}
+import org.springframework.web.bind.annotation.RestController;
+{{- else }}
+import org.springframework.stereotype.Controller;
+{{- end }}
+{{- if (ne .SuperControllerClassPackage "") }}
+import {{ .SuperControllerClassPackage }};
+{{- end }}
+
+/**
+ * <p>
+ * {{ .Table.Comment }} 前端控制器
+ * </p>
+ *
+ * @author {{ .Author }}
+ * @since {{ .Date }}
+ */
+{{- if .RestControllerStyle }}
+@RestController
+{{- else }}
+@Controller
+{{- end }}
+@RequestMapping("{{if .Package.ModuleName}}/{{ .Package.ModuleName }}{{ end }}/{{if .ControllerMappingHyphenStyle }}{{ .ControllerMappingHyphen }}{{ else }}{{ .Table.EntityPath }}{{ end }}")
+{{- if .Kotlin }}
+class {{ .Table.ControllerName }}{{if .SuperControllerClass }} : {{ .SuperControllerClass }}(){{ end }}
+{{- else }}
+{{- if (ne .SuperControllerClass "") }}
+public class {{ .Table.ControllerName }} extends {{ .SuperControllerClass }} {
+{{- else }}
+public class {{ .Table.ControllerName }} {
+{{- end }}
+
+}
+{{- end }}

@@ -3,6 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"runtime"
+	"tomoto/codegen"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 // App struct
@@ -34,4 +39,41 @@ func (a *App) shutdown(ctx context.Context) {
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s!", name)
+}
+
+func (a *App) PingDb(dataSource codegen.DataSourceConfig) ([]codegen.DatabaseOptions, error) {
+	var (
+		// dsn = "" comment
+		dsn = ""
+		db  *gorm.DB
+		err error
+	)
+
+	switch dataSource.Typ {
+	case "mysql":
+		dsn = fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local&timeout=5s",
+			dataSource.Username, dataSource.Password, dataSource.Host,
+			dataSource.Port, dataSource.Database)
+		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	var options []codegen.DatabaseOptions
+	db.Raw(`SELECT table_name name,IFNULL(TABLE_COMMENT,table_name) comment
+FROM INFORMATION_SCHEMA.TABLES
+WHERE UPPER(table_type)='BASE TABLE'
+  AND LOWER(table_schema) = ?`, dataSource.Database).Scan(&options)
+
+	return options, nil
+}
+
+func (a *App) Execute(configContext codegen.ConfigContext) (string, error) {
+
+	return "代码生成完成!", nil
+}
+
+func (a *App) GetOs() string {
+	return runtime.GOOS
 }

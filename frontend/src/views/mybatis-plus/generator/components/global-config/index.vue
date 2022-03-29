@@ -73,6 +73,7 @@ const timeStrategyOptions = [
   {
     label: 'ONLY_TIME',
     value: 'ONLY_TIME',
+    disabled: true,
   },
   {
     label: 'TIME_PACK',
