@@ -31,7 +31,14 @@
 
     <template #footer>
       <div class="flex justify-center">
-        <t-button block>生成</t-button>
+        <t-button
+          block
+          @click="executeGenerate"
+          :loading="loading"
+          :disabled="basicStore.executeDisable"
+        >
+          生成
+        </t-button>
       </div>
     </template>
   </to-page>
@@ -39,6 +46,20 @@
 <script setup lang="ts">
 import MybatisIcon from '@/assets/mybatis.png'
 import ToPage from '@/components/ToPage/index.vue'
+import { useBasic } from '@/store/modules/mybatis/useBasic'
+import { useGlobal } from '@/store/modules/mybatis/useGlobal'
+import { usePackage } from '@/store/modules/mybatis/usePackage'
+import { useStrategy } from '@/store/modules/mybatis/useStrategy'
+import { useTemplate } from '@/store/modules/mybatis/useTemplate'
+import {
+  ConfigContext,
+  DataSourceConfig,
+  GlobalConfig as GlobalConfigModel,
+  PackageConfig as PackageConfigModel,
+  StrategyConfig as StrategyConfigModel,
+  TemplateConfig as TemplateConfigModel,
+} from '@/wailsjs/go/models'
+import { MessagePlugin } from 'tdesign-vue-next'
 import BasicConfig from './components/basic-config/index.vue'
 import GlobalConfig from './components/global-config/index.vue'
 import InjectConfig from './components/inject-config/index.vue'
@@ -46,7 +67,44 @@ import PackageConfig from './components/package-config/index.vue'
 import StrategyConfig from './components/strategy-config/index.vue'
 import TemplateConfig from './components/template-config/index.vue'
 
+const loading = ref(false)
+const basicStore = useBasic()
+const globalStore = useGlobal()
+const packageStore = usePackage()
+const templateStore = useTemplate()
+const strategyStore = useStrategy()
+
 const tabsValue = ref('global-config')
+
+const executeGenerate = () => {
+  if (!strategyStore.strategy.addIncludes || !strategyStore.strategy.addIncludes?.length) {
+    MessagePlugin.warning('请在策略配置中选择要生成的表！')
+    return
+  }
+
+  const configContext = ConfigContext.createFrom({
+    dataSource: DataSourceConfig.createFrom(toRaw(basicStore.dataSource)),
+    globalConfig: GlobalConfigModel.createFrom(toRaw(globalStore.global)),
+    packageConfig: PackageConfigModel.createFrom(toRaw(packageStore.package)),
+    templateConfig: TemplateConfigModel.createFrom(toRaw(templateStore.template)),
+    strategyConfig: StrategyConfigModel.createFrom(toRaw(strategyStore.strategy)),
+  })
+
+  ConfigContext
+
+  loading.value = true
+
+  window.go.codegen.Manager.CodeGenerate(configContext)
+    .then((msg: any) => {
+      MessagePlugin.success(msg)
+    })
+    .catch((err: any) => {
+      MessagePlugin.error(err)
+    })
+    .finally(() => {
+      loading.value = false
+    })
+}
 </script>
 
 <style scoped></style>

@@ -19,8 +19,8 @@ export const fillOptions = [
 
 export interface FillInput {
   key: string
+  name: string
   value: string
-  fill: string
 }
 
 export const assignIds = [

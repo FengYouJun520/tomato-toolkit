@@ -3,7 +3,7 @@
     <t-form label-align="right" :label-width="140" colon>
       <t-row :gutter="[24, 24]" class="mt-6">
         <t-col>
-          <t-button theme="warning">重置</t-button>
+          <t-button theme="warning" @click="templateStore.clearTemplate">重置</t-button>
         </t-col>
       </t-row>
 
@@ -26,6 +26,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useTemplate } from '@/store/modules/mybatis/useTemplate'
+
 const disableTemplateOptions = [
   {
     label: 'entity',
@@ -53,6 +55,8 @@ const disableTemplateOptions = [
     value: 'XML',
   },
 ]
+
+const templateStore = useTemplate()
 </script>
 
 <style lang="scss" scoped></style>

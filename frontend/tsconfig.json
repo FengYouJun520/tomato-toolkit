@@ -13,7 +13,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@wails*": ["src/wails*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

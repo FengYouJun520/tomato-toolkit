@@ -12,10 +12,6 @@ export default defineConfig({
         find: '@',
         replacement: resolve(__dirname, 'src'),
       },
-      {
-        find: '@wails',
-        replacement: resolve(__dirname, 'src/wails'),
-      },
     ],
   },
   plugins: [

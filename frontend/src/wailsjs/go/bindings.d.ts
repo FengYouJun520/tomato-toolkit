@@ -1,9 +1,16 @@
 import * as models from './models';
 
 export interface go {
+  "codegen": {
+    "Manager": {
+		CodeGenerate(arg1:models.ConfigContext):Promise<string|Error>
+    },
+  }
+
   "main": {
     "App": {
-		Greet(arg1:string):Promise<string>
+		GetOs():Promise<string>
+		PingDb(arg1:models.DataSourceConfig):Promise<Array<models.DatabaseOptions>|Error>
     },
   }
 

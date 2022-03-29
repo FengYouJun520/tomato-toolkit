@@ -1,3 +1,14 @@
+export interface TablesOptions {
+  label: string
+  value: string
+  comment: string
+}
+
+export interface DatabaseOptions {
+  name: string
+  comment: string
+}
+
 export type databaseType = 'mysql' | 'postgres' | 'sqlite'
 export interface DataSourceConfig {
   typ: databaseType
@@ -79,6 +90,7 @@ export type IdType = 'AUTO' | 'NONE' | 'INPUT' | 'ASSIGN_ID' | 'ASSIGN_UUID'
 export type FillType = 'DEFAULT' | 'INSERT' | 'UPDATE' | 'INSERT_UPDATE'
 
 export interface FillKeyVal {
+  key: string
   name: string
   value: FillType
 }
@@ -97,9 +109,9 @@ export interface Entity {
   logicDeleteColumnName?: string
   logicDeletePropertyName?: string
   naming: NamingStrategy
-  addSuperEntityColumns?: string[]
-  addIgnoreColumns?: string[]
-  addTableFills?: Array<FillKeyVal>
+  addSuperEntityColumns: string[]
+  addIgnoreColumns: string[]
+  addTableFills: Array<FillKeyVal>
   idType: IdType
   formatFileName?: string
 }

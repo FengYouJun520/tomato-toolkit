@@ -1,9 +1,9 @@
 <template>
-  <t-form label-align="right" colon>
+  <t-form label-align="right" colon :data="basicStore.dataSource">
     <t-row :gutter="[24, 24]">
       <t-col :xs="12" :lg="6">
         <t-form-item label="数据库类型">
-          <t-select default-value="mysql" clearable>
+          <t-select v-model="basicStore.dataSource.typ" clearable>
             <t-option
               v-for="option in databaseOptions"
               :key="option.value"
@@ -29,22 +29,22 @@
       </t-col>
       <t-col :xs="12" :lg="6">
         <t-form-item label="数据库名称">
-          <t-input />
+          <t-input v-model="basicStore.dataSource.database" />
         </t-form-item>
       </t-col>
       <t-col :xs="12" :lg="6">
         <t-form-item label="Host">
-          <t-input />
+          <t-input v-model="basicStore.dataSource.host" />
         </t-form-item>
       </t-col>
       <t-col :xs="12" :lg="6">
         <t-form-item label="Port">
-          <t-input />
+          <t-input v-model="basicStore.dataSource.port" />
         </t-form-item>
       </t-col>
       <t-col :xs="12" :lg="6">
         <t-form-item label="用户名">
-          <t-input>
+          <t-input v-model="basicStore.dataSource.username">
             <template #prefix-icon>
               <t-icon name="user" />
             </template>
@@ -53,7 +53,7 @@
       </t-col>
       <t-col :xs="12" :lg="6">
         <t-form-item label="密码">
-          <t-input type="password">
+          <t-input type="password" v-model="basicStore.dataSource.password">
             <template #prefix-icon>
               <t-icon name="lock-on" />
             </template>
@@ -63,8 +63,8 @@
     </t-row>
     <t-row :gutter="[24, 24]" class="mt-6">
       <t-col :span="12" class="flex justify-center gap-3">
-        <t-button>测试</t-button>
-        <t-button theme="warning">重置</t-button>
+        <t-button @click="testConnection">测试</t-button>
+        <t-button theme="warning" @click="basicStore.clearBasic">重置</t-button>
       </t-col>
     </t-row>
   </t-form>
@@ -73,6 +73,11 @@
 import Mysql from '@/assets/mysql.svg'
 import Postgresql from '@/assets/postgresql.svg'
 import Sqlite from '@/assets/sqlite.svg'
+import { useBasic } from '@/store/modules/mybatis/useBasic'
+import { useStrategy } from '@/store/modules/mybatis/useStrategy'
+import { DatabaseOptions } from '@/types/mybatis-plus'
+import { MessagePlugin } from 'tdesign-vue-next'
+
 const databaseOptions = [
   {
     label: 'mysql',
@@ -86,12 +91,29 @@ const databaseOptions = [
     disabled: true,
   },
   {
-    label: 'postgresql',
-    value: 'postgresql',
+    label: 'postgres',
+    value: 'postgres',
     icon: Postgresql,
     disabled: true,
   },
 ]
+
+const basicStore = useBasic()
+const strategy = useStrategy()
+
+const testConnection = () => {
+  window.go.main.App.PingDb(basicStore.dataSource)
+    .then((options: DatabaseOptions[] | Error) => {
+      basicStore.setOptions(options as DatabaseOptions[])
+      MessagePlugin.success('连接成功')
+      basicStore.executeDisable = false
+    })
+    .catch((err: string) => {
+      strategy.clearAddIncludes()
+      basicStore.clearOptions()
+      MessagePlugin.error(err)
+    })
+}
 </script>
 
 <style lang="scss" scoped></style>

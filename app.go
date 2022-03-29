@@ -36,11 +36,6 @@ func (a *App) shutdown(ctx context.Context) {
 	// Perform your teardown here
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s!", name)
-}
-
 func (a *App) PingDb(dataSource codegen.DataSourceConfig) ([]codegen.DatabaseOptions, error) {
 	var (
 		// dsn = "" comment
@@ -67,11 +62,6 @@ WHERE UPPER(table_type)='BASE TABLE'
   AND LOWER(table_schema) = ?`, dataSource.Database).Scan(&options)
 
 	return options, nil
-}
-
-func (a *App) Execute(configContext codegen.ConfigContext) (string, error) {
-
-	return "代码生成完成!", nil
 }
 
 func (a *App) GetOs() string {
