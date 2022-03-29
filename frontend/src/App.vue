@@ -3,7 +3,7 @@ import { useThemeStore } from '@/store/modules/theme'
 
 const themeStore = useThemeStore()
 watchEffect(() => {
-  if (themeStore.theme === 'dark') {
+  if (themeStore.getTheme === 'dark') {
     document.documentElement.setAttribute('theme-mode', 'dark')
   } else {
     document.documentElement.removeAttribute('theme-mode')

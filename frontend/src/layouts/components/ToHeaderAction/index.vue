@@ -23,9 +23,11 @@
   </div>
 </template>
 <script setup lang="ts">
+import AutoIcon from '@/assets/auto.svg'
 import DarkIcon from '@/assets/moon.svg'
 import LightIcon from '@/assets/sun.svg'
-import { useThemeStore } from '@/store/modules/theme'
+import { ThemeType, useThemeStore } from '@/store/modules/theme'
+import { RadioValue } from 'tdesign-vue-next'
 
 const ThemeModes = [
   {
@@ -35,6 +37,10 @@ const ThemeModes = [
   {
     type: 'dark',
     label: '暗黑',
+  },
+  {
+    type: 'auto',
+    label: '跟随系统',
   },
 ]
 
@@ -48,10 +54,15 @@ const getModeIcon = (type: string) => {
   if (type === 'dark') {
     return DarkIcon
   }
+  if (type === 'auto') {
+    return AutoIcon
+  }
 }
 
-const handleThemeChange = () => {
-  themeStore.toggleTheme()
+const handleThemeChange = (theme: RadioValue) => {
+  console.log(theme)
+
+  themeStore.toggleTheme(theme.toString() as ThemeType)
 }
 </script>
 
@@ -62,6 +73,7 @@ const handleThemeChange = () => {
 
 .setting-title {
   @apply my-6 inline-block w-full text-base;
+  color: var(--td-text-color-primary);
 }
 
 .radio-setting {
@@ -79,7 +91,7 @@ const handleThemeChange = () => {
     max-height: 78px;
     padding: 8px;
     border-radius: 2px;
-    border: 2px solid #e3e6eb;
+    border: 2px solid var(--td-gray-color-5);
 
     > :deep(.t-radio-button__label) {
       display: inline-flex;
@@ -90,6 +102,15 @@ const handleThemeChange = () => {
       }
     }
   }
+
+  &:nth-child(2) :deep(.t-radio-button__label) {
+    background-color: var(--td-gray-color-11);
+
+    svg {
+      fill: var(--td-gray-color-4);
+    }
+  }
+
   .t-is-checked {
     border: 2px solid var(--td-brand-color) !important;
   }

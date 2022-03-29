@@ -34,7 +34,7 @@ const route = useRoute()
 const router = useRouter()
 const themeStore = useThemeStore()
 const appStore = useAppStore()
-const theme = computed(() => themeStore.theme)
+const theme = computed(() => themeStore.getTheme)
 
 const expanded = ref<string[]>(route.matched.map((r) => r.path))
 const handleChange = (active: MenuValue) => {
