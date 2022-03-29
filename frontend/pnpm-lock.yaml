@@ -4,6 +4,7 @@ specifiers:
   '@types/node': ^17.0.23
   '@vitejs/plugin-vue': ^2.2.4
   autoprefixer: ^10.4.4
+  nanoid: ^3.3.2
   pinia: ^2.0.12
   pinia-plugin-persistedstate-2: ^1.0.0
   postcss: ^8.4.12
@@ -22,6 +23,7 @@ specifiers:
   vue-tsc: ^0.29.8
 
 dependencies:
+  nanoid: 3.3.2
   pinia: 2.0.12_typescript@4.6.3+vue@3.2.31
   tdesign-icons-vue-next: 0.0.7_vue@3.2.31
   tdesign-vue-next: 0.11.0_vue@3.2.31
@@ -1150,8 +1152,8 @@ packages:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
     dev: true
 
-  /nanoid/3.3.1:
-    resolution: {integrity: sha512-n6Vs/3KGyxPQd6uO0eH4Bv0ojGSUvuLlIHtC3Y0kEO23YRge8H9x1GCzLn28YX0H66pMkxuaeESFq4tKISKwdw==}
+  /nanoid/3.3.2:
+    resolution: {integrity: sha512-CuHBogktKwpm5g2sRgv83jEy2ijFzBwMoYA60orPDR7ynsLijJDqgsi4RDGj3OJpy3Ieb+LYwiRmIOGyytgITA==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -1296,7 +1298,7 @@ packages:
     resolution: {integrity: sha512-lg6eITwYe9v6Hr5CncVbK70SoioNQIq81nsaG86ev5hAidQvmOeETBqs7jm43K2F5/Ley3ytDtriImV6TpNiSg==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
-      nanoid: 3.3.1
+      nanoid: 3.3.2
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
