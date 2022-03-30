@@ -8,7 +8,7 @@
   >
     <template #logo>
       <div v-if="!appStore.collapse" class="flex items-center overflow-hidden">
-        <div class="ml-4 overflow-hidden text-2xl">番茄工具包</div>
+        <div class="ml-4 overflow-hidden text-2xl">番茄工具集</div>
       </div>
     </template>
 
