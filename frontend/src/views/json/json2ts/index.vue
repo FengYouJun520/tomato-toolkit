@@ -117,7 +117,9 @@ const convert = (e: MouseEvent) => {
 }
 
 const handleInspiration = () => {
-  window.open('https://github.com/beshanoe/json2ts/blob/master/src/utils/json2.ts')
+  window.runtime.BrowserOpenURL(
+    'https://github.com/beshanoe/json2ts/blob/master/src/utils/json2.ts'
+  )
 }
 </script>
 
