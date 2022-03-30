@@ -106,6 +106,10 @@ const formData: Json2TsProps = reactive({
 })
 
 const convert = () => {
+  if (formData.source === '') {
+    return
+  }
+
   const json2ts = new Json2Ts(formData.config)
   const result = json2ts.convert(JSON.parse(toRaw(formData.source)))
   formData.result = result

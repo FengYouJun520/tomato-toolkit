@@ -19,4 +19,8 @@ import ToHeaderAction from '../ToHeaderAction/index.vue'
 const appStore = useAppStore()
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.header-right {
+  @apply flex items-center mr-6;
+}
+</style>

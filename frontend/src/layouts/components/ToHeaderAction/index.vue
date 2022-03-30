@@ -1,5 +1,11 @@
 <template>
-  <div class="mr-4">
+  <div>
+    <t-button variant="text" shape="square" @click="visible = true" class="w-12 h-16">
+      <template #icon>
+        <t-icon size="20" name="setting" />
+      </template>
+    </t-button>
+
     <t-drawer v-model:visible="visible" header="页面设置" :footer="false">
       <t-form>
         <div class="setting-title">主题设置</div>
@@ -15,11 +21,6 @@
         </t-radio-group>
       </t-form>
     </t-drawer>
-    <t-button variant="text" shape="square" @click="visible = true">
-      <template #icon>
-        <t-icon size="20" name="setting" />
-      </template>
-    </t-button>
   </div>
 </template>
 <script setup lang="ts">
