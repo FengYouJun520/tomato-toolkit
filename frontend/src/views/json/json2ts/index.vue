@@ -69,10 +69,6 @@
       </t-row>
     </t-form>
 
-    <template #extract>
-      <t-button @click="convert">转换</t-button>
-    </template>
-
     <template #footer>
       <div class="flex items-center">
         <span>灵感来源：</span>
@@ -109,12 +105,19 @@ const formData: Json2TsProps = reactive({
   },
 })
 
-const convert = (e: MouseEvent) => {
-  e.preventDefault()
+const convert = () => {
   const json2ts = new Json2Ts(formData.config)
   const result = json2ts.convert(JSON.parse(toRaw(formData.source)))
   formData.result = result
 }
+
+watch(
+  formData,
+  () => {
+    convert()
+  },
+  { deep: true }
+)
 
 const handleInspiration = () => {
   window.runtime.BrowserOpenURL(
