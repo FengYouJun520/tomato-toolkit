@@ -1,15 +1,15 @@
 package codegen
 
 import (
-    "fmt"
-    "testing"
+	"fmt"
+	"testing"
 
-    "gorm.io/driver/mysql"
-    "gorm.io/gorm"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 var (
-    querySql = `SELECT
+	querySql = `SELECT
 	table_name 'name',
 	IFNULL( TABLE_COMMENT, table_name ) 'comment',
 	TABLE_SCHEMA 'table_schema' 
@@ -23,32 +23,32 @@ WHERE
 )
 
 func TestInQuery(t *testing.T) {
-    var tables = []string{"sys_user", "sys_role", "sys_menu"}
-    dsn := "root:root@tcp(localhost:3306)/blog?charset=utf8mb4&parseTime=True&loc=Local&timeout=5s"
-    db, _ := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	var tables = []string{"sys_user", "sys_role", "sys_menu"}
+	dsn := "root:root@tcp(localhost:3306)/blog?charset=utf8mb4&parseTime=True&loc=Local&timeout=5s"
+	db, _ := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
-    db = db.Raw(querySql, "blog", tables)
-    if db.Error != nil {
-        t.Fatal(db.Error)
-    }
+	db = db.Raw(querySql, "blog", tables)
+	if db.Error != nil {
+		t.Fatal(db.Error)
+	}
 
-    rows, _ := db.Rows()
-    defer rows.Close()
+	rows, _ := db.Rows()
+	defer rows.Close()
 
-    var tableInfos []*TableInfo
+	var tableInfos []*TableInfo
 
-    for rows.Next() {
-        var tableinfo TableInfo
-        rows.Scan(&tableinfo.Name, &tableinfo.Comment, &tableinfo.SchemaName)
-        tableInfos = append(tableInfos, &tableinfo)
-    }
+	for rows.Next() {
+		var tableinfo TableInfo
+		rows.Scan(&tableinfo.Name, &tableinfo.Comment, &tableinfo.SchemaName)
+		tableInfos = append(tableInfos, &tableinfo)
+	}
 
-    fmt.Println(tableInfos)
+	fmt.Println(tableInfos)
 
-    for _, tableInfo := range tableInfos {
-        if err := tableInfo.ExecuteColumns(db); err != nil {
-            t.Fatal(err)
-        }
-    }
-    fmt.Println(tableInfos)
+	for _, tableInfo := range tableInfos {
+		if err := tableInfo.ExecuteColumns(db); err != nil {
+			t.Fatal(err)
+		}
+	}
+	fmt.Println(tableInfos)
 }

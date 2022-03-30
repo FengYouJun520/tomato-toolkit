@@ -68,7 +68,11 @@
               >
                 <t-row :gutter="24">
                   <t-col :span="4">{{ option.value }}</t-col>
-                  <t-col :span="8">{{ option.comment }}</t-col>
+                  <t-col :span="8">
+                    <t-tag v-if="option.comment" theme="success" variant="light">
+                      {{ option.comment }}
+                    </t-tag>
+                  </t-col>
                 </t-row>
               </t-option>
             </t-select>
