@@ -1,3 +1,7 @@
+
+### Bug Fixes
+* mybatis-plus: 测试连接未成功生成按钮应该处于禁用状态
+
 ## [1.0.0](https://github.com/FengYouJun520/tomato-toolkit/compare/main...v1.0.0) (2022-3-30)
 
 ### Bug Fixes

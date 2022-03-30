@@ -51,6 +51,6 @@ export const useBasic = defineStore('basic-config', {
   },
   persistedState: {
     persist: true,
-    excludePaths: ['dataSource'],
+    includePaths: ['dataSource'],
   },
 })
