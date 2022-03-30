@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "build:watch": "vue-tsc --noEmit && vite build --watch",
+    "build": "vite build",
+    "build:watch": "vite build --watch",
     "preview": "vite preview"
   },
   "dependencies": {
