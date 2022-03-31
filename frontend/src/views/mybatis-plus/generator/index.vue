@@ -90,8 +90,6 @@ const executeGenerate = () => {
     strategyConfig: StrategyConfigModel.createFrom(toRaw(strategyStore.strategy)),
   })
 
-  ConfigContext
-
   loading.value = true
 
   window.go.codegen.Manager.CodeGenerate(configContext)
