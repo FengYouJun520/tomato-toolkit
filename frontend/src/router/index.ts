@@ -63,6 +63,15 @@ export const routes: RouteRecordRaw[] = [
           icon: 'precise-monitor',
         },
       },
+      {
+        path: 'json-format',
+        name: 'JsonFormat',
+        component: () => import('@/views/json/json-format.vue'),
+        meta: {
+          title: 'json格式化',
+          icon: 'precise-monitor',
+        },
+      },
     ],
   },
   {
