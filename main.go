@@ -4,6 +4,7 @@ import (
 	"embed"
 	"log"
 	"tomoto/codegen"
+	"tomoto/crypt"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"
@@ -23,6 +24,7 @@ func main() {
 	app := NewApp()
 	// Create an instance of the app structure
 	manager := codegen.NewManager(templates)
+	crypto := crypt.NewCrypt()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -47,6 +49,7 @@ func main() {
 		Bind: []interface{}{
 			app,
 			manager,
+			crypto,
 		},
 		// Windows platform specific options
 		Windows: &windows.Options{

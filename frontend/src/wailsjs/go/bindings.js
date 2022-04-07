@@ -15,6 +15,19 @@ const go = {
     },
   },
 
+  "crypt": {
+    "Crypt": {
+      /**
+       * Encode
+       * @param {models.CryptConfig} arg1 - Go Type: *crypt.CryptConfig
+       * @returns {Promise<string|Error>}  - Go Type: string
+       */
+      "Encode": (arg1) => {
+        return window.go.crypt.Crypt.Encode(arg1);
+      },
+    },
+  },
+
   "main": {
     "App": {
       /**

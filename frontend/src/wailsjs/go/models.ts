@@ -372,3 +372,23 @@ export class ConfigContext {
 	    return a;
 	}
 }
+export class CryptConfig {
+    typ: string;
+    cost: string;
+    source: string;
+    publicKey: string;
+    privateKey: string;
+
+    static createFrom(source: any = {}) {
+        return new CryptConfig(source);
+    }
+
+    constructor(source: any = {}) {
+        if ('string' === typeof source) source = JSON.parse(source);
+        this.typ = source["typ"];
+        this.cost = source["cost"];
+        this.source = source["source"];
+        this.publicKey = source["publicKey"];
+        this.privateKey = source["privateKey"];
+    }
+}

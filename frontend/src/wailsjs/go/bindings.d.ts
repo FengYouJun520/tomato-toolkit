@@ -7,6 +7,12 @@ export interface go {
     },
   }
 
+  "crypt": {
+    "Crypt": {
+		Encode(arg1:models.CryptConfig):Promise<string|Error>
+    },
+  }
+
   "main": {
     "App": {
 		GetOs():Promise<string>

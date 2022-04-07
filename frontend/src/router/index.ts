@@ -65,6 +65,27 @@ export const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/crypto',
+    name: 'Crypto',
+    redirect: '/crypto/crypto',
+    component: LAYOUT,
+    meta: {
+      title: '加解密管理',
+      icon: 'control-platform',
+    },
+    children: [
+      {
+        path: 'crypto',
+        name: 'CryptoEnDe',
+        component: () => import('@/views/crypto/en-de/index.vue'),
+        meta: {
+          title: '加解密',
+          icon: 'precise-monitor',
+        },
+      },
+    ],
+  },
 ]
 
 const router = createRouter({
