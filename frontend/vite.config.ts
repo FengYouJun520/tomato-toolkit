@@ -14,6 +14,9 @@ export default defineConfig({
       },
     ],
   },
+  server: {
+    port: 22330,
+  },
   plugins: [
     vue(),
     AutoImport({

@@ -4,7 +4,8 @@
   "frontend:build": "",
   "frontend:install": "pnpm install",
   "frontend:dev": "",
-  "frontend:dev:watcher": "pnpm build:watch",
+  "frontend:dev:watcher": "pnpm dev",
+  "frontend:dev:serverUrl": "http://localhost:22330",
   "wailsjsdir": "frontend/src",
   "version": "2",
   "Path": "",
@@ -26,7 +27,7 @@
     "comments": "Built using Wails (https://wails.app)"
   },
   "debounceMS": 100,
-  "devserverurl": "http://localhost:34115",
+  "devserverurl": "localhost:22330",
   "appargs": "",
   "nsisType": "multiple"
 }

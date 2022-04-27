@@ -52,7 +52,8 @@
 </template>
 <script setup lang="ts">
 import ToPage from '@/components/ToPage/index.vue'
-import { CryptConfig } from '@/wailsjs/go/models'
+import { Encode } from '@/wailsjs/go/crypt/Crypt'
+import { crypt } from '@/wailsjs/go/models'
 import { MessagePlugin, SelectOption, SelectOptionGroup } from 'tdesign-vue-next'
 
 interface CryptoProps {
@@ -129,7 +130,7 @@ watch([() => cryptoModel.source, () => cryptoModel.typ], () => {
     return
   }
 
-  window.go.crypt.Crypt.Encode(CryptConfig.createFrom(toRaw(cryptoModel)))
+  Encode(crypt.CryptConfig.createFrom(toRaw(cryptoModel)))
     .then((dest: any) => {
       cryptoModel.dest = dest as string
     })

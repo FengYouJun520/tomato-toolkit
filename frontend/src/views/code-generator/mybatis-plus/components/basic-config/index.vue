@@ -76,6 +76,7 @@ import Sqlite from '@/assets/sqlite.svg'
 import { useBasic } from '@/store/modules/mybatis/useBasic'
 import { useStrategy } from '@/store/modules/mybatis/useStrategy'
 import { DatabaseOptions } from '@/types/mybatis-plus'
+import { PingDb } from '@/wailsjs/go/main/App'
 import { MessagePlugin } from 'tdesign-vue-next'
 
 const databaseOptions = [
@@ -102,7 +103,7 @@ const basicStore = useBasic()
 const strategy = useStrategy()
 
 const testConnection = () => {
-  window.go.main.App.PingDb(basicStore.dataSource)
+  PingDb(basicStore.dataSource)
     .then((options: DatabaseOptions[] | Error) => {
       basicStore.setOptions(options as DatabaseOptions[])
       MessagePlugin.success('连接成功')

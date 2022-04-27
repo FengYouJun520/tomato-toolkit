@@ -51,14 +51,8 @@ import { useGlobal } from '@/store/modules/mybatis/useGlobal'
 import { usePackage } from '@/store/modules/mybatis/usePackage'
 import { useStrategy } from '@/store/modules/mybatis/useStrategy'
 import { useTemplate } from '@/store/modules/mybatis/useTemplate'
-import {
-  ConfigContext,
-  DataSourceConfig,
-  GlobalConfig as GlobalConfigModel,
-  PackageConfig as PackageConfigModel,
-  StrategyConfig as StrategyConfigModel,
-  TemplateConfig as TemplateConfigModel,
-} from '@/wailsjs/go/models'
+import { CodeGenerate } from '@/wailsjs/go/codegen/Manager'
+import { codegen } from '@/wailsjs/go/models'
 import { MessagePlugin } from 'tdesign-vue-next'
 import BasicConfig from './components/basic-config/index.vue'
 import GlobalConfig from './components/global-config/index.vue'
@@ -82,17 +76,17 @@ const executeGenerate = () => {
     return
   }
 
-  const configContext = ConfigContext.createFrom({
-    dataSource: DataSourceConfig.createFrom(toRaw(basicStore.dataSource)),
-    globalConfig: GlobalConfigModel.createFrom(toRaw(globalStore.global)),
-    packageConfig: PackageConfigModel.createFrom(toRaw(packageStore.package)),
-    templateConfig: TemplateConfigModel.createFrom(toRaw(templateStore.template)),
-    strategyConfig: StrategyConfigModel.createFrom(toRaw(strategyStore.strategy)),
+  const configContext = codegen.ConfigContext.createFrom({
+    dataSource: codegen.DataSourceConfig.createFrom(toRaw(basicStore.dataSource)),
+    globalConfig: codegen.GlobalConfig.createFrom(toRaw(globalStore.global)),
+    packageConfig: codegen.PackageConfig.createFrom(toRaw(packageStore.package)),
+    templateConfig: codegen.TemplateConfig.createFrom(toRaw(templateStore.template)),
+    strategyConfig: codegen.StrategyConfig.createFrom(toRaw(strategyStore.strategy)),
   })
 
   loading.value = true
 
-  window.go.codegen.Manager.CodeGenerate(configContext)
+  CodeGenerate(configContext)
     .then((msg: any) => {
       MessagePlugin.success(msg)
     })
