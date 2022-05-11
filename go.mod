@@ -3,7 +3,7 @@ module tomoto
 go 1.18
 
 require (
-	github.com/wailsapp/wails/v2 v2.0.0-beta.35
+	github.com/wailsapp/wails/v2 v2.0.0-beta.36
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292
 	golang.org/x/text v0.3.7
 	gorm.io/driver/mysql v1.3.2

@@ -25,68 +25,6 @@ export namespace crypt {
 
 export namespace codegen {
 	
-	export class DataSourceConfig {
-	    typ: string;
-	    database: string;
-	    username: string;
-	    password: string;
-	    host: string;
-	    port: number;
-	
-	    static createFrom(source: any = {}) {
-	        return new DataSourceConfig(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.typ = source["typ"];
-	        this.database = source["database"];
-	        this.username = source["username"];
-	        this.password = source["password"];
-	        this.host = source["host"];
-	        this.port = source["port"];
-	    }
-	}
-	export class DatabaseOptions {
-	    name: string;
-	    comment: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new DatabaseOptions(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.name = source["name"];
-	        this.comment = source["comment"];
-	    }
-	}
-	export class GlobalConfig {
-	    fileOverride: boolean;
-	    disableOpenDir: boolean;
-	    outputDir: string;
-	    author: string;
-	    enableKotlin: boolean;
-	    enableSwagger: boolean;
-	    dateType: string;
-	    commentDate: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new GlobalConfig(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.fileOverride = source["fileOverride"];
-	        this.disableOpenDir = source["disableOpenDir"];
-	        this.outputDir = source["outputDir"];
-	        this.author = source["author"];
-	        this.enableKotlin = source["enableKotlin"];
-	        this.enableSwagger = source["enableSwagger"];
-	        this.dateType = source["dateType"];
-	        this.commentDate = source["commentDate"];
-	    }
-	}
 	export class Service {
 	    superServiceClass: string;
 	    superServiceImplClass: string;
@@ -267,6 +205,44 @@ export namespace codegen {
 		    return a;
 		}
 	}
+	
+	
+	export class DataSourceConfig {
+	    typ: string;
+	    database: string;
+	    username: string;
+	    password: string;
+	    host: string;
+	    port: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new DataSourceConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.typ = source["typ"];
+	        this.database = source["database"];
+	        this.username = source["username"];
+	        this.password = source["password"];
+	        this.host = source["host"];
+	        this.port = source["port"];
+	    }
+	}
+	export class DatabaseOptions {
+	    name: string;
+	    comment: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DatabaseOptions(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.comment = source["comment"];
+	    }
+	}
 	export class TemplateConfig {
 	    disableAll: boolean;
 	    disable: boolean;
@@ -357,6 +333,32 @@ export namespace codegen {
 		    return a;
 		}
 	}
+	export class GlobalConfig {
+	    fileOverride: boolean;
+	    disableOpenDir: boolean;
+	    outputDir: string;
+	    author: string;
+	    enableKotlin: boolean;
+	    enableSwagger: boolean;
+	    dateType: string;
+	    commentDate: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new GlobalConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.fileOverride = source["fileOverride"];
+	        this.disableOpenDir = source["disableOpenDir"];
+	        this.outputDir = source["outputDir"];
+	        this.author = source["author"];
+	        this.enableKotlin = source["enableKotlin"];
+	        this.enableSwagger = source["enableSwagger"];
+	        this.dateType = source["dateType"];
+	        this.commentDate = source["commentDate"];
+	    }
+	}
 	export class ConfigContext {
 	    dataSource?: DataSourceConfig;
 	    globalConfig?: GlobalConfig;
@@ -395,8 +397,6 @@ export namespace codegen {
 		    return a;
 		}
 	}
-	
-	
 	
 	
 	

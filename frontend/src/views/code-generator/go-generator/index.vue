@@ -1,5 +1,5 @@
 <template>
-  <div>go code generator</div>
+  <div>TODO: go code generator</div>
 </template>
 <script setup lang="ts"></script>
 
