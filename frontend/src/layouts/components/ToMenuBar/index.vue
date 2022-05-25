@@ -1,8 +1,8 @@
 <template>
   <t-menu
     :theme="theme"
-    :value="$route.path"
-    :expanded="expanded"
+    :default-value="$route.path"
+    v-model:expanded="expanded"
     :collapsed="appStore.collapse"
     @change="handleChange"
   >
