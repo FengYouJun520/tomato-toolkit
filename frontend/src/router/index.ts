@@ -6,28 +6,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Root',
-    redirect: '/monitor',
-    component: LAYOUT,
-    meta: {
-      title: '首页',
-      icon: 'dashboard',
-    },
-    children: [
-      {
-        path: 'monitor',
-        name: 'Monitor',
-        component: () => import('@/views/monitor/index.vue'),
-        meta: {
-          title: '监控页',
-          icon: 'dashboard',
-        },
-      },
-    ],
-  },
-  {
-    path: '/code-generator',
-    name: 'CodeGenerator',
-    redirect: '/code-generator/mybatis-plus-generate',
+    redirect: '/mybatis-plus-generate',
     component: LAYOUT,
     meta: {
       title: '代码生成器',
@@ -40,14 +19,6 @@ export const routes: RouteRecordRaw[] = [
         component: () => import('@/views/code-generator/mybatis-plus/index.vue'),
         meta: {
           title: 'MybatisPlus代码生成器',
-        },
-      },
-      {
-        path: 'go-generator',
-        name: 'GoCodeGenerator',
-        component: () => import('@/views/code-generator/go-generator/index.vue'),
-        meta: {
-          title: 'go代码生成器',
         },
       },
     ],
