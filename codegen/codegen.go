@@ -11,6 +11,7 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
 	"tomoto/util"
 
 	"gorm.io/driver/mysql"
@@ -102,9 +103,9 @@ func (m *Manager) mappingTableInfos() error {
 
 	// 获取表信息
 	for rows.Next() {
-		var tableinfo TableInfo
-		_ = rows.Scan(&tableinfo.Name, &tableinfo.Comment, &tableinfo.SchemaName)
-		m.TableInfos = append(m.TableInfos, &tableinfo)
+		var tableInfo TableInfo
+		_ = rows.Scan(&tableInfo.Name, &tableInfo.Comment, &tableInfo.SchemaName)
+		m.TableInfos = append(m.TableInfos, &tableInfo)
 	}
 
 	// 获取列信息
@@ -119,7 +120,7 @@ func (m *Manager) mappingTableInfos() error {
 
 func (m *Manager) columnsInfo() {
 	for _, tableInfo := range m.TableInfos {
-		tableInfo.ExecuteColumns(m.db)
+		_ = tableInfo.ExecuteColumns(m.db)
 	}
 }
 
@@ -139,7 +140,7 @@ func (m *Manager) CodeGenerate(config *ConfigContext) (string, error) {
 	}
 
 	// 1.生成 entity
-	var importPackages = []string{}
+	var importPackages []string
 
 	m.onCodeGenerate(importPackages, config.PackageConfig.Entity, strategy.Entity.FormatFileName, "entity.java.tmpl", ".java")
 
@@ -149,8 +150,6 @@ func (m *Manager) CodeGenerate(config *ConfigContext) (string, error) {
 	m.onCodeGenerate(importPackages, config.PackageConfig.ServiceImpl, strategy.Service.FormatServiceImplFileName, "service.impl.java.tmpl", ".java")
 	m.onCodeGenerate(importPackages, config.PackageConfig.Mapper, strategy.Mapper.FormatMapperFileName, "mapper.java.tmpl", ".java")
 	m.onCodeGenerate(importPackages, config.PackageConfig.MapperXml, strategy.Mapper.FormatXmlFileName, "mapper.xml.tmpl", ".xml")
-
-	m.t.Clone()
 
 	if !config.GlobalConfig.DisableOpenDir {
 		if err := openDir(config.GlobalConfig.OutputDir); err != nil {
@@ -163,14 +162,14 @@ func (m *Manager) CodeGenerate(config *ConfigContext) (string, error) {
 
 func openDir(dir string) error {
 	dir = filepath.Clean(dir)
-	os := runtime.GOOS
-	switch os {
+
+	switch runtime.GOOS {
 	case "windows":
 		return exec.Command("explorer", dir).Start()
 	case "darwin":
 		return exec.Command("open", dir).Start()
 	default:
-		return errors.New(os + "系统暂不支持打开文件夹命令")
+		return errors.New(runtime.GOOS + "系统暂不支持打开文件夹命令")
 	}
 }
 
@@ -180,11 +179,11 @@ func (m *Manager) onCodeGenerate(importPackages []string, packageName, FormatFil
 	pack = strings.ReplaceAll(pack, ".", "/")
 	path := filepath.Join(config.GlobalConfig.OutputDir, pack)
 	fileOverride := config.GlobalConfig.FileOverride
-	os.MkdirAll(path, 0666)
+	_ = os.MkdirAll(path, 0666)
 
 	// 遍历要生成的表
 	for _, tableInfo := range m.TableInfos {
-		className := util.SnakecaseToTitleCamel(tableInfo.Name)
+		className := util.SnakeCaseToTitleCamel(tableInfo.Name)
 		path := filepath.Join(path, fmt.Sprintf(FormatFileName, className)+suffix)
 		// 文件已存在，如果不覆盖则跳过
 		if m.skipCreateFile(path, fileOverride) {
@@ -195,8 +194,9 @@ func (m *Manager) onCodeGenerate(importPackages []string, packageName, FormatFil
 
 		file, _ := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0666)
 		// 执行渲染
-		m.t.ExecuteTemplate(file, templateName, templateData)
-		file.Close()
+		_ = m.t.ExecuteTemplate(file, templateName, templateData)
+
+		_ = file.Close()
 	}
 }
 
@@ -276,7 +276,7 @@ func (m *Manager) transformTemplateData(tableInfo *TableInfo, className string, 
 		SuperMapperClass:             mapperSuperClass,
 		MapperAnnotation:             strategy.Mapper.EnableMapperAnnotation,
 		ControllerMappingHyphenStyle: strategy.Controller.EnableHyphenStyle,
-		ControllerMappingHyphen:      util.CamelToKebabcase(table.EntityPath),
+		ControllerMappingHyphen:      util.CamelToKebabCase(table.EntityPath),
 		IdType:                       strategy.Entity.IdType,
 		SchemaName:                   schemaName,
 		EnableCache:                  false,
@@ -345,7 +345,7 @@ func (m *Manager) createTable(tableInfo *TableInfo, className string, importPack
 		// 是否是主键
 		keyFlag := column.KeyFlag == "PRI"
 
-		propertyName := util.SnakecaseToCamel(column.Name)
+		propertyName := util.SnakeCaseToCamel(column.Name)
 		capitalName := column.Name
 		// getter,setter方法是否移除Boolean类型的is前缀
 		if strings.HasPrefix(capitalName, "is_") &&
@@ -353,7 +353,7 @@ func (m *Manager) createTable(tableInfo *TableInfo, className string, importPack
 			strategy.Entity.EnableRemoveIsPrefix {
 			capitalName = capitalName[3:]
 		}
-		capitalName = util.SnakecaseToTitleCamel(capitalName)
+		capitalName = util.SnakeCaseToTitleCamel(capitalName)
 		// 是否开启乐观锁
 		versionField := strategy.Entity.VersionPropertyName == propertyName ||
 			strategy.Entity.VersionColumnName == column.Name
@@ -390,7 +390,7 @@ func (m *Manager) createTable(tableInfo *TableInfo, className string, importPack
 		Name:            tableInfo.Name,
 		Comment:         tableInfo.Comment,
 		ControllerName:  fmt.Sprintf(strategy.Controller.FormatFileName, className),
-		EntityPath:      util.SnakecaseToCamel(tableInfo.Name),
+		EntityPath:      util.SnakeCaseToCamel(tableInfo.Name),
 		Fields:          fields,
 		CommonFields:    []Field{},
 		ImportPackages:  importPackages,
@@ -459,7 +459,7 @@ func getSuperClass(superClassPack string) (superEntityClass string) {
 		// BaseModel
 		superEntityClass = superClasses[len(superClasses)-1]
 	} else {
-		superEntityClass = util.SnakecaseToTitleCamel(superClassPack)
+		superEntityClass = util.SnakeCaseToTitleCamel(superClassPack)
 	}
 	return
 }

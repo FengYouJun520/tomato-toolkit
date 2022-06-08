@@ -1,15 +1,15 @@
 <template>
   <div>
-    <t-button variant="text" shape="square" @click="visible = true" class="w-12 h-16">
+    <t-button class="w-12 h-16" shape="square" variant="text" @click="visible = true">
       <template #icon>
-        <t-icon size="20" name="setting" />
+        <t-icon name="setting" size="20" />
       </template>
     </t-button>
 
-    <t-drawer v-model:visible="visible" header="页面设置" :footer="false">
+    <t-drawer v-model:visible="visible" :footer="false" header="页面设置">
       <t-form>
         <div class="setting-title">主题设置</div>
-        <t-radio-group class="gap-x-3" :value="themeStore.theme" @change="handleThemeChange">
+        <t-radio-group :value="themeStore.theme" class="gap-x-3" @change="handleThemeChange">
           <div v-for="mode in ThemeModes" :key="mode.type" class="radio-setting">
             <div class="flex flex-col items-center">
               <t-radio-button :key="mode.type" :value="mode.type">
@@ -23,7 +23,7 @@
     </t-drawer>
   </div>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import AutoIcon from '@/assets/auto.svg'
 import DarkIcon from '@/assets/moon.svg'
 import LightIcon from '@/assets/sun.svg'
@@ -61,8 +61,6 @@ const getModeIcon = (type: string) => {
 }
 
 const handleThemeChange = (theme: RadioValue) => {
-  console.log(theme)
-
   themeStore.toggleTheme(theme.toString() as ThemeType)
 }
 </script>

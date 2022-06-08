@@ -48,7 +48,7 @@ func TestSnakecaseToTitleCamel(t *testing.T) {
 	}
 
 	for _, v := range tests {
-		res := SnakecaseToTitleCamel(v.input)
+		res := SnakeCaseToTitleCamel(v.input)
 		if res != v.expect {
 			t.Fatalf("input: %v, res: %v, expect: %v\n", v.input, res, v.expect)
 		}
@@ -101,7 +101,7 @@ func TestSnakecaseToCamel(t *testing.T) {
 	}
 
 	for _, v := range tests {
-		res := SnakecaseToCamel(v.input)
+		res := SnakeCaseToCamel(v.input)
 		if res != v.expect {
 			t.Fatalf("input: %v, res: %v, expect: %v\n", v.input, res, v.expect)
 		}
@@ -134,7 +134,7 @@ func TestCameToKebabcase(t *testing.T) {
 	}
 
 	for _, v := range tests {
-		res := CamelToKebabcase(v.input)
+		res := CamelToKebabCase(v.input)
 		if res != v.expect {
 			t.Fatalf("input: %v, res: %v, expect: %v\n", v.input, res, v.expect)
 		}

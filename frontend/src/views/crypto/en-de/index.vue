@@ -1,34 +1,34 @@
 <template>
   <to-page title="加解密工具">
     <div class="flex flex-col">
-      <t-form label-align="top" colon :data="cryptoModel">
+      <t-form :data="cryptoModel" colon label-align="top">
         <t-row :gutter="[24, 24]">
-          <t-col :xs="12" :md="6">
+          <t-col :md="6" :xs="12">
             <t-form-item label="类型">
-              <t-select :options="cryptoOptions" v-model="cryptoModel.typ" />
+              <t-select v-model="cryptoModel.typ" :options="cryptoOptions" />
             </t-form-item>
           </t-col>
-          <t-col :xs="12" :md="6">
+          <t-col :md="6" :xs="12">
             <t-form-item label="盐(salt)">
               <t-input v-model="cryptoModel.cost" clearable />
             </t-form-item>
           </t-col>
 
-          <t-col :xs="12" :md="6" v-if="cryptoModel.typ === 'rsa'">
+          <t-col v-if="cryptoModel.typ === 'rsa'" :md="6" :xs="12">
             <t-form-item label="公钥">
               <t-textarea
                 v-model="cryptoModel.publicKey"
-                clearable
                 :autosize="{ minRows: 5, maxRows: 10 }"
+                clearable
               />
             </t-form-item>
           </t-col>
-          <t-col :xs="12" :md="6" v-if="cryptoModel.typ === 'rsa'">
+          <t-col v-if="cryptoModel.typ === 'rsa'" :md="6" :xs="12">
             <t-form-item label="私钥">
               <t-textarea
                 v-model="cryptoModel.privateKey"
-                clearable
                 :autosize="{ minRows: 5, maxRows: 10 }"
+                clearable
               />
             </t-form-item>
           </t-col>
@@ -50,7 +50,7 @@
     </div>
   </to-page>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import ToPage from '@/components/ToPage/index.vue'
 import { Encode } from '@/wailsjs/go/crypt/Crypt'
 import { crypt } from '@/wailsjs/go/models'
@@ -130,7 +130,7 @@ watch([() => cryptoModel.source, () => cryptoModel.typ], () => {
     return
   }
 
-  Encode(crypt.CryptConfig.createFrom(toRaw(cryptoModel)))
+  Encode(crypt.Config.createFrom(toRaw(cryptoModel)))
     .then((dest: any) => {
       cryptoModel.dest = dest as string
     })

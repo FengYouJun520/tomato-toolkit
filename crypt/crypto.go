@@ -19,7 +19,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type CryptConfig struct {
+// Config CryptConfig
+type Config struct {
 	Typ        string `json:"typ"`
 	Cost       string `json:"cost"`
 	Source     string `json:"source"`
@@ -35,7 +36,7 @@ func NewCrypt() *Crypt {
 	return &Crypt{}
 }
 
-func (c *Crypt) Encode(cryptConfig *CryptConfig) (string, error) {
+func (c *Crypt) Encode(cryptConfig *Config) (string, error) {
 	switch cryptConfig.Typ {
 	case "md5", "sha1", "sha256", "sha512":
 		return c.byHmac(cryptConfig)
@@ -50,7 +51,7 @@ func (c *Crypt) Encode(cryptConfig *CryptConfig) (string, error) {
 	}
 }
 
-func (c *Crypt) byHmac(cryptConfig *CryptConfig) (string, error) {
+func (c *Crypt) byHmac(cryptConfig *Config) (string, error) {
 	var h hash.Hash
 	switch cryptConfig.Typ {
 	case "md5":
@@ -69,7 +70,7 @@ func (c *Crypt) byHmac(cryptConfig *CryptConfig) (string, error) {
 	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
-func (c *Crypt) byRsa(cryptConfig *CryptConfig) (string, error) {
+func (c *Crypt) byRsa(cryptConfig *Config) (string, error) {
 	block, _ := pem.Decode([]byte(cryptConfig.PublicKey))
 	if block == nil {
 		return "", errors.New("public key error")
@@ -81,7 +82,7 @@ func (c *Crypt) byRsa(cryptConfig *CryptConfig) (string, error) {
 	}
 	// 类型断言
 	pub := pubInterface.(*rsa.PublicKey)
-	//加密
+	// 加密
 	dest, err := rsa.EncryptPKCS1v15(rand.Reader, pub, []byte(cryptConfig.Source))
 	if err != nil {
 		return "", nil
@@ -90,7 +91,7 @@ func (c *Crypt) byRsa(cryptConfig *CryptConfig) (string, error) {
 	return hex.EncodeToString(dest), nil
 }
 
-func (c *Crypt) byBcrypt(cryptConfig *CryptConfig) (string, error) {
+func (c *Crypt) byBcrypt(cryptConfig *Config) (string, error) {
 	encodePass, err := bcrypt.GenerateFromPassword([]byte(cryptConfig.Source), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
@@ -99,6 +100,6 @@ func (c *Crypt) byBcrypt(cryptConfig *CryptConfig) (string, error) {
 	return string(encodePass), nil
 }
 
-func (c *Crypt) byBase64(cryptConfig *CryptConfig) (string, error) {
+func (c *Crypt) byBase64(cryptConfig *Config) (string, error) {
 	return base64.StdEncoding.EncodeToString([]byte(cryptConfig.Source)), nil
 }

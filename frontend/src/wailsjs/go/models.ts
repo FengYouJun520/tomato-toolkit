@@ -1,21 +1,39 @@
 export namespace codegen {
 	
-	export class Mapper {
-	    superClass: string;
-	    enableMapperAnnotation: boolean;
-	    formatMapperFileName: string;
-	    formatXmlFileName: string;
+	export class DataSourceConfig {
+	    typ: string;
+	    database: string;
+	    username: string;
+	    password: string;
+	    host: string;
+	    port: number;
 	
 	    static createFrom(source: any = {}) {
-	        return new Mapper(source);
+	        return new DataSourceConfig(source);
 	    }
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.superClass = source["superClass"];
-	        this.enableMapperAnnotation = source["enableMapperAnnotation"];
-	        this.formatMapperFileName = source["formatMapperFileName"];
-	        this.formatXmlFileName = source["formatXmlFileName"];
+	        this.typ = source["typ"];
+	        this.database = source["database"];
+	        this.username = source["username"];
+	        this.password = source["password"];
+	        this.host = source["host"];
+	        this.port = source["port"];
+	    }
+	}
+	export class DatabaseOptions {
+	    name: string;
+	    comment: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DatabaseOptions(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.comment = source["comment"];
 	    }
 	}
 	export class Service {
@@ -34,6 +52,24 @@ export namespace codegen {
 	        this.superServiceImplClass = source["superServiceImplClass"];
 	        this.formatServiceFileName = source["formatServiceFileName"];
 	        this.formatServiceImplFileName = source["formatServiceImplFileName"];
+	    }
+	}
+	export class Mapper {
+	    superClass: string;
+	    enableMapperAnnotation: boolean;
+	    formatMapperFileName: string;
+	    formatXmlFileName: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Mapper(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.superClass = source["superClass"];
+	        this.enableMapperAnnotation = source["enableMapperAnnotation"];
+	        this.formatMapperFileName = source["formatMapperFileName"];
+	        this.formatXmlFileName = source["formatXmlFileName"];
 	    }
 	}
 	export class Controller {
@@ -179,43 +215,6 @@ export namespace codegen {
 		    }
 		    return a;
 		}
-	}
-	
-	export class DataSourceConfig {
-	    typ: string;
-	    database: string;
-	    username: string;
-	    password: string;
-	    host: string;
-	    port: number;
-	
-	    static createFrom(source: any = {}) {
-	        return new DataSourceConfig(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.typ = source["typ"];
-	        this.database = source["database"];
-	        this.username = source["username"];
-	        this.password = source["password"];
-	        this.host = source["host"];
-	        this.port = source["port"];
-	    }
-	}
-	export class DatabaseOptions {
-	    name: string;
-	    comment: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new DatabaseOptions(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.name = source["name"];
-	        this.comment = source["comment"];
-	    }
 	}
 	export class TemplateConfig {
 	    disableAll: boolean;
@@ -374,12 +373,16 @@ export namespace codegen {
 	
 	
 	
+	
+	
+	
+	
 
 }
 
 export namespace crypt {
 	
-	export class CryptConfig {
+	export class Config {
 	    typ: string;
 	    cost: string;
 	    source: string;
@@ -387,7 +390,7 @@ export namespace crypt {
 	    privateKey: string;
 	
 	    static createFrom(source: any = {}) {
-	        return new CryptConfig(source);
+	        return new Config(source);
 	    }
 	
 	    constructor(source: any = {}) {
