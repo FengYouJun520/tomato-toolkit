@@ -5,6 +5,7 @@ import App from './App.vue'
 import router, { setupRouter } from './router'
 import { setupStore } from './store'
 import './styles/index.css'
+import 'uno.css'
 
 async function bootstrap() {
   const app = createApp(App)
@@ -16,4 +17,4 @@ async function bootstrap() {
   app.mount('#app')
 }
 
-bootstrap()
+await bootstrap()

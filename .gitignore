@@ -1,2 +1,5 @@
 build/bin
 build/windows/installer
+frontend/dist
+frontend/node_modules
+.idea

@@ -43,7 +43,7 @@ require (
 	github.com/tkrajina/go-reflector v0.5.6 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	golang.org/x/net v0.0.0-20220325170049-de3da57026de // indirect
-	golang.org/x/sys v0.0.0-20220328115105-d36c6a25d886 // indirect
+	golang.org/x/sys v0.0.0-20220330033206-e17cdc41300f // indirect
 )
 
 // replace github.com/wailsapp/wails/v2 v2.0.0-beta.34 => C:\Users\czx\go\pkg\mod\github.com\wailsapp\wails\v2@v2.0.0-beta.34

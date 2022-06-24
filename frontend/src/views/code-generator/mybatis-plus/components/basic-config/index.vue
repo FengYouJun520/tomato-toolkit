@@ -10,16 +10,17 @@
               :value="option.value"
               :disabled="option.disabled"
             >
-              <div class="flex items-center gap-6">
-                <component :is="option.icon" class="w-6 h-6" />
+              <div flex items-center gap-6>
+                <component :is="option.icon" w-6 h-6 />
                 {{ option.label }}
               </div>
             </t-option>
             <template #valueDisplay="{ value }">
-              <div class="flex items-center gap-3">
+              <div flex items-center gap-3>
                 <component
                   :is="databaseOptions.find((database) => database.value === value)?.icon"
-                  class="w-6 h-6"
+                  w-6
+                  h-6
                 />
                 <t-tag theme="success" variant="light"> {{ value }} </t-tag>
               </div>
@@ -61,7 +62,7 @@
         </t-form-item>
       </t-col>
     </t-row>
-    <t-row :gutter="[24, 24]" class="mt-6">
+    <t-row :gutter="[24, 24]" mt-6>
       <t-col :span="12" class="flex justify-center gap-3">
         <t-button @click="testConnection">测试</t-button>
         <t-button theme="warning" @click="basicStore.clearBasic">重置</t-button>

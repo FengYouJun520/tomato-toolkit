@@ -1,13 +1,13 @@
 <template>
   <div>
     <t-form label-align="right" :label-width="140" colon>
-      <t-row :gutter="[24, 24]" class="mt-6">
+      <t-row :gutter="[24, 24]" mt-6>
         <t-col>
           <t-button theme="warning" @click="templateStore.clearTemplate">重置</t-button>
         </t-col>
       </t-row>
 
-      <t-row :gutter="[24, 24]" class="mt-6">
+      <t-row :gutter="[24, 24]" mt-6>
         <t-col :xs="12" :md="6" :lg="4">
           <t-form-item label="禁用所有模板">
             <t-radio-group disabled variant="primary-filled" :default-value="false">

@@ -1,13 +1,13 @@
 <template>
   <div>
     <t-form label-align="right" :label-width="120" colon :data="strategyStore.strategy">
-      <t-row :gutter="[24, 24]" class="mt-6">
+      <t-row :gutter="[24, 24]" mt-6>
         <t-col>
           <t-button theme="warning" @click="strategyStore.clearStrategy">重置</t-button>
         </t-col>
       </t-row>
 
-      <t-row :gutter="[24, 24]" class="mt-6">
+      <t-row :gutter="[24, 24]" mt-6>
         <t-col :xs="12" :md="6">
           <t-form-item label="开启大写命名">
             <t-radio-group

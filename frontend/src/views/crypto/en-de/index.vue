@@ -1,6 +1,6 @@
 <template>
   <to-page title="加解密工具">
-    <div class="flex flex-col">
+    <div flex flex-col>
       <t-form :data="cryptoModel" colon label-align="top">
         <t-row :gutter="[24, 24]">
           <t-col :md="6" :xs="12">

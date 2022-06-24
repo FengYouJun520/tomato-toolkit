@@ -1,12 +1,12 @@
 <template>
   <to-page>
     <template #title>
-      <div class="flex items-center gap-3">
-        <img :src="MybatisIcon" alt="mybatis-plus" class="h-12" />
+      <div flex items-center gap-3>
+        <img :src="MybatisIcon" alt="mybatis-plus" h-12 />
         <div>Mybatis-Plus代码生成器</div>
       </div>
     </template>
-    <div class="flex flex-col gap-y-3">
+    <div flex flex-col gap-y-3>
       <!-- 基础配置 -->
       <basic-config />
 
@@ -30,7 +30,7 @@
     </div>
 
     <template #footer>
-      <div class="flex justify-center">
+      <div flex justify-center>
         <t-button
           block
           @click="executeGenerate"

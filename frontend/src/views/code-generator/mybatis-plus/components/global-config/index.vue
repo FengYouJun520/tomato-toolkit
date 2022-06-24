@@ -1,12 +1,12 @@
 <template>
   <div>
     <t-form label-align="right" :label-width="140" colon :data="globalStore.global">
-      <t-row :gutter="[24, 24]" class="mt-6">
+      <t-row :gutter="[24, 24]" mt-6>
         <t-col>
           <t-button theme="warning" @click="globalStore.clearGlobal">重置</t-button>
         </t-col>
       </t-row>
-      <t-row :gutter="[24, 24]" class="mt-6">
+      <t-row :gutter="[24, 24]" mt-6>
         <t-col :span="12">
           <t-form-item label="作者名称">
             <t-input v-model="globalStore.global.author" />
@@ -14,7 +14,7 @@
         </t-col>
       </t-row>
 
-      <t-row :gutter="[24, 24]" class="mt-6">
+      <t-row :gutter="[24, 24]" mt-6>
         <t-col :xs="12" :md="6" :lg="4">
           <t-form-item label="覆盖已生成文件">
             <t-radio-group v-model="globalStore.global.fileOverride" variant="primary-filled">
@@ -62,7 +62,7 @@
           </t-form-item>
         </t-col>
       </t-row>
-      <t-row class="mt-6">
+      <t-row mt-6>
         <t-col>
           <t-form-item label="指定输出目录">
             <t-input v-model="globalStore.global.outputDir" />

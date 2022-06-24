@@ -23,7 +23,7 @@
     "companyName": "tomato-toolkit",
     "productName": "tomato-toolkit",
     "productVersion": "1.0.0",
-    "copyright": "Copyright.........",
+    "copyright": "Copyright 2022 FengYouJun",
     "comments": "Built using Wails (https://wails.app)"
   },
   "debounceMS": 100,

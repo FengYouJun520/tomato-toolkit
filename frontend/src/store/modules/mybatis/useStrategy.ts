@@ -1,5 +1,5 @@
 import { StrategyConfig } from '@/types/mybatis-plus'
-import { FillInput } from '@/views/mybatis-plus/generator/components/strategy-config/strategy-right/data'
+import { FillInput } from '@/views/code-generator/mybatis-plus/components/strategy-config/strategy-right/data'
 import { nanoid } from 'nanoid'
 import { defineStore } from 'pinia'
 import { useBasic } from './useBasic'

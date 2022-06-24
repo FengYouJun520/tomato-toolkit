@@ -70,7 +70,7 @@
     </t-form>
 
     <template #footer>
-      <div class="flex items-center">
+      <div flex items-center>
         <span>灵感来源：</span>
         <t-button variant="text" shape="circle" @click="handleInspiration">
           <template #icon>
@@ -84,6 +84,7 @@
 <script setup lang="ts">
 import ToPage from '@/components/ToPage/index.vue'
 import { IJson2TsConfig, Json2Ts } from './json2ts'
+import { BrowserOpenURL } from '@/wailsjs/runtime'
 
 interface Json2TsProps {
   source: string
@@ -124,9 +125,7 @@ watch(
 )
 
 const handleInspiration = () => {
-  window.runtime.BrowserOpenURL(
-    'https://github.com/beshanoe/json2ts/blob/master/src/utils/json2.ts'
-  )
+  BrowserOpenURL('https://github.com/beshanoe/json2ts/blob/master/src/utils/json2.ts')
 }
 </script>
 

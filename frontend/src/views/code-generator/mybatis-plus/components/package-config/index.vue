@@ -1,13 +1,13 @@
 <template>
   <div>
     <t-form label-align="right" :label-width="140" colon :data="packageStore.package">
-      <t-row :gutter="[24, 24]" class="mt-6">
+      <t-row :gutter="[24, 24]" mt-6>
         <t-col>
           <t-button theme="warning" @click="packageStore.clearPackage">重置</t-button>
         </t-col>
       </t-row>
 
-      <t-row :gutter="[24, 24]" class="mt-6">
+      <t-row :gutter="[24, 24]" mt-6>
         <t-col :xs="12" :md="6" :lg="4">
           <t-form-item label="父包名">
             <t-input v-model="packageStore.package.parent" />
