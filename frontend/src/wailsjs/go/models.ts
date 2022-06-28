@@ -1,52 +1,5 @@
-export namespace crypt {
-	
-	export class Config {
-	    typ: string;
-	    cost: string;
-	    source: string;
-	    publicKey: string;
-	    privateKey: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new Config(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.typ = source["typ"];
-	        this.cost = source["cost"];
-	        this.source = source["source"];
-	        this.publicKey = source["publicKey"];
-	        this.privateKey = source["privateKey"];
-	    }
-	}
-
-}
-
 export namespace codegen {
 	
-	export class DataSourceConfig {
-	    typ: string;
-	    database: string;
-	    username: string;
-	    password: string;
-	    host: string;
-	    port: number;
-	
-	    static createFrom(source: any = {}) {
-	        return new DataSourceConfig(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.typ = source["typ"];
-	        this.database = source["database"];
-	        this.username = source["username"];
-	        this.password = source["password"];
-	        this.host = source["host"];
-	        this.port = source["port"];
-	    }
-	}
 	export class DatabaseOptions {
 	    name: string;
 	    comment: string;
@@ -361,6 +314,28 @@ export namespace codegen {
 	        this.commentDate = source["commentDate"];
 	    }
 	}
+	export class DataSourceConfig {
+	    typ: string;
+	    database: string;
+	    username: string;
+	    password: string;
+	    host: string;
+	    port: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new DataSourceConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.typ = source["typ"];
+	        this.database = source["database"];
+	        this.username = source["username"];
+	        this.password = source["password"];
+	        this.host = source["host"];
+	        this.port = source["port"];
+	    }
+	}
 	export class ConfigContext {
 	    dataSource?: DataSourceConfig;
 	    // Go type: GlobalConfig
@@ -402,6 +377,31 @@ export namespace codegen {
 		    }
 		    return a;
 		}
+	}
+
+}
+
+export namespace crypt {
+	
+	export class Config {
+	    typ: string;
+	    cost: string;
+	    source: string;
+	    publicKey: string;
+	    privateKey: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Config(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.typ = source["typ"];
+	        this.cost = source["cost"];
+	        this.source = source["source"];
+	        this.publicKey = source["publicKey"];
+	        this.privateKey = source["privateKey"];
+	    }
 	}
 
 }

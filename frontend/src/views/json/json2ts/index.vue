@@ -79,12 +79,21 @@
         </t-button>
       </div>
     </template>
+    <template #extract>
+      <t-button @click="convert">
+        <template #icon>
+          <precise-monitor-icon />
+        </template>
+      </t-button>
+    </template>
   </to-page>
 </template>
 <script setup lang="ts">
 import ToPage from '@/components/ToPage/index.vue'
 import { IJson2TsConfig, Json2Ts } from './json2ts'
 import { BrowserOpenURL } from '@/wailsjs/runtime'
+import { MessagePlugin } from 'tdesign-vue-next'
+import { PreciseMonitorIcon } from 'tdesign-icons-vue-next'
 
 interface Json2TsProps {
   source: string
@@ -112,17 +121,19 @@ const convert = () => {
   }
 
   const json2ts = new Json2Ts(formData.config)
-  const result = json2ts.convert(JSON.parse(toRaw(formData.source)))
-  formData.result = result
+  try {
+    const obj = JSON.parse(toRaw(formData.source))
+    if (obj) {
+      const result = json2ts.convert(obj)
+      formData.result = result
+    }
+  } catch (error) {
+    MessagePlugin.error({
+      content: '请检查JSON格式是否正确',
+      duration: 2000,
+    })
+  }
 }
-
-watch(
-  formData,
-  () => {
-    convert()
-  },
-  { deep: true }
-)
 
 const handleInspiration = () => {
   BrowserOpenURL('https://github.com/beshanoe/json2ts/blob/master/src/utils/json2.ts')
