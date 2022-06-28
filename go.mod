@@ -3,7 +3,7 @@ module tomoto
 go 1.18
 
 require (
-	github.com/wailsapp/wails/v2 v2.0.0-beta.36
+	github.com/wailsapp/wails/v2 v2.0.0-beta.38
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292
 	golang.org/x/text v0.3.7
 	gorm.io/driver/mysql v1.3.2
@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/bep/debounce v1.2.1 // indirect
 	github.com/labstack/echo/v4 v4.7.2 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
@@ -33,7 +34,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/leaanthony/go-ansi-parser v1.4.0 // indirect
-	github.com/leaanthony/go-common-file-dialog v1.0.3 // indirect
 	github.com/leaanthony/gosod v1.0.3 // indirect
 	github.com/leaanthony/slicer v1.6.0 // indirect
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8 // indirect

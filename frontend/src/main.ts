@@ -1,11 +1,11 @@
 import TDesign from 'tdesign-vue-next'
-import 'tdesign-vue-next/es/style/index.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router, { setupRouter } from './router'
 import { setupStore } from './store'
-import './styles/index.css'
 import 'uno.css'
+import 'tdesign-vue-next/es/style/index.css'
+import './styles/index.css'
 
 async function bootstrap() {
   const app = createApp(App)
@@ -17,4 +17,4 @@ async function bootstrap() {
   app.mount('#app')
 }
 
-await bootstrap()
+bootstrap()

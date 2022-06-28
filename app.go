@@ -74,7 +74,6 @@ func (a *App) shutdown(ctx context.Context) {
 
 func (a *App) PingDb(dataSource codegen.DataSourceConfig) ([]codegen.DatabaseOptions, error) {
     var (
-        // dsn = "" comment
         dsn = ""
         db  *gorm.DB
         err error

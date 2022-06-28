@@ -22,9 +22,9 @@
   "Info": {
     "companyName": "tomato-toolkit",
     "productName": "tomato-toolkit",
-    "productVersion": "1.0.0",
+    "productVersion": "1.1.0",
     "copyright": "Copyright 2022 FengYouJun",
-    "comments": "Built using Wails (https://wails.app)"
+    "comments": "https://github.com/FengYouJun520/tomato-toolkit"
   },
   "debounceMS": 100,
   "devserverurl": "localhost:22330",
