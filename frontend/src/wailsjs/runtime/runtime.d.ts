@@ -9,20 +9,27 @@ The electron alternative for Go
 */
 
 export interface Position {
-    x: number;
-    y: number;
+  x: number;
+  y: number;
 }
 
 export interface Size {
-    w: number;
-    h: number;
+  w: number;
+  h: number;
+}
+
+export interface Screen {
+  isCurrent: boolean;
+  isPrimary: boolean;
+  width: number
+  height: number
 }
 
 // Environment information such as platform, buildtype, ...
 export interface EnvironmentInfo {
-    buildType: string;
-    platform: string;
-    arch: string;
+  buildType: string;
+  platform: string;
+  arch: string;
 }
 
 // [EventsEmit](https://wails.io/docs/reference/runtime/events#eventsemit)
@@ -167,9 +174,13 @@ export function WindowMinimise(): void;
 // Restores the window to the dimensions and position prior to minimising.
 export function WindowUnminimise(): void;
 
-// [WindowSetRGBA](https://wails.io/docs/reference/runtime/window#windowsetrgba)
+// [WindowSetBackgroundColour](https://wails.io/docs/reference/runtime/window#windowsetbackgroundcolour)
 // Sets the background colour of the window to the given RGBA colour definition. This colour will show through for all transparent pixels.
-export function WindowSetRGBA(R: number, G: number, B: number, A: number): void;
+export function WindowSetBackgroundColour(R: number, G: number, B: number, A: number): void;
+
+// [ScreenGetAll](https://wails.io/docs/reference/runtime/window#screengetall)
+// Gets the all screens. Call this anew each time you want to refresh data from the underlying windowing system.
+export function ScreenGetAll(): Promise<Screen[]>;
 
 // [BrowserOpenURL](https://wails.io/docs/reference/runtime/browser#browseropenurl)
 // Opens the given URL in the system browser.

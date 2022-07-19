@@ -138,23 +138,27 @@ export function WindowUnmaximise() {
 }
 
 export function WindowMinimise() {
-    window.runtime.WindowMinimise();
+  window.runtime.WindowMinimise();
 }
 
 export function WindowUnminimise() {
-    window.runtime.WindowUnminimise();
+  window.runtime.WindowUnminimise();
 }
 
-export function WindowSetRGBA(RGBA) {
-    window.runtime.WindowSetRGBA(RGBA);
+export function WindowSetBackgroundColour(R, G, B, A) {
+  window.runtime.WindowSetBackgroundColour(R, G, B, A);
+}
+
+export function ScreenGetAll() {
+  return window.runtime.ScreenGetAll();
 }
 
 export function BrowserOpenURL(url) {
-    window.runtime.BrowserOpenURL(url);
+  window.runtime.BrowserOpenURL(url);
 }
 
 export function Environment() {
-    return window.runtime.Environment();
+  return window.runtime.Environment();
 }
 
 export function Quit() {
