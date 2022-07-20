@@ -1,6 +1,6 @@
 <template>
   <div>
-    <t-form label-align="right" :label-width="160" colon :data="strategyStore.strategy.entity">
+    <t-form :data="strategyStore.strategy.entity" :label-width="160" colon label-align="right">
       <t-row :gutter="[24, 24]" mt-6>
         <t-col>
           <t-button theme="warning" @click="strategyStore.clearStrategy">重置</t-button>
@@ -8,7 +8,7 @@
       </t-row>
 
       <t-row :gutter="[24, 24]" mt-6>
-        <t-col :xs="12" :md="6">
+        <t-col :md="6" :xs="12">
           <t-form-item label="禁用SerialVersionUID">
             <t-radio-group
               v-model="strategyStore.strategy.entity.disableSerialVersionUID"
@@ -19,7 +19,7 @@
             </t-radio-group>
           </t-form-item>
         </t-col>
-        <t-col :xs="12" :md="6">
+        <t-col :md="6" :xs="12">
           <t-form-item label="使用链式模式">
             <t-radio-group
               v-model="strategyStore.strategy.entity.enableChainModel"
@@ -30,7 +30,7 @@
             </t-radio-group>
           </t-form-item>
         </t-col>
-        <t-col :xs="12" :md="6">
+        <t-col :md="6" :xs="12">
           <t-form-item label="使用lombok">
             <t-radio-group
               v-model="strategyStore.strategy.entity.enableLombok"
@@ -41,7 +41,7 @@
             </t-radio-group>
           </t-form-item>
         </t-col>
-        <t-col :xs="12" :md="6">
+        <t-col :md="6" :xs="12">
           <t-form-item label="使用record">
             <t-radio-group
               v-model="strategyStore.strategy.entity.enableActiveRecord"
@@ -52,7 +52,7 @@
             </t-radio-group>
           </t-form-item>
         </t-col>
-        <t-col :xs="12" :md="6">
+        <t-col :md="6" :xs="12">
           <t-form-item label="使用静态常量字段">
             <t-radio-group
               v-model="strategyStore.strategy.entity.enableColumnConstant"
@@ -63,7 +63,7 @@
             </t-radio-group>
           </t-form-item>
         </t-col>
-        <t-col :xs="12" :md="6">
+        <t-col :md="6" :xs="12">
           <t-form-item label="移除Boolean类型is前缀">
             <t-radio-group
               v-model="strategyStore.strategy.entity.enableRemoveIsPrefix"
@@ -79,41 +79,41 @@
       <t-row :gutter="[24, 24]" class="mt-6">
         <t-col>
           <t-form-item label="父类包名">
-            <t-input v-model="strategyStore.strategy.entity.superClass" />
+            <t-input v-model="strategyStore.strategy.entity.superClass"/>
           </t-form-item>
         </t-col>
         <t-col>
           <t-form-item label="乐观锁属性名">
-            <t-input v-model="strategyStore.strategy.entity.versionPropertyName" />
+            <t-input v-model="strategyStore.strategy.entity.versionPropertyName"/>
           </t-form-item>
         </t-col>
         <t-col>
           <t-form-item label="乐观锁字段名">
-            <t-input v-model="strategyStore.strategy.entity.versionColumnName" />
+            <t-input v-model="strategyStore.strategy.entity.versionColumnName"/>
           </t-form-item>
         </t-col>
         <t-col>
           <t-form-item label="逻辑删除属性名">
-            <t-input v-model="strategyStore.strategy.entity.logicDeletePropertyName" />
+            <t-input v-model="strategyStore.strategy.entity.logicDeletePropertyName"/>
           </t-form-item>
         </t-col>
         <t-col>
           <t-form-item label="逻辑删除字段名">
-            <t-input v-model="strategyStore.strategy.entity.logicDeleteColumnName" />
+            <t-input v-model="strategyStore.strategy.entity.logicDeleteColumnName"/>
           </t-form-item>
         </t-col>
 
         <t-col>
           <t-form-item label="实体命名策略">
-            <t-select :options="namingOptions" v-model="strategyStore.strategy.entity.naming" />
+            <t-select v-model="strategyStore.strategy.entity.naming" :options="namingOptions"/>
           </t-form-item>
         </t-col>
         <t-col>
           <t-form-item label="添加忽略字段">
             <t-tag-input
               v-model="strategyStore.strategy.entity.addIgnoreColumns"
-              excess-tags-display-type="break-line"
               clearable
+              excess-tags-display-type="break-line"
             />
           </t-form-item>
         </t-col>
@@ -121,13 +121,13 @@
           <t-form-item label="自动填充字段">
             <div v-if="strategyStore.addTableFillsIsExist" class="flex flex-col gap-6">
               <t-input-group
-                separate
                 v-for="fillField in strategyStore.strategy.entity.addTableFills"
                 :key="fillField.key"
+                separate
               >
                 <t-row>
                   <t-col :span="4">
-                    <t-input v-model="fillField.name" style="width: 140px" />
+                    <t-input v-model="fillField.name" style="width: 140px"/>
                   </t-col>
                   <t-col :span="1" class="text-center">
                     <span class="text-center align-middle">-</span>
@@ -154,21 +154,21 @@
         </t-col>
         <t-col>
           <t-form-item label="全局主键类型">
-            <t-select :options="assignIds" v-model="strategyStore.strategy.entity.idType" />
+            <t-select v-model="strategyStore.strategy.entity.idType" :options="assignIds"/>
           </t-form-item>
         </t-col>
         <t-col>
           <t-form-item label="类文件格式">
-            <t-input v-model="strategyStore.strategy.entity.formatFileName" />
+            <t-input v-model="strategyStore.strategy.entity.formatFileName"/>
           </t-form-item>
         </t-col>
       </t-row>
     </t-form>
   </div>
 </template>
-<script setup lang="ts">
-import { useStrategy } from '@/store/modules/mybatis/useStrategy'
-import { assignIds, fillOptions } from './data'
+<script lang="ts" setup>
+import {useStrategy} from '@/store/modules/mybatis/useStrategy'
+import {assignIds, fillOptions} from './data'
 
 const strategyStore = useStrategy()
 

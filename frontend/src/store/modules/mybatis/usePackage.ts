@@ -1,5 +1,5 @@
-import { PackageConfig } from '@/types/mybatis-plus'
-import { defineStore } from 'pinia'
+import {PackageConfig} from '@/types/mybatis-plus'
+import {defineStore} from 'pinia'
 
 interface PackageState {
   package: PackageConfig

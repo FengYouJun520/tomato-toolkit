@@ -2,7 +2,7 @@
   <div>
     <t-button class="w-12 h-16" shape="square" variant="text" @click="visible = true">
       <template #icon>
-        <t-icon name="setting" size="20" />
+        <t-icon name="setting" size="20"/>
       </template>
     </t-button>
 
@@ -13,7 +13,7 @@
           <div v-for="mode in ThemeModes" :key="mode.type" class="radio-setting">
             <div class="flex flex-col items-center">
               <t-radio-button :key="mode.type" :value="mode.type">
-                <component :is="getModeIcon(mode.type)" class="w-20 h-10" />
+                <component :is="getModeIcon(mode.type)" class="w-20 h-10"/>
               </t-radio-button>
               <p>{{ mode.label }}</p>
             </div>
@@ -27,8 +27,8 @@
 import AutoIcon from '@/assets/auto.svg'
 import DarkIcon from '@/assets/moon.svg'
 import LightIcon from '@/assets/sun.svg'
-import { ThemeType, useThemeStore } from '@/store/modules/theme'
-import { RadioValue } from 'tdesign-vue-next'
+import {ThemeType, useThemeStore} from '@/store/modules/theme'
+import {RadioValue} from 'tdesign-vue-next'
 
 const ThemeModes = [
   {
@@ -113,6 +113,7 @@ const handleThemeChange = (theme: RadioValue) => {
   .t-is-checked {
     border: 2px solid var(--td-brand-color) !important;
   }
+
   .t-form__controls-content {
     justify-content: end;
   }

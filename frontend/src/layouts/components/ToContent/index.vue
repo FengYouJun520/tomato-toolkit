@@ -1,15 +1,15 @@
 <template>
   <t-content>
     <router-view v-slot="{ Component, route }">
-      <transition name="slide-fade" appear mode="out-in">
+      <transition appear mode="out-in" name="slide-fade">
         <keep-alive>
-          <component :is="Component" :key="route.fullpath" />
+          <component :is="Component" :key="route.fullpath"/>
         </keep-alive>
       </transition>
     </router-view>
   </t-content>
 </template>
-<script setup lang="ts"></script>
+<script lang="ts" setup></script>
 
 <style scoped>
 .t-layout__content {

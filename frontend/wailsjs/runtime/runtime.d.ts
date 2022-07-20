@@ -1,79 +1,79 @@
 export interface Position {
-    x: number;
-    y: number;
+  x: number;
+  y: number;
 }
 
 export interface Size {
-    w: number;
-    h: number;
+  w: number;
+  h: number;
 }
 
 export interface runtime {
-    EventsEmit(eventName: string, data?: any): void;
+  EventsEmit(eventName: string, data?: any): void;
 
-    EventsOn(eventName: string, callback: (data?: any) => void): void;
+  EventsOn(eventName: string, callback: (data?: any) => void): void;
 
-    EventsOnMultiple(eventName: string, callback: (data?: any) => void, maxCallbacks: number): void;
+  EventsOnMultiple(eventName: string, callback: (data?: any) => void, maxCallbacks: number): void;
 
-    EventsOnce(eventName: string, callback: (data?: any) => void): void;
+  EventsOnce(eventName: string, callback: (data?: any) => void): void;
 
-    LogTrace(message: string): void;
+  LogTrace(message: string): void;
 
-    LogDebug(message: string): void;
+  LogDebug(message: string): void;
 
-    LogError(message: string): void;
+  LogError(message: string): void;
 
-    LogFatal(message: string): void;
+  LogFatal(message: string): void;
 
-    LogInfo(message: string): void;
+  LogInfo(message: string): void;
 
-    LogWarning(message: string): void;
+  LogWarning(message: string): void;
 
-    WindowReload(): void;
+  WindowReload(): void;
 
-    WindowCenter(): void;
+  WindowCenter(): void;
 
-    WindowSetTitle(title: string): void;
+  WindowSetTitle(title: string): void;
 
-    WindowFullscreen(): void;
+  WindowFullscreen(): void;
 
-    WindowUnfullscreen(): void;
+  WindowUnfullscreen(): void;
 
-    WindowSetSize(width: number, height: number): Promise<Size>;
+  WindowSetSize(width: number, height: number): Promise<Size>;
 
-    WindowGetSize(): Promise<Size>;
+  WindowGetSize(): Promise<Size>;
 
-    WindowSetMaxSize(width: number, height: number): void;
+  WindowSetMaxSize(width: number, height: number): void;
 
-    WindowSetMinSize(width: number, height: number): void;
+  WindowSetMinSize(width: number, height: number): void;
 
-    WindowSetPosition(x: number, y: number): void;
+  WindowSetPosition(x: number, y: number): void;
 
-    WindowGetPosition(): Promise<Position>;
+  WindowGetPosition(): Promise<Position>;
 
-    WindowHide(): void;
+  WindowHide(): void;
 
-    WindowShow(): void;
+  WindowShow(): void;
 
-    WindowMaximise(): void;
+  WindowMaximise(): void;
 
-    WindowToggleMaximise(): void;
+  WindowToggleMaximise(): void;
 
-    WindowUnmaximise(): void;
+  WindowUnmaximise(): void;
 
-    WindowMinimise(): void;
+  WindowMinimise(): void;
 
-    WindowUnminimise(): void;
+  WindowUnminimise(): void;
 
-    WindowSetRGBA(R: number, G: number, B: number, A: number): void;
+  WindowSetRGBA(R: number, G: number, B: number, A: number): void;
 
-    BrowserOpenURL(url: string): void;
+  BrowserOpenURL(url: string): void;
 
-    Quit(): void;
+  Quit(): void;
 }
 
 declare global {
-    interface Window {
-        runtime: runtime;
-    }
+  interface Window {
+    runtime: runtime;
+  }
 }

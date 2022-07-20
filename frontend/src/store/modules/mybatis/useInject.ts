@@ -1,5 +1,5 @@
-import { InjectionConfig } from '@/types/mybatis-plus'
-import { defineStore } from 'pinia'
+import {InjectionConfig} from '@/types/mybatis-plus'
+import {defineStore} from 'pinia'
 
 interface InjectConfigState {
   injection: InjectionConfig

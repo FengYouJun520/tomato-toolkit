@@ -5,12 +5,12 @@
         <t-row :gutter="[24, 24]">
           <t-col :md="6" :xs="12">
             <t-form-item label="类型">
-              <t-select v-model="cryptoModel.typ" :options="cryptoOptions" />
+              <t-select v-model="cryptoModel.typ" :options="cryptoOptions"/>
             </t-form-item>
           </t-col>
           <t-col :md="6" :xs="12">
             <t-form-item label="盐(salt)">
-              <t-input v-model="cryptoModel.cost" clearable />
+              <t-input v-model="cryptoModel.cost" clearable/>
             </t-form-item>
           </t-col>
 
@@ -37,12 +37,12 @@
         <t-row :gutter="[24, 24]">
           <t-col>
             <t-form-item label="源数据">
-              <t-textarea v-model="cryptoModel.source" :autosize="{ minRows: 5, maxRows: 10 }" />
+              <t-textarea v-model="cryptoModel.source" :autosize="{ minRows: 5, maxRows: 10 }"/>
             </t-form-item>
           </t-col>
           <t-col>
             <t-form-item label="加密后数据">
-              <t-textarea v-model="cryptoModel.dest" :autosize="{ minRows: 5, maxRows: 10 }" />
+              <t-textarea v-model="cryptoModel.dest" :autosize="{ minRows: 5, maxRows: 10 }"/>
             </t-form-item>
           </t-col>
         </t-row>
@@ -52,9 +52,9 @@
 </template>
 <script lang="ts" setup>
 import ToPage from '@/components/ToPage/index.vue'
-import { Encode } from '@/wailsjs/go/crypt/Crypt'
-import { crypt } from '@/wailsjs/go/models'
-import { MessagePlugin, SelectOption, SelectOptionGroup } from 'tdesign-vue-next'
+import {Encode} from '@/wailsjs/go/crypt/Crypt'
+import {crypt} from '@/wailsjs/go/models'
+import {MessagePlugin, SelectOption, SelectOptionGroup} from 'tdesign-vue-next'
 
 interface CryptoProps {
   typ: string

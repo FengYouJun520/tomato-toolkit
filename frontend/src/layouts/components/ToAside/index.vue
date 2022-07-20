@@ -1,12 +1,12 @@
 <template>
   <t-aside :width="appStore.collapse ? '64px' : '232px'">
     <div class="h-full">
-      <to-menu-bar />
+      <to-menu-bar/>
     </div>
   </t-aside>
 </template>
-<script setup lang="ts">
-import { useAppStore } from '@/store/modules/app'
+<script lang="ts" setup>
+import {useAppStore} from '@/store/modules/app'
 import ToMenuBar from '../ToMenuBar/index.vue'
 
 const appStore = useAppStore()

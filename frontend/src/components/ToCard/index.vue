@@ -1,29 +1,29 @@
 <template>
-  <div class="to-card" :class="classes">
+  <div :class="classes" class="to-card">
     <div class="to-card__inner">
-      <div class="to-card__title" :class="[titleClass]" v-if="$slots.title || title">
+      <div v-if="$slots.title || title" :class="[titleClass]" class="to-card__title">
         <slot name="title">
           {{ title }}
         </slot>
       </div>
-      <div class="to-card__content" :class="contentClass">
-        <slot name="default" />
+      <div :class="contentClass" class="to-card__content">
+        <slot name="default"/>
       </div>
-      <div class="to-card__footer" :class="footerClass" v-if="$slots.footer || title">
+      <div v-if="$slots.footer || title" :class="footerClass" class="to-card__footer">
         <slot name="footer">
           {{ footer }}
         </slot>
       </div>
-      <div class="to-card__extract" :class="extractClass" v-if="$slots.extract">
-        <slot name="extract" />
+      <div v-if="$slots.extract" :class="extractClass" class="to-card__extract">
+        <slot name="extract"/>
       </div>
-      <div class="to-card-operation" :class="operationClass" v-if="$slots.operation">
-        <slot name="operation" />
+      <div v-if="$slots.operation" :class="operationClass" class="to-card-operation">
+        <slot name="operation"/>
       </div>
     </div>
   </div>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 interface CardProps {
   trigger?: 'hover' | 'always'
   shadow?: boolean

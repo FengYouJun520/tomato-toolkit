@@ -1,19 +1,19 @@
 <template>
-  <to-page title="首页" extractClass="gap-3" operationClass="justify-end">
+  <to-page extractClass="gap-3" operationClass="justify-end" title="首页">
     <t-button theme="primary">primary</t-button>
-    <t-alert theme="success" message="这是一条成功的消息提示" />
+    <t-alert message="这是一条成功的消息提示" theme="success"/>
     <t-button theme="success">success</t-button>
     <t-button theme="warning">warning</t-button>
     <t-button theme="danger">danger</t-button>
 
-    <t-divider />
+    <t-divider/>
 
     <t-table
-      row-key="tid"
       :columns="columns"
       :data="data"
-      bordered
       :selected-row-keys="selectedRowKeys"
+      bordered
+      row-key="tid"
       @select-change="rehandleSelectChange"
     >
       <template #status="{ row }">
@@ -42,7 +42,7 @@
     </template>
   </to-page>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import ToPage from '@/components/ToPage/index.vue'
 
 const columns = [
@@ -50,18 +50,18 @@ const columns = [
     colKey: 'row-select',
     type: 'multiple',
     // disabled 参数：{row: RowData; rowIndex: number })
-    disabled: ({ rowIndex }: { rowIndex: number | string }) => rowIndex === 1 || rowIndex === 3,
+    disabled: ({rowIndex}: { rowIndex: number | string }) => rowIndex === 1 || rowIndex === 3,
     width: 50,
   },
-  { colKey: 'instance', title: '集群名称', width: 150 },
+  {colKey: 'instance', title: '集群名称', width: 150},
   {
     colKey: 'status',
     title: '状态',
     width: 100,
     cell: 'status',
   },
-  { colKey: 'owner', title: '管理员' },
-  { colKey: 'description', title: '描述' },
+  {colKey: 'owner', title: '管理员'},
+  {colKey: 'description', title: '描述'},
   {
     colKey: 'op',
     width: 200,
@@ -101,11 +101,11 @@ const data = [
 ]
 const selectedRowKeys = ref([3, '2'])
 
-const rehandleClickOp = ({ text, row }: any) => {
+const rehandleClickOp = ({text, row}: any) => {
   console.log(text, row)
 }
 
-const rehandleSelectChange = (value: any, { selectedRowData }: any) => {
+const rehandleSelectChange = (value: any, {selectedRowData}: any) => {
   selectedRowKeys.value = value
   console.log(value, selectedRowData)
 }

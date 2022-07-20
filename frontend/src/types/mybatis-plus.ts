@@ -10,6 +10,7 @@ export interface DatabaseOptions {
 }
 
 export type databaseType = 'mysql' | 'postgres' | 'sqlite'
+
 export interface DataSourceConfig {
   typ: databaseType
   database: string
@@ -71,7 +72,8 @@ export interface TemplateConfig {
   controller?: string
 }
 
-export interface InjectionConfig {}
+export interface InjectionConfig {
+}
 
 export interface StrategyConfig {
   enableCapitalMode: boolean
@@ -122,6 +124,7 @@ export interface Controller {
   enableRestStyle: boolean
   formatFileName?: string
 }
+
 export interface Service {
   superServiceClass?: string
   superServiceImplClass?: string

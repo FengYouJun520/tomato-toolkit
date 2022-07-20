@@ -1,23 +1,23 @@
 <template>
   <to-card :shadow="false">
-    <template #title v-if="title || $slots.title">
-      <slot name="title"> {{ title }} </slot>
+    <template v-if="title || $slots.title" #title>
+      <slot name="title"> {{ title }}</slot>
     </template>
     <template #default>
-      <slot name="default" />
+      <slot name="default"/>
     </template>
-    <template #footer v-if="footer || $slots.footer">
-      <slot name="footer"> {{ footer }} </slot>
+    <template v-if="footer || $slots.footer" #footer>
+      <slot name="footer"> {{ footer }}</slot>
     </template>
-    <template #extract v-if="$slots.extract">
-      <slot name="extract" />
+    <template v-if="$slots.extract" #extract>
+      <slot name="extract"/>
     </template>
-    <template #operation v-if="$slots.operation">
-      <slot name="operation" />
+    <template v-if="$slots.operation" #operation>
+      <slot name="operation"/>
     </template>
   </to-card>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import ToCard from '../ToCard/index.vue'
 
 interface PageWrapProps {

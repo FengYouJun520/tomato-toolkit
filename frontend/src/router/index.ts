@@ -1,6 +1,6 @@
 import LAYOUT from '@/layouts/index.vue'
-import { App } from 'vue'
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import {App} from 'vue'
+import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router'
 
 export const routes: RouteRecordRaw[] = [
   {

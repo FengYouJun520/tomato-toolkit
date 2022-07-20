@@ -1,5 +1,5 @@
-import { GlobalConfig } from '@/types/mybatis-plus'
-import { defineStore } from 'pinia'
+import {GlobalConfig} from '@/types/mybatis-plus'
+import {defineStore} from 'pinia'
 
 interface GlobalConfigState {
   global: GlobalConfig

@@ -1,7 +1,7 @@
 <template>
-  <t-footer> Copyright @ 2022-{{ new Date().getFullYear() }} FengYouJun </t-footer>
+  <t-footer> Copyright @ 2022-{{ new Date().getFullYear() }} FengYouJun</t-footer>
 </template>
-<script setup lang="ts"></script>
+<script lang="ts" setup></script>
 
 <style scoped>
 .t-layout__footer {

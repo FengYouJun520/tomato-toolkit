@@ -1,30 +1,30 @@
 <template>
   <to-page>
     <template #title>
-      <div flex items-center gap-3>
-        <img :src="MybatisIcon" alt="mybatis-plus" h-12 />
+      <div flex gap-3 items-center>
+        <img :src="MybatisIcon" alt="mybatis-plus" h-12/>
         <div>Mybatis-Plus代码生成器</div>
       </div>
     </template>
     <div flex flex-col gap-y-3>
       <!-- 基础配置 -->
-      <basic-config />
+      <basic-config/>
 
       <t-tabs v-model="tabsValue" theme="card">
         <t-tab-panel label="全局配置" value="global-config">
-          <global-config />
+          <global-config/>
         </t-tab-panel>
         <t-tab-panel label="包配置" value="package-config">
-          <package-config />
+          <package-config/>
         </t-tab-panel>
         <t-tab-panel label="模板配置" value="template-config">
-          <template-config />
+          <template-config/>
         </t-tab-panel>
         <t-tab-panel disabled label="注入配置" value="inject-config">
-          <inject-config />
+          <inject-config/>
         </t-tab-panel>
         <t-tab-panel label="策略配置" value="strategy-config">
-          <strategy-config />
+          <strategy-config/>
         </t-tab-panel>
       </t-tabs>
     </div>
@@ -32,10 +32,10 @@
     <template #footer>
       <div flex justify-center>
         <t-button
+          :disabled="basicStore.executeDisable"
+          :loading="loading"
           block
           @click="executeGenerate"
-          :loading="loading"
-          :disabled="basicStore.executeDisable"
         >
           生成
         </t-button>
@@ -43,17 +43,17 @@
     </template>
   </to-page>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import MybatisIcon from '@/assets/mybatis.png'
 import ToPage from '@/components/ToPage/index.vue'
-import { useBasic } from '@/store/modules/mybatis/useBasic'
-import { useGlobal } from '@/store/modules/mybatis/useGlobal'
-import { usePackage } from '@/store/modules/mybatis/usePackage'
-import { useStrategy } from '@/store/modules/mybatis/useStrategy'
-import { useTemplate } from '@/store/modules/mybatis/useTemplate'
-import { CodeGenerate } from '@/wailsjs/go/codegen/Manager'
-import { codegen } from '@/wailsjs/go/models'
-import { MessagePlugin } from 'tdesign-vue-next'
+import {useBasic} from '@/store/modules/mybatis/useBasic'
+import {useGlobal} from '@/store/modules/mybatis/useGlobal'
+import {usePackage} from '@/store/modules/mybatis/usePackage'
+import {useStrategy} from '@/store/modules/mybatis/useStrategy'
+import {useTemplate} from '@/store/modules/mybatis/useTemplate'
+import {CodeGenerate} from '@/wailsjs/go/codegen/Manager'
+import {codegen} from '@/wailsjs/go/models'
+import {MessagePlugin} from 'tdesign-vue-next'
 import BasicConfig from './components/basic-config/index.vue'
 import GlobalConfig from './components/global-config/index.vue'
 import InjectConfig from './components/inject-config/index.vue'

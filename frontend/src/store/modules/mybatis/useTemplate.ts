@@ -1,5 +1,5 @@
-import { TemplateConfig } from '@/types/mybatis-plus'
-import { defineStore } from 'pinia'
+import {TemplateConfig} from '@/types/mybatis-plus'
+import {defineStore} from 'pinia'
 
 interface TemplateConfigState {
   template: TemplateConfig

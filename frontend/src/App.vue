@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import { useThemeStore } from '@/store/modules/theme'
+<script lang="ts" setup>
+import {useThemeStore} from '@/store/modules/theme'
 
 const themeStore = useThemeStore()
 watchEffect(() => {
@@ -13,7 +13,7 @@ watchEffect(() => {
 
 <template>
   <t-config-provider>
-    <router-view />
+    <router-view/>
   </t-config-provider>
 </template>
 

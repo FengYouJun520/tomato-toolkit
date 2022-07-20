@@ -1,5 +1,5 @@
-import { DatabaseOptions, DataSourceConfig, TablesOptions } from '@/types/mybatis-plus'
-import { defineStore } from 'pinia'
+import {DatabaseOptions, DataSourceConfig, TablesOptions} from '@/types/mybatis-plus'
+import {defineStore} from 'pinia'
 
 interface BasicState {
   dataSource: DataSourceConfig

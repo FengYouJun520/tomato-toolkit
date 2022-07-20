@@ -1,6 +1,6 @@
 <template>
   <to-page title="Json转为Typescript">
-    <t-form :data="formData" :label-width="140" label-align="right" colon>
+    <t-form :data="formData" :label-width="140" colon label-align="right">
       <t-row :gutter="[24, 24]">
         <t-col :span="4">
           <t-form-item label="使用前缀 I">
@@ -43,27 +43,27 @@
           </t-form-item>
         </t-col>
 
-        <t-col :xs="12" :md="6">
+        <t-col :md="6" :xs="12">
           <t-form-item label="类前缀">
-            <t-input v-model="formData.config.prefix" />
+            <t-input v-model="formData.config.prefix"/>
           </t-form-item>
         </t-col>
 
-        <t-col :xs="12" :md="6">
+        <t-col :md="6" :xs="12">
           <t-form-item label="根对象名">
-            <t-input v-model="formData.config.rootObjectName" />
+            <t-input v-model="formData.config.rootObjectName"/>
           </t-form-item>
         </t-col>
       </t-row>
       <t-row :gutter="[24, 24]" class="mt-6">
-        <t-col :xs="12" :lg="6">
+        <t-col :lg="6" :xs="12">
           <t-form-item :label-width="0">
-            <t-textarea autofocus v-model="formData.source" placeholder="请输入json数据" />
+            <t-textarea v-model="formData.source" autofocus placeholder="请输入json数据"/>
           </t-form-item>
         </t-col>
-        <t-col :xs="12" :lg="6">
+        <t-col :lg="6" :xs="12">
           <t-form-item :label-width="0">
-            <t-textarea v-model="formData.result" />
+            <t-textarea v-model="formData.result"/>
           </t-form-item>
         </t-col>
       </t-row>
@@ -72,9 +72,9 @@
     <template #footer>
       <div flex items-center>
         <span>灵感来源：</span>
-        <t-button variant="text" shape="circle" @click="handleInspiration">
+        <t-button shape="circle" variant="text" @click="handleInspiration">
           <template #icon>
-            <t-icon name="logo-github-filled" />
+            <t-icon name="logo-github-filled"/>
           </template>
         </t-button>
       </div>
@@ -82,18 +82,18 @@
     <template #extract>
       <t-button @click="convert">
         <template #icon>
-          <precise-monitor-icon />
+          <precise-monitor-icon/>
         </template>
       </t-button>
     </template>
   </to-page>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import ToPage from '@/components/ToPage/index.vue'
-import { IJson2TsConfig, Json2Ts } from './json2ts'
-import { BrowserOpenURL } from '@/wailsjs/runtime'
-import { MessagePlugin } from 'tdesign-vue-next'
-import { PreciseMonitorIcon } from 'tdesign-icons-vue-next'
+import {IJson2TsConfig, Json2Ts} from './json2ts'
+import {BrowserOpenURL} from '@/wailsjs/runtime'
+import {MessagePlugin} from 'tdesign-vue-next'
+import {PreciseMonitorIcon} from 'tdesign-icons-vue-next'
 
 interface Json2TsProps {
   source: string

@@ -88,7 +88,7 @@ export class Json2Ts {
     if (obj === null) {
       return 'any'
     }
-    const { prependWithI, prefix } = this.config
+    const {prependWithI, prefix} = this.config
     if (prependWithI) {
       type = `I${prefix || ''}${type}`
     }
@@ -107,7 +107,7 @@ export class Json2Ts {
   }
 
   private interfacesToString() {
-    const { sortAlphabetically, addExport, optionalFields } = this.config
+    const {sortAlphabetically, addExport, optionalFields} = this.config
     return Object.keys(this.interfaces)
       .map((name) => {
         const interfaceStr = [`${addExport ? 'export ' : ''}interface ${name} {`]

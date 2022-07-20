@@ -1,10 +1,10 @@
 (() => {
   var __defProp = Object.defineProperty;
-  var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
+  var __markAsModule = (target) => __defProp(target, "__esModule", {value: true});
   var __export = (target, all) => {
     __markAsModule(target);
     for (var name in all)
-      __defProp(target, name, { get: all[name], enumerable: true });
+      __defProp(target, name, {get: all[name], enumerable: true});
   };
 
   // desktop/log.js
@@ -20,33 +20,43 @@
     LogWarning: () => LogWarning,
     SetLogLevel: () => SetLogLevel
   });
+
   function sendLogMessage(level, message) {
     window.WailsInvoke("L" + level + message);
   }
+
   function LogTrace(message) {
     sendLogMessage("T", message);
   }
+
   function LogPrint(message) {
     sendLogMessage("P", message);
   }
+
   function LogDebug(message) {
     sendLogMessage("D", message);
   }
+
   function LogInfo(message) {
     sendLogMessage("I", message);
   }
+
   function LogWarning(message) {
     sendLogMessage("W", message);
   }
+
   function LogError(message) {
     sendLogMessage("E", message);
   }
+
   function LogFatal(message) {
     sendLogMessage("F", message);
   }
+
   function SetLogLevel(loglevel) {
     sendLogMessage("S", loglevel);
   }
+
   var LogLevel = {
     TRACE: 1,
     DEBUG: 2,
@@ -70,17 +80,21 @@
     }
   };
   var eventListeners = {};
+
   function EventsOnMultiple(eventName, callback, maxCallbacks) {
     eventListeners[eventName] = eventListeners[eventName] || [];
     const thisListener = new Listener(callback, maxCallbacks);
     eventListeners[eventName].push(thisListener);
   }
+
   function EventsOn(eventName, callback) {
     EventsOnMultiple(eventName, callback, -1);
   }
+
   function EventsOnce(eventName, callback) {
     EventsOnMultiple(eventName, callback, 1);
   }
+
   function notifyListeners(eventData) {
     let eventName = eventData.name;
     if (eventListeners[eventName]) {
@@ -96,6 +110,7 @@
       eventListeners[eventName] = newEventListenerList;
     }
   }
+
   function EventsNotify(notifyMessage) {
     let message;
     try {
@@ -106,6 +121,7 @@
     }
     notifyListeners(message);
   }
+
   function EventsEmit(eventName) {
     const payload = {
       name: eventName,
@@ -114,6 +130,7 @@
     notifyListeners(payload);
     window.WailsInvoke("EE" + JSON.stringify(payload));
   }
+
   function EventsOff(eventName) {
     delete eventListeners[eventName];
     window.WailsInvoke("EX" + eventName);
@@ -121,31 +138,35 @@
 
   // desktop/calls.js
   var callbacks = {};
+
   function cryptoRandom() {
     var array = new Uint32Array(1);
     return window.crypto.getRandomValues(array)[0];
   }
+
   function basicRandom() {
     return Math.random() * 9007199254740991;
   }
+
   var randomFunc;
   if (window.crypto) {
     randomFunc = cryptoRandom;
   } else {
     randomFunc = basicRandom;
   }
+
   function Call(name, args, timeout) {
     if (timeout == null) {
       timeout = 0;
     }
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       var callbackID;
       do {
         callbackID = name + "-" + randomFunc();
       } while (callbacks[callbackID]);
       var timeoutHandle;
       if (timeout > 0) {
-        timeoutHandle = setTimeout(function() {
+        timeoutHandle = setTimeout(function () {
           reject(Error("Call to " + name + " timed out. Request ID: " + callbackID));
         }, timeout);
       }
@@ -166,6 +187,7 @@
       }
     });
   }
+
   function Callback(incomingMessage) {
     let message;
     try {
@@ -193,6 +215,7 @@
 
   // desktop/bindings.js
   window.go = {};
+
   function SetBindings(bindingsMap) {
     try {
       bindingsMap = JSON.parse(bindingsMap);
@@ -205,16 +228,18 @@
       Object.keys(bindingsMap[packageName]).forEach((structName) => {
         window.go[packageName][structName] = window.go[packageName][structName] || {};
         Object.keys(bindingsMap[packageName][structName]).forEach((methodName) => {
-          window.go[packageName][structName][methodName] = function() {
+          window.go[packageName][structName][methodName] = function () {
             let timeout = 0;
+
             function dynamic() {
               const args = [].slice.call(arguments);
               return Call([packageName, structName, methodName].join("."), args, timeout);
             }
-            dynamic.setTimeout = function(newTimeout) {
+
+            dynamic.setTimeout = function (newTimeout) {
               timeout = newTimeout;
             };
-            dynamic.getTimeout = function() {
+            dynamic.getTimeout = function () {
               return timeout;
             };
             return dynamic;
@@ -247,62 +272,81 @@
     WindowUnmaximise: () => WindowUnmaximise,
     WindowUnminimise: () => WindowUnminimise
   });
+
   function WindowReload() {
     window.location.reload();
   }
+
   function WindowCenter() {
     window.WailsInvoke("Wc");
   }
+
   function WindowSetTitle(title) {
     window.WailsInvoke("WT" + title);
   }
+
   function WindowFullscreen() {
     window.WailsInvoke("WF");
   }
+
   function WindowUnfullscreen() {
     window.WailsInvoke("Wf");
   }
+
   function WindowSetSize(width, height) {
     window.WailsInvoke("Ws:" + width + ":" + height);
   }
+
   function WindowGetSize() {
     return Call(":wails:WindowGetSize");
   }
+
   function WindowSetMaxSize(width, height) {
     window.WailsInvoke("WZ:" + width + ":" + height);
   }
+
   function WindowSetMinSize(width, height) {
     window.WailsInvoke("Wz:" + width + ":" + height);
   }
+
   function WindowSetPosition(x, y) {
     window.WailsInvoke("Wp:" + x + ":" + y);
   }
+
   function WindowGetPosition() {
     return Call(":wails:WindowGetPos");
   }
+
   function WindowHide() {
     window.WailsInvoke("WH");
   }
+
   function WindowShow() {
     window.WailsInvoke("WS");
   }
+
   function WindowMaximise() {
     window.WailsInvoke("WM");
   }
+
   function WindowToggleMaximise() {
     window.WailsInvoke("Wt");
   }
+
   function WindowUnmaximise() {
     window.WailsInvoke("WU");
   }
+
   function WindowMinimise() {
     window.WailsInvoke("Wm");
   }
+
   function WindowUnminimise() {
     window.WailsInvoke("Wu");
   }
+
   function WindowSetRGBA(R, G, B, A) {
-    let rgba = JSON.stringify({ r: R || 0, g: G || 0, b: B || 0, a: A || 255 });
+    let rgba = JSON.stringify({r: R || 0, g: G || 0, b: B || 0, a: A || 255});
     window.WailsInvoke("Wr:" + rgba);
   }
 
@@ -311,6 +355,7 @@
   __export(browser_exports, {
     BrowserOpenURL: () => BrowserOpenURL
   });
+
   function BrowserOpenURL(url) {
     window.WailsInvoke("BO:" + url);
   }
@@ -319,6 +364,7 @@
   function Quit() {
     window.WailsInvoke("Q");
   }
+
   window.runtime = {
     ...log_exports,
     ...window_exports,
@@ -372,11 +418,13 @@
       currentElement = currentElement.parentElement;
     }
   });
+
   function setResize(cursor) {
     document.body.style.cursor = cursor || window.wails.flags.defaultCursor;
     window.wails.flags.resizeEdge = cursor;
   }
-  window.addEventListener("mousemove", function(e) {
+
+  window.addEventListener("mousemove", function (e) {
     if (!window.wails.flags.enableResize) {
       return;
     }
@@ -409,7 +457,7 @@
     else if (rightBorder)
       setResize("e-resize");
   });
-  window.addEventListener("contextmenu", function(e) {
+  window.addEventListener("contextmenu", function (e) {
     if (window.wails.flags.disableWailsDefaultContextMenu) {
       e.preventDefault();
     }
