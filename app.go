@@ -18,7 +18,7 @@ const (
 	KB = 1024
 )
 
-func ConvetMemSize(kbSize uint64) string {
+func ConvertMemSize(kbSize uint64) string {
 	if kbSize/GB > 0 {
 		return fmt.Sprintf("%.2fGB", math.Round(float64(kbSize)/GB))
 	} else if kbSize/MB > 0 {

@@ -1,12 +1,12 @@
 export namespace codegen {
-	
-	export class DataSourceConfig {
-	    typ: string;
-	    database: string;
-	    username: string;
-	    password: string;
-	    host: string;
-	    port: number;
+
+  export class DataSourceConfig {
+    typ: string;
+    database: string;
+    username: string;
+    password: string;
+    host: string;
+    port: number;
 
     constructor(source: any = {}) {
       if ('string' === typeof source) source = JSON.parse(source);
@@ -121,38 +121,38 @@ export namespace codegen {
     enableRemoveIsPrefix: boolean;
     enableTableFieldAnnotation: boolean;
     enableActiveRecord: boolean;
-	    versionColumnName: string;
-	    versionPropertyName: string;
-	    logicDeleteColumnName: string;
-	    logicDeletePropertyName: string;
-	    naming: string;
-	    addSuperEntityColumns: string[];
-	    addIgnoreColumns: string[];
-	    addTableFills: FieldTypeKeyVal[];
-	    idType: string;
-	    formatFileName: string;
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.superClass = source["superClass"];
-	        this.disableSerialVersionUID = source["disableSerialVersionUID"];
-	        this.enableColumnConstant = source["enableColumnConstant"];
-	        this.enableChainModel = source["enableChainModel"];
-	        this.enableLombok = source["enableLombok"];
-	        this.enableRemoveIsPrefix = source["enableRemoveIsPrefix"];
-	        this.enableTableFieldAnnotation = source["enableTableFieldAnnotation"];
-	        this.enableActiveRecord = source["enableActiveRecord"];
-	        this.versionColumnName = source["versionColumnName"];
-	        this.versionPropertyName = source["versionPropertyName"];
-        this.logicDeleteColumnName = source["logicDeleteColumnName"];
-        this.logicDeletePropertyName = source["logicDeletePropertyName"];
-        this.naming = source["naming"];
-        this.addSuperEntityColumns = source["addSuperEntityColumns"];
-        this.addIgnoreColumns = source["addIgnoreColumns"];
-        this.addTableFills = this.convertValues(source["addTableFills"], FieldTypeKeyVal);
-        this.idType = source["idType"];
-        this.formatFileName = source["formatFileName"];
-      }
+    versionColumnName: string;
+    versionPropertyName: string;
+    logicDeleteColumnName: string;
+    logicDeletePropertyName: string;
+    naming: string;
+    addSuperEntityColumns: string[];
+    addIgnoreColumns: string[];
+    addTableFills: FieldTypeKeyVal[];
+    idType: string;
+    formatFileName: string;
+
+    constructor(source: any = {}) {
+      if ('string' === typeof source) source = JSON.parse(source);
+      this.superClass = source["superClass"];
+      this.disableSerialVersionUID = source["disableSerialVersionUID"];
+      this.enableColumnConstant = source["enableColumnConstant"];
+      this.enableChainModel = source["enableChainModel"];
+      this.enableLombok = source["enableLombok"];
+      this.enableRemoveIsPrefix = source["enableRemoveIsPrefix"];
+      this.enableTableFieldAnnotation = source["enableTableFieldAnnotation"];
+      this.enableActiveRecord = source["enableActiveRecord"];
+      this.versionColumnName = source["versionColumnName"];
+      this.versionPropertyName = source["versionPropertyName"];
+      this.logicDeleteColumnName = source["logicDeleteColumnName"];
+      this.logicDeletePropertyName = source["logicDeletePropertyName"];
+      this.naming = source["naming"];
+      this.addSuperEntityColumns = source["addSuperEntityColumns"];
+      this.addIgnoreColumns = source["addIgnoreColumns"];
+      this.addTableFills = this.convertValues(source["addTableFills"], FieldTypeKeyVal);
+      this.idType = source["idType"];
+      this.formatFileName = source["formatFileName"];
+    }
 
     static createFrom(source: any = {}) {
       return new Entity(source);
@@ -168,41 +168,42 @@ export namespace codegen {
         if (asMap) {
           for (const key of Object.keys(a)) {
             a[key] = new classs(a[key]);
-		            }
-		            return a;
-		        }
-		        return new classs(a);
-		    }
-		    return a;
-		}
-	}
-	export class StrategyConfig {
-	    enableCapitalMode: boolean;
-	    enableSkipView: boolean;
-	    disableSqlFilter: boolean;
-	    enableSchema: boolean;
-	    addIncludes: string[];
-	    // Go type: Entity
-	    entity?: any;
-	    // Go type: Controller
-	    controller?: any;
-	    // Go type: Mapper
-	    mapper?: any;
-	    // Go type: Service
-	    service?: any;
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.enableCapitalMode = source["enableCapitalMode"];
-        this.enableSkipView = source["enableSkipView"];
-        this.disableSqlFilter = source["disableSqlFilter"];
-        this.enableSchema = source["enableSchema"];
-        this.addIncludes = source["addIncludes"];
-        this.entity = this.convertValues(source["entity"], null);
-        this.controller = this.convertValues(source["controller"], null);
-        this.mapper = this.convertValues(source["mapper"], null);
-        this.service = this.convertValues(source["service"], null);
+          }
+          return a;
+        }
+        return new classs(a);
       }
+      return a;
+    }
+  }
+
+  export class StrategyConfig {
+    enableCapitalMode: boolean;
+    enableSkipView: boolean;
+    disableSqlFilter: boolean;
+    enableSchema: boolean;
+    addIncludes: string[];
+    // Go type: Entity
+    entity?: any;
+    // Go type: Controller
+    controller?: any;
+    // Go type: Mapper
+    mapper?: any;
+    // Go type: Service
+    service?: any;
+
+    constructor(source: any = {}) {
+      if ('string' === typeof source) source = JSON.parse(source);
+      this.enableCapitalMode = source["enableCapitalMode"];
+      this.enableSkipView = source["enableSkipView"];
+      this.disableSqlFilter = source["disableSqlFilter"];
+      this.enableSchema = source["enableSchema"];
+      this.addIncludes = source["addIncludes"];
+      this.entity = this.convertValues(source["entity"], null);
+      this.controller = this.convertValues(source["controller"], null);
+      this.mapper = this.convertValues(source["mapper"], null);
+      this.service = this.convertValues(source["service"], null);
+    }
 
     static createFrom(source: any = {}) {
       return new StrategyConfig(source);
@@ -218,37 +219,38 @@ export namespace codegen {
         if (asMap) {
           for (const key of Object.keys(a)) {
             a[key] = new classs(a[key]);
-		            }
-		            return a;
-		        }
-		        return new classs(a);
-		    }
-		    return a;
-		}
-	}
-	export class TemplateConfig {
-	    disableAll: boolean;
-	    disable: boolean;
-	    entity: string;
-	    entityKt: string;
-	    service: string;
-	    serviceImpl: string;
-	    mapper: string;
-	    mapperXml: string;
-	    controller: string;
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-        this.disableAll = source["disableAll"];
-        this.disable = source["disable"];
-        this.entity = source["entity"];
-        this.entityKt = source["entityKt"];
-        this.service = source["service"];
-        this.serviceImpl = source["serviceImpl"];
-        this.mapper = source["mapper"];
-        this.mapperXml = source["mapperXml"];
-        this.controller = source["controller"];
+          }
+          return a;
+        }
+        return new classs(a);
       }
+      return a;
+    }
+  }
+
+  export class TemplateConfig {
+    disableAll: boolean;
+    disable: boolean;
+    entity: string;
+    entityKt: string;
+    service: string;
+    serviceImpl: string;
+    mapper: string;
+    mapperXml: string;
+    controller: string;
+
+    constructor(source: any = {}) {
+      if ('string' === typeof source) source = JSON.parse(source);
+      this.disableAll = source["disableAll"];
+      this.disable = source["disable"];
+      this.entity = source["entity"];
+      this.entityKt = source["entityKt"];
+      this.service = source["service"];
+      this.serviceImpl = source["serviceImpl"];
+      this.mapper = source["mapper"];
+      this.mapperXml = source["mapperXml"];
+      this.controller = source["controller"];
+    }
 
     static createFrom(source: any = {}) {
       return new TemplateConfig(source);
@@ -279,22 +281,22 @@ export namespace codegen {
     mapper: string;
     mapperXml: string;
     controller: string;
-	    other: string;
-	    pathInfo: PathInfo[];
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.parent = source["parent"];
-	        this.moduleName = source["moduleName"];
-        this.entity = source["entity"];
-        this.service = source["service"];
-        this.serviceImpl = source["serviceImpl"];
-        this.mapper = source["mapper"];
-        this.mapperXml = source["mapperXml"];
-        this.controller = source["controller"];
-        this.other = source["other"];
-        this.pathInfo = this.convertValues(source["pathInfo"], PathInfo);
-      }
+    other: string;
+    pathInfo: PathInfo[];
+
+    constructor(source: any = {}) {
+      if ('string' === typeof source) source = JSON.parse(source);
+      this.parent = source["parent"];
+      this.moduleName = source["moduleName"];
+      this.entity = source["entity"];
+      this.service = source["service"];
+      this.serviceImpl = source["serviceImpl"];
+      this.mapper = source["mapper"];
+      this.mapperXml = source["mapperXml"];
+      this.controller = source["controller"];
+      this.other = source["other"];
+      this.pathInfo = this.convertValues(source["pathInfo"], PathInfo);
+    }
 
     static createFrom(source: any = {}) {
       return new PackageConfig(source);
@@ -310,35 +312,36 @@ export namespace codegen {
         if (asMap) {
           for (const key of Object.keys(a)) {
             a[key] = new classs(a[key]);
-		            }
-		            return a;
-		        }
-		        return new classs(a);
-		    }
-		    return a;
-		}
-	}
-	export class GlobalConfig {
-	    fileOverride: boolean;
-	    disableOpenDir: boolean;
-	    outputDir: string;
-	    author: string;
-	    enableKotlin: boolean;
-	    enableSwagger: boolean;
-	    dateType: string;
-	    commentDate: string;
-	
-	    constructor(source: any = {}) {
-        if ('string' === typeof source) source = JSON.parse(source);
-        this.fileOverride = source["fileOverride"];
-        this.disableOpenDir = source["disableOpenDir"];
-        this.outputDir = source["outputDir"];
-        this.author = source["author"];
-        this.enableKotlin = source["enableKotlin"];
-        this.enableSwagger = source["enableSwagger"];
-        this.dateType = source["dateType"];
-        this.commentDate = source["commentDate"];
+          }
+          return a;
+        }
+        return new classs(a);
       }
+      return a;
+    }
+  }
+
+  export class GlobalConfig {
+    fileOverride: boolean;
+    disableOpenDir: boolean;
+    outputDir: string;
+    author: string;
+    enableKotlin: boolean;
+    enableSwagger: boolean;
+    dateType: string;
+    commentDate: string;
+
+    constructor(source: any = {}) {
+      if ('string' === typeof source) source = JSON.parse(source);
+      this.fileOverride = source["fileOverride"];
+      this.disableOpenDir = source["disableOpenDir"];
+      this.outputDir = source["outputDir"];
+      this.author = source["author"];
+      this.enableKotlin = source["enableKotlin"];
+      this.enableSwagger = source["enableSwagger"];
+      this.dateType = source["dateType"];
+      this.commentDate = source["commentDate"];
+    }
 
     static createFrom(source: any = {}) {
       return new GlobalConfig(source);
@@ -354,7 +357,7 @@ export namespace codegen {
     // Go type: TemplateConfig
     templateConfig?: any;
     // Go type: StrategyConfig
-	    strategyConfig?: any;
+    strategyConfig?: any;
 
     constructor(source: any = {}) {
       if ('string' === typeof source) source = JSON.parse(source);
@@ -379,7 +382,7 @@ export namespace codegen {
         if (asMap) {
           for (const key of Object.keys(a)) {
             a[key] = new classs(a[key]);
-		            }
+          }
           return a;
         }
         return new classs(a);

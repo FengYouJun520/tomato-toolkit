@@ -138,7 +138,7 @@ export function WindowUnmaximise() {
 }
 
 export function WindowMinimise() {
-  window.runtime.WindowMinimise();
+    window.runtime.WindowMinimise();
 }
 
 export function WindowUnminimise() {
