@@ -1,33 +1,33 @@
 {
-  "name": "tomato-toolkit",
-  "assetdir": "frontend/dist",
-  "frontend:build": "",
-  "frontend:install": "pnpm install",
-  "frontend:dev": "",
-  "frontend:dev:watcher": "pnpm dev",
-  "frontend:dev:serverUrl": "auto",
-  "wailsjsdir": "frontend/src",
-  "version": "2",
-  "Path": "",
-  "BuildDir": "",
-  "outputfilename": "tomato-toolkit",
-  "OutputType": "",
-  "Platform": "",
-  "runNonNativeBuildHooks": false,
-  "postBuildHooks": null,
-  "Author": {
-    "name": "FengYouJun",
-    "email": "845225187@qq.com"
-  },
-  "Info": {
-    "companyName": "tomato-toolkit",
-    "productName": "tomato-toolkit",
-    "productVersion": "1.1.0",
-    "copyright": "Copyright 2022 FengYouJun",
-    "comments": "https://github.com/FengYouJun520/tomato-toolkit"
-  },
-  "debounceMS": 100,
-  "devserverurl": "localhost:22330",
-  "appargs": "",
-  "nsisType": "multiple"
+    "name": "tomato-toolkit",
+    "assetdir": "frontend/dist",
+    "frontend:build": "",
+    "frontend:install": "pnpm install",
+    "frontend:dev": "",
+    "frontend:dev:watcher": "pnpm dev",
+    "frontend:dev:serverUrl": "http://localhost:22330",
+    "wailsjsdir": "frontend/src",
+    "version": "2",
+    "Path": "",
+    "BuildDir": "",
+    "outputfilename": "tomato-toolkit",
+    "OutputType": "",
+    "Platform": "",
+    "runNonNativeBuildHooks": false,
+    "postBuildHooks": null,
+    "Author": {
+        "name": "FengYouJun",
+        "email": "845225187@qq.com"
+    },
+    "Info": {
+        "companyName": "tomato-toolkit",
+        "productName": "tomato-toolkit",
+        "productVersion": "1.1.0",
+        "copyright": "Copyright 2022 FengYouJun",
+        "comments": "https://github.com/FengYouJun520/tomato-toolkit"
+    },
+    "debounceMS": 100,
+    "devserverurl": "http://localhost:22330",
+    "appargs": "",
+    "nsisType": "multiple"
 }
