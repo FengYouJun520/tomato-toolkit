@@ -1,38 +1,29 @@
-name: "example combined"
-on:
-  workflow_dispatch:
-  # This Action only starts when you go to Actions and manually run the workflow.
+name: Wails build
+
+on: [push, pull_request]
 
 jobs:
-  package:
+  build:
     strategy:
+      fail-fast: false
       matrix:
-        platform: [windows-latest, macos-latest, linux-latest]
-        go-version: [1.19]
-    runs-on: ${{ matrix.platform }}
+        build: [
+          {name: tomato-toolkit, platform: linux/amd64, os: ubuntu-latest},
+          {name: tomato-toolkit, platform: windows/amd64, os: windows-latest},
+          {name: tomato-toolkit, platform: darwin/universal, os: macos-latest}
+        ]
+    runs-on: ${{ matrix.build.os }}
     steps:
       - uses: actions/checkout@v2
-      - name: Install Go
-        uses: actions/setup-go@v2
         with:
-          go-version: ${{ matrix.go-version }}
+          submodules: recursive
       - name: setup node
         uses: actions/setup-node@v2
         with:
           node-version: 16
-      # You may need to manually build you frontend here, unless you have configured frontend build and install commands in wails.json.
-      - name: build frontend      
         run: npm run build
-      - name: Get Wails
-        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-      - name: windows Build Wails app'
-        if: matrix.platform == 'windows-latest'
-        run: |
-          wails build -clean -upx -webview2 embed -nsis
-      - name: Build Wails app
-        run: |
-          wails build -clean -webview2 embed
-      - name: MacOS download gon for code signing and app notarization
-        if: matrix.platform == 'macos-latest'
-        run: |
-          brew install mitchellh/gon/gon
+      - uses: dAppServer/wails-build-action@v2
+        with:
+          build-name: ${{ matrix.build.name }}
+          build-platform: ${{ matrix.build.platform }}
+          go-version: 1.19
