@@ -14,60 +14,6 @@ export namespace codegen {
 	        this.comment = source["comment"];
 	    }
 	}
-	export class GlobalConfig {
-	    fileOverride: boolean;
-	    disableOpenDir: boolean;
-	    outputDir: string;
-	    author: string;
-	    enableKotlin: boolean;
-	    enableSwagger: boolean;
-	    dateType: string;
-	    commentDate: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new GlobalConfig(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.fileOverride = source["fileOverride"];
-	        this.disableOpenDir = source["disableOpenDir"];
-	        this.outputDir = source["outputDir"];
-	        this.author = source["author"];
-	        this.enableKotlin = source["enableKotlin"];
-	        this.enableSwagger = source["enableSwagger"];
-	        this.dateType = source["dateType"];
-	        this.commentDate = source["commentDate"];
-	    }
-	}
-	export class TemplateConfig {
-	    disableAll: boolean;
-	    disable: boolean;
-	    entity: string;
-	    entityKt: string;
-	    service: string;
-	    serviceImpl: string;
-	    mapper: string;
-	    mapperXml: string;
-	    controller: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new TemplateConfig(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.disableAll = source["disableAll"];
-	        this.disable = source["disable"];
-	        this.entity = source["entity"];
-	        this.entityKt = source["entityKt"];
-	        this.service = source["service"];
-	        this.serviceImpl = source["serviceImpl"];
-	        this.mapper = source["mapper"];
-	        this.mapperXml = source["mapperXml"];
-	        this.controller = source["controller"];
-	    }
-	}
 	export class Service {
 	    superServiceClass: string;
 	    superServiceImplClass: string;
@@ -248,26 +194,32 @@ export namespace codegen {
 		    return a;
 		}
 	}
-	export class DataSourceConfig {
-	    typ: string;
-	    database: string;
-	    username: string;
-	    password: string;
-	    host: string;
-	    port: number;
+	export class TemplateConfig {
+	    disableAll: boolean;
+	    disable: boolean;
+	    entity: string;
+	    entityKt: string;
+	    service: string;
+	    serviceImpl: string;
+	    mapper: string;
+	    mapperXml: string;
+	    controller: string;
 	
 	    static createFrom(source: any = {}) {
-	        return new DataSourceConfig(source);
+	        return new TemplateConfig(source);
 	    }
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.typ = source["typ"];
-	        this.database = source["database"];
-	        this.username = source["username"];
-	        this.password = source["password"];
-	        this.host = source["host"];
-	        this.port = source["port"];
+	        this.disableAll = source["disableAll"];
+	        this.disable = source["disable"];
+	        this.entity = source["entity"];
+	        this.entityKt = source["entityKt"];
+	        this.service = source["service"];
+	        this.serviceImpl = source["serviceImpl"];
+	        this.mapper = source["mapper"];
+	        this.mapperXml = source["mapperXml"];
+	        this.controller = source["controller"];
 	    }
 	}
 	export class PathInfo {
@@ -332,10 +284,54 @@ export namespace codegen {
 		    return a;
 		}
 	}
+	export class GlobalConfig {
+	    fileOverride: boolean;
+	    disableOpenDir: boolean;
+	    outputDir: string;
+	    author: string;
+	    enableKotlin: boolean;
+	    enableSwagger: boolean;
+	    dateType: string;
+	    commentDate: string;
 	
+	    static createFrom(source: any = {}) {
+	        return new GlobalConfig(source);
+	    }
 	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.fileOverride = source["fileOverride"];
+	        this.disableOpenDir = source["disableOpenDir"];
+	        this.outputDir = source["outputDir"];
+	        this.author = source["author"];
+	        this.enableKotlin = source["enableKotlin"];
+	        this.enableSwagger = source["enableSwagger"];
+	        this.dateType = source["dateType"];
+	        this.commentDate = source["commentDate"];
+	    }
+	}
+	export class DataSourceConfig {
+	    typ: string;
+	    database: string;
+	    username: string;
+	    password: string;
+	    host: string;
+	    port: number;
 	
+	    static createFrom(source: any = {}) {
+	        return new DataSourceConfig(source);
+	    }
 	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.typ = source["typ"];
+	        this.database = source["database"];
+	        this.username = source["username"];
+	        this.password = source["password"];
+	        this.host = source["host"];
+	        this.port = source["port"];
+	    }
+	}
 	export class ConfigContext {
 	    dataSource?: DataSourceConfig;
 	    globalConfig?: GlobalConfig;
@@ -374,6 +370,14 @@ export namespace codegen {
 		    return a;
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
 
