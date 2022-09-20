@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 16
       - name: install dep
-        with: npm run install
+        run: npm run install
       - name: setup node
         run: npm run build
       - uses: dAppServer/wails-build-action@v2
