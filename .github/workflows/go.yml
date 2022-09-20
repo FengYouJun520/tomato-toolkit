@@ -1,24 +1,69 @@
-name: Wails build
-
-on: [push, pull_request]
+name: "example combined"
+on:
+  workflow_dispatch:
+  # This Action only starts when you go to Actions and manually run the workflow.
 
 jobs:
-  build:
+  package:
     strategy:
-      fail-fast: false
       matrix:
-        build: [
-          {name: tomato-toolkit, platform: linux/amd64, os: ubuntu-latest},
-          {name: tomato-toolkit, platform: windows/amd64, os: windows-latest},
-          {name: tomato-toolkit, platform: darwin/universal, os: macos-latest}
-        ]
-    runs-on: ${{ matrix.build.os }}
+        platform: [windows-latest, macos-latest, linux-latest]
+        go-version: [1.19]
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
         with:
-          submodules: recursive
-      - uses: dAppServer/wails-build-action@v2
+          go-version: ${{ matrix.go-version }}
+      - name: setup node
+        uses: actions/setup-node@v2
         with:
-          build-name: ${{ matrix.build.name }}
-          build-platform: ${{ matrix.build.platform }}
-          go-version: 1.19
+          node-version: 16
+      # You may need to manually build you frontend here, unless you have configured frontend build and install commands in wails.json.
+        run: npm run build
+      - name: Get Wails
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+      - name: windows Build Wails app'
+        if: matrix.platform == 'windows-latest'
+        run: |
+          wails build -clean -upx -webview2 embed -nsis
+      - name: Build Wails app
+        run: |
+          wails build -clean -webview2 embed
+      - name: MacOS download gon for code signing and app notarization
+        if: matrix.platform == 'macos-latest'
+        run: |
+          brew install mitchellh/gon/gon
+      - name: Import Code-Signing Certificates for macOS
+        if: matrix.platform == 'macos-latest'
+        uses: Apple-Actions/import-codesign-certs@v1
+        with:
+          # The certificates in a PKCS12 file encoded as a base64 string
+          p12-file-base64: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_P12_BASE64 }}
+          # The password used to import the PKCS12 file.
+          - name: Import Code-Signing Certificates for macOS
+  if: matrix.platform == 'macos-latest'
+  uses: Apple-Actions/import-codesign-certs@v1
+  with:
+    # The certificates in a PKCS12 file encoded as a base64 string
+    p12-file-base64: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_P12_BASE64 }}
+    # The password used to import the PKCS12 file.
+    p12-password: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
+- name: Sign our macOS binary
+  if: matrix.platform == 'macos-latest'
+  run: |
+    echo "Signing Package"
+    gon -log-level=info ./build/darwin/gon-sign.json
+    p12-password: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
+- name: Sign our macOS binary
+  if: matrix.platform == 'macos-latest'
+  run: |
+    echo "Signing Package"
+    gon -log-level=info ./build/darwin/gon-sign.json
+    p12-password: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
+- name: Sign our macOS binary
+  if: matrix.platform == 'macos-latest'
+  run: |
+    echo "Signing Package"
+    gon -log-level=info ./build/darwin/gon-sign.json
