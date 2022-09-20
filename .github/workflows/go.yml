@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 16
       - name: install dep
-        run: cd frontend && npm run install
+        run: cd frontend && npm install
       - name: setup node
         run: cd frontend && npm run build
       - uses: dAppServer/wails-build-action@v2
