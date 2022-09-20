@@ -1,4 +1,4 @@
-name: Wails build
+name: tomato-toolkit build
 
 on: [push, pull_request]
 
