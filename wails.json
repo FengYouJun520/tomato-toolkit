@@ -2,9 +2,9 @@
     "name": "tomato-toolkit",
     "assetdir": "frontend/dist",
     "frontend:build": "",
-    "frontend:install": "pnpm install",
+    "frontend:install": "npm install",
     "frontend:dev": "",
-    "frontend:dev:watcher": "pnpm dev",
+    "frontend:dev:watcher": "npm run dev",
     "frontend:dev:serverUrl": "http://localhost:22330",
     "wailsjsdir": "frontend/src",
     "version": "2",
@@ -22,7 +22,7 @@
     "Info": {
         "companyName": "tomato-toolkit",
         "productName": "tomato-toolkit",
-        "productVersion": "1.1.0",
+        "productVersion": "1.2.0",
         "copyright": "Copyright 2022 FengYouJun",
         "comments": "https://github.com/FengYouJun520/tomato-toolkit"
     },
