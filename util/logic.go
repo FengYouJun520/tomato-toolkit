@@ -20,6 +20,7 @@ func MapTo[K, V any](slice []K, f func(k K) V) []V {
 	return result
 }
 
+// First 获取第一个符合条件的值
 func First[T any](slice []T, f func(t T) bool) (T, bool) {
 	for _, v := range slice {
 		if f(v) {
