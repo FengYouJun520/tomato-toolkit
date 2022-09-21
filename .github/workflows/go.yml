@@ -15,36 +15,22 @@ jobs:
     runs-on: ${{ matrix.build.os }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+            version: 7.3
+      - name: Use Node.js 16.13
+        uses: actions/setup-node@v2
         with:
           node-version: 16.13
-
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 7.3
-          run_install: |
-            - recursive: true
-            - cmd: [frontend]
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
+          cache: 'pnpm'
+      - name: Install dependencies
         run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+          cd frontend
+          pnpm install
 
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ matrix.build.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ matrix.build.os }}-pnpm-store-
-
-      - name: setup node
+      - name: Build frontend
         run: |
             cd frontend
             pnpm build
