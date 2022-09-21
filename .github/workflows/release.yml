@@ -22,27 +22,47 @@ jobs:
         with:
           version: 7.3
           run-install: false
+
       - name: Use Node.js 16.13
         uses: actions/setup-node@v2
         with:
           node-version: 16.13
           cache: 'pnpm'
           cache-dependency-path: frontend/pnpm-lock.yaml
+
       - name: Install dependencies
         run: |
           pnpm config set registry https://registry.npmmirror.com/
           cd frontend
           pnpm install --frozen-lockfile
-          
+
       - name: Build frontend
         run: |
-          cd frontend
-          pnpm build
-      - uses: dAppServer/wails-build-action@v2
+            cd frontend
+            pnpm build
+
+      - name: Install Golang
+        uses: actions/setup-go@v3
         with:
-          build-name: ${{ matrix.build.name }}
-          build-platform: ${{ matrix.build.platform }}
-          go-version: 1.19
+          go-version: '1.19'
+          check-latest: true
+          cache: true
+
+      - name: Build Golang
+        run: |
+          go env -w GOPROXY=https://goproxy.cn,direct
+          go mod tidy
+
+      - name: Build wails
+      - run: |
+          go install github.com/wailsapp/wails/v2/cmd/wails@latest
+          wails -v
+          wails update -pre
+          
+      - name: Build tomato-toolkit
+        if: ${{ matrix.build.os }} == "windows-latest"
+        run: |
+          wails build -webview2 download
 
       - name: Release
         uses: softprops/action-gh-release@v1
