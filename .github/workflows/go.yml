@@ -53,11 +53,11 @@ jobs:
           go mod tidy
 
       - name: Build wails
-      - run: |
+        run: |
           go install github.com/wailsapp/wails/v2/cmd/wails@latest
           wails -v
           wails update -pre
-          
+
       - name: Build tomato-toolkit
         if: ${{ matrix.build.os }} == "windows-latest"
         run: |
