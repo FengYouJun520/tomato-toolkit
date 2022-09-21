@@ -65,5 +65,4 @@ jobs:
         with:
           body_path: CHANGELOG.md
           files: |
-            build/bin/tomato-toolkit-amd64-installer.exe
             build/bin/tomato-toolkit.exe
