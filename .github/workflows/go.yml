@@ -47,19 +47,15 @@ jobs:
           check-latest: true
           cache: true
 
-      - name: Build Golang
+      - name: Install wails dependencies
         run: |
           go env -w GOPROXY=https://goproxy.cn,direct
-          go mod tidy
-
-      - name: Build wails
-        run: |
           go install github.com/wailsapp/wails/v2/cmd/wails@latest
           wails -v
+          wails -doctor
           wails update -pre
 
       - name: Build tomato-toolkit
-        if: ${{ matrix.build.os }} == "windows-latest"
         run: |
-          wails build -webview2 download
+          wails build -s -webview2 download
           
