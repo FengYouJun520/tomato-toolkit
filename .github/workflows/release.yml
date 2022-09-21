@@ -63,6 +63,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          body_path: CHANGELOG.md
+          body: "Full Changelog: [CHANGELOG.md](https://github.com/FengYouJun520/tomato-toolkit/blob/main/CHANGELOG.md)"
           files: |
             build/bin/tomato-toolkit.exe
