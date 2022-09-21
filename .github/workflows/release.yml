@@ -21,7 +21,7 @@ jobs:
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: 7.3
-          run-install: false
+          run_install: false
 
       - name: Use Node.js 16.13
         uses: actions/setup-node@v2
@@ -58,7 +58,7 @@ jobs:
           
       - name: Build tomato-toolkit
         run: |
-          wails build -s -webview2 download
+          wails build -v 2 -s -webview2 download
 
       - name: Release
         uses: softprops/action-gh-release@v1
