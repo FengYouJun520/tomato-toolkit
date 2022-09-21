@@ -19,16 +19,19 @@ jobs:
 
       - uses: pnpm/action-setup@v2.2.2
         with:
-            version: 7.3
+          version: 7.3
+          run-install: false
       - name: Use Node.js 16.13
         uses: actions/setup-node@v2
         with:
           node-version: 16.13
           cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
       - name: Install dependencies
         run: |
+          pnpm config set registry https://registry.npmmirror.com/
           cd frontend
-          pnpm install
+          pnpm install --frozen-lockfile
 
       - name: Build frontend
         run: |
