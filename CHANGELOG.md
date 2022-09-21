@@ -1,4 +1,4 @@
-#[1.2.2](https://github.com/FengYouJun520/tomato-toolkit/releases)
+## [1.2.2](https://github.com/FengYouJun520/tomato-toolkit/releases)
 
 ### Buf Fixed
 
