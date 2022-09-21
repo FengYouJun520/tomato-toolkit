@@ -30,8 +30,6 @@ jobs:
           version: 7.3
           run_install: |
             - recursive: true
-              args: [--frozen-lockfile, --strict-peer-dependencies]
-            - args: [--global, gulp, prettier, typescript]
             - cmd: [frontend]
 
       - name: Get pnpm store directory
