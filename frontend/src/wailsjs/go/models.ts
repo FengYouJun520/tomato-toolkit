@@ -1,5 +1,84 @@
+export namespace crypt {
+	
+	export class Config {
+	    typ: string;
+	    cost: string;
+	    source: string;
+	    publicKey: string;
+	    privateKey: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Config(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.typ = source["typ"];
+	        this.cost = source["cost"];
+	        this.source = source["source"];
+	        this.publicKey = source["publicKey"];
+	        this.privateKey = source["privateKey"];
+	    }
+	}
+
+}
+
 export namespace codegen {
 	
+	export class Controller {
+	    superClass: string;
+	    enableHyphenStyle: boolean;
+	    enableRestStyle: boolean;
+	    formatFileName: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Controller(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.superClass = source["superClass"];
+	        this.enableHyphenStyle = source["enableHyphenStyle"];
+	        this.enableRestStyle = source["enableRestStyle"];
+	        this.formatFileName = source["formatFileName"];
+	    }
+	}
+	export class Mapper {
+	    superClass: string;
+	    enableMapperAnnotation: boolean;
+	    formatMapperFileName: string;
+	    formatXmlFileName: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Mapper(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.superClass = source["superClass"];
+	        this.enableMapperAnnotation = source["enableMapperAnnotation"];
+	        this.formatMapperFileName = source["formatMapperFileName"];
+	        this.formatXmlFileName = source["formatXmlFileName"];
+	    }
+	}
+	export class Service {
+	    superServiceClass: string;
+	    superServiceImplClass: string;
+	    formatServiceFileName: string;
+	    formatServiceImplFileName: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Service(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.superServiceClass = source["superServiceClass"];
+	        this.superServiceImplClass = source["superServiceImplClass"];
+	        this.formatServiceFileName = source["formatServiceFileName"];
+	        this.formatServiceImplFileName = source["formatServiceImplFileName"];
+	    }
+	}
 	export class DataSourceConfig {
 	    typ: string;
 	    database: string;
@@ -20,6 +99,32 @@ export namespace codegen {
 	        this.password = source["password"];
 	        this.host = source["host"];
 	        this.port = source["port"];
+	    }
+	}
+	export class GlobalConfig {
+	    fileOverride: boolean;
+	    disableOpenDir: boolean;
+	    outputDir: string;
+	    author: string;
+	    enableKotlin: boolean;
+	    enableSwagger: boolean;
+	    dateType: string;
+	    commentDate: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new GlobalConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.fileOverride = source["fileOverride"];
+	        this.disableOpenDir = source["disableOpenDir"];
+	        this.outputDir = source["outputDir"];
+	        this.author = source["author"];
+	        this.enableKotlin = source["enableKotlin"];
+	        this.enableSwagger = source["enableSwagger"];
+	        this.dateType = source["dateType"];
+	        this.commentDate = source["commentDate"];
 	    }
 	}
 	export class PathInfo {
@@ -83,6 +188,48 @@ export namespace codegen {
 		    }
 		    return a;
 		}
+	}
+	export class TemplateConfig {
+	    disableAll: boolean;
+	    disable: boolean;
+	    entity: string;
+	    entityKt: string;
+	    service: string;
+	    serviceImpl: string;
+	    mapper: string;
+	    mapperXml: string;
+	    controller: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new TemplateConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.disableAll = source["disableAll"];
+	        this.disable = source["disable"];
+	        this.entity = source["entity"];
+	        this.entityKt = source["entityKt"];
+	        this.service = source["service"];
+	        this.serviceImpl = source["serviceImpl"];
+	        this.mapper = source["mapper"];
+	        this.mapperXml = source["mapperXml"];
+	        this.controller = source["controller"];
+	    }
+	}
+	export class DatabaseOptions {
+	    name: string;
+	    comment: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DatabaseOptions(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.comment = source["comment"];
+	    }
 	}
 	export class FieldTypeKeyVal {
 	    key: string;
@@ -164,74 +311,6 @@ export namespace codegen {
 		    return a;
 		}
 	}
-	export class Controller {
-	    superClass: string;
-	    enableHyphenStyle: boolean;
-	    enableRestStyle: boolean;
-	    formatFileName: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new Controller(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.superClass = source["superClass"];
-	        this.enableHyphenStyle = source["enableHyphenStyle"];
-	        this.enableRestStyle = source["enableRestStyle"];
-	        this.formatFileName = source["formatFileName"];
-	    }
-	}
-	export class Service {
-	    superServiceClass: string;
-	    superServiceImplClass: string;
-	    formatServiceFileName: string;
-	    formatServiceImplFileName: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new Service(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.superServiceClass = source["superServiceClass"];
-	        this.superServiceImplClass = source["superServiceImplClass"];
-	        this.formatServiceFileName = source["formatServiceFileName"];
-	        this.formatServiceImplFileName = source["formatServiceImplFileName"];
-	    }
-	}
-	export class DatabaseOptions {
-	    name: string;
-	    comment: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new DatabaseOptions(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.name = source["name"];
-	        this.comment = source["comment"];
-	    }
-	}
-	export class Mapper {
-	    superClass: string;
-	    enableMapperAnnotation: boolean;
-	    formatMapperFileName: string;
-	    formatXmlFileName: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new Mapper(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.superClass = source["superClass"];
-	        this.enableMapperAnnotation = source["enableMapperAnnotation"];
-	        this.formatMapperFileName = source["formatMapperFileName"];
-	        this.formatXmlFileName = source["formatXmlFileName"];
-	    }
-	}
 	export class StrategyConfig {
 	    enableCapitalMode: boolean;
 	    enableSkipView: boolean;
@@ -278,60 +357,6 @@ export namespace codegen {
 		    return a;
 		}
 	}
-	export class TemplateConfig {
-	    disableAll: boolean;
-	    disable: boolean;
-	    entity: string;
-	    entityKt: string;
-	    service: string;
-	    serviceImpl: string;
-	    mapper: string;
-	    mapperXml: string;
-	    controller: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new TemplateConfig(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.disableAll = source["disableAll"];
-	        this.disable = source["disable"];
-	        this.entity = source["entity"];
-	        this.entityKt = source["entityKt"];
-	        this.service = source["service"];
-	        this.serviceImpl = source["serviceImpl"];
-	        this.mapper = source["mapper"];
-	        this.mapperXml = source["mapperXml"];
-	        this.controller = source["controller"];
-	    }
-	}
-	export class GlobalConfig {
-	    fileOverride: boolean;
-	    disableOpenDir: boolean;
-	    outputDir: string;
-	    author: string;
-	    enableKotlin: boolean;
-	    enableSwagger: boolean;
-	    dateType: string;
-	    commentDate: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new GlobalConfig(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.fileOverride = source["fileOverride"];
-	        this.disableOpenDir = source["disableOpenDir"];
-	        this.outputDir = source["outputDir"];
-	        this.author = source["author"];
-	        this.enableKotlin = source["enableKotlin"];
-	        this.enableSwagger = source["enableSwagger"];
-	        this.dateType = source["dateType"];
-	        this.commentDate = source["commentDate"];
-	    }
-	}
 	export class ConfigContext {
 	    dataSource?: DataSourceConfig;
 	    globalConfig?: GlobalConfig;
@@ -371,33 +396,6 @@ export namespace codegen {
 		}
 	}
 	
-	
-	
-
-}
-
-export namespace crypt {
-	
-	export class Config {
-	    typ: string;
-	    cost: string;
-	    source: string;
-	    publicKey: string;
-	    privateKey: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new Config(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.typ = source["typ"];
-	        this.cost = source["cost"];
-	        this.source = source["source"];
-	        this.publicKey = source["publicKey"];
-	        this.privateKey = source["privateKey"];
-	    }
-	}
 
 }
 

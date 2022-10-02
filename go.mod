@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/getlantern/systray v1.2.1
-	github.com/wailsapp/wails/v2 v2.0.0-rc.1.1
+	github.com/wailsapp/wails/v2 v2.0.0
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292
 	golang.org/x/text v0.3.7
 	gorm.io/driver/mysql v1.3.2
