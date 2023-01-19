@@ -3,7 +3,7 @@ import { NIcon, NLayoutSider, NMenu } from 'naive-ui'
 
 import { Component } from 'vue'
 import { RouteRecordRaw, RouterLink } from 'vue-router'
-import { routes } from '@/router'
+import router, { routes } from '@/router'
 import { MenuMixedOption, MenuOption } from 'naive-ui/es/menu/src/interface'
 
 const message = useMessage()
@@ -24,7 +24,7 @@ const generateMenuOptions = (routes: RouteRecordRaw[]): MenuMixedOption[] => rou
         { default: () => route.meta?.title }
       ),
     icon: renderIcon(route.meta?.icon),
-    key: route.path,
+    key: router.resolve(route).path,
     children: route.children && route.children.length > 0 ? generateMenuOptions(route.children) : undefined,
   }
 
@@ -43,7 +43,11 @@ const handleUpdateValue = (key: string, item: MenuOption) =>{
 
 <template>
   <NLayoutSider :native-scrollbar="false">
-    <NMenu :options="menuOptions" @update:value="handleUpdateValue" />
+    <NMenu
+      :default-value="$route.path"
+      :options="menuOptions"
+      @update:value="handleUpdateValue"
+    />
   </NLayoutSider>
 </template>
 
