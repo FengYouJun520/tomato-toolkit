@@ -1,6 +1,6 @@
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import { resolve } from "path";
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
@@ -9,8 +9,8 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 export default defineConfig({
   resolve: {
     alias: [
-      {find: '@', replacement: resolve(__dirname, 'src')}
-    ]
+      { find: '@', replacement: resolve(__dirname, 'src') },
+    ],
   },
   plugins: [
     vue(),
@@ -18,14 +18,15 @@ export default defineConfig({
       dts: resolve(__dirname, 'src/types/auto-import.d.ts'),
       imports: [
         'vue',
+        'pinia',
         {
           'naive-ui': [
             'useDialog',
             'useMessage',
             'useNotification',
-            'useLoadingBar'
-          ]
-        }
+            'useLoadingBar',
+          ],
+        },
       ],
       eslintrc: {
         enabled: true,
@@ -48,13 +49,13 @@ export default defineConfig({
   },
   // to make use of `TAURI_DEBUG` and other env variables
   // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
-  envPrefix: ["VITE_", "TAURI_"],
+  envPrefix: ['VITE_', 'TAURI_'],
   build: {
     // Tauri supports es2021
-    target: process.env.TAURI_PLATFORM == "windows" ? "chrome105" : "safari13",
+    target: process.env.TAURI_PLATFORM === 'windows' ? 'chrome105' : 'safari13',
     // don't minify for debug builds
-    minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
+    minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
     // produce sourcemaps for debug builds
     sourcemap: !!process.env.TAURI_DEBUG,
   },
-});
+})
