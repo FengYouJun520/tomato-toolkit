@@ -4,7 +4,15 @@
 </script>
 
 <template>
-  <div>mybatis plus generator</div>
+  <div>
+    <div>mybatis plus generator</div>
+    <n-space>
+      <n-button>default</n-button>
+      <n-button type="primary">
+        primary
+      </n-button>
+    </n-space>
+  </div>
 </template>
 
 <style lang="css" scoped>

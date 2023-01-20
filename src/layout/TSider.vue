@@ -5,8 +5,10 @@ import { Component } from 'vue'
 import { RouteRecordRaw, RouterLink } from 'vue-router'
 import router, { routes } from '@/router'
 import { MenuMixedOption, MenuOption } from 'naive-ui/es/menu/src/interface'
+import { useUiState } from '@/store/ui'
 
 const message = useMessage()
+const uiState = useUiState()
 
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
@@ -42,8 +44,13 @@ const handleUpdateValue = (key: string, item: MenuOption) =>{
 </script>
 
 <template>
-  <NLayoutSider :native-scrollbar="false">
+  <NLayoutSider
+    :native-scrollbar="false"
+    collapse-mode="width"
+    :collapsed="uiState.isCollapse"
+  >
     <NMenu
+      :collapsed="uiState.isCollapse"
       :default-value="$route.path"
       :options="menuOptions"
       @update:value="handleUpdateValue"

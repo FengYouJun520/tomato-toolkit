@@ -8,6 +8,7 @@ specifiers:
   '@types/node': ^18.11.18
   '@typescript-eslint/eslint-plugin': ^5.48.2
   '@typescript-eslint/parser': ^5.48.2
+  '@vicons/antd': ^0.12.0
   '@vicons/ionicons5': ^0.12.0
   '@vitejs/plugin-vue': ^4.0.0
   autoprefixer: ^10.4.13
@@ -43,6 +44,7 @@ devDependencies:
   '@types/node': 18.11.18
   '@typescript-eslint/eslint-plugin': 5.48.2_caon6io6stgpr7lz2rtbhekxqy
   '@typescript-eslint/parser': 5.48.2_7uibuqfxkfaozanbtbziikiqje
+  '@vicons/antd': 0.12.0
   '@vicons/ionicons5': 0.12.0
   '@vitejs/plugin-vue': 4.0.0_vite@4.0.4+vue@3.2.45
   autoprefixer: 10.4.13_postcss@8.4.21
@@ -877,6 +879,10 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.48.2
       eslint-visitor-keys: 3.3.0
+    dev: true
+
+  /@vicons/antd/0.12.0:
+    resolution: {integrity: sha512-C0p6aO1EmGG1QHrqgUWQS1No20934OdWSRQshM5NIDK5H1On6tC26U0hT6Rmp40KfUsvhvX5YW8BoWJdNFifPg==}
     dev: true
 
   /@vicons/ionicons5/0.12.0:
