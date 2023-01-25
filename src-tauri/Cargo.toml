@@ -17,6 +17,9 @@ tauri-build = { version = "1.2", features = [] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.2", features = ["fs-all", "shell-open"] }
+tera = "1.17.1"
+sqlx = { version = "0.6.2", features = ["runtime-tokio-rustls", "all"] }
+anyhow = "1.0.68"
 
 [features]
 # by default Tauri runs in production mode

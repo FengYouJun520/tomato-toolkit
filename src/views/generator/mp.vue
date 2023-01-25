@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <div>
+  <n-card>
     <div>mybatis plus generator</div>
     <n-space>
       <n-button>default</n-button>
@@ -12,7 +12,7 @@
         primary
       </n-button>
     </n-space>
-  </div>
+  </n-card>
 </template>
 
 <style lang="css" scoped>

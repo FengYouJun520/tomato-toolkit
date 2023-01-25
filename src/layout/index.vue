@@ -6,10 +6,10 @@ import TSider from './TSider.vue'
 <template>
   <n-layout has-sider position="absolute">
     <TSider />
-    <n-layout class="mx-auto">
+    <n-layout>
       <THeader />
       <n-layout-content
-        class="mt-16"
+        class="mt-16 m-5"
         position="absolute"
         :native-scrollbar="false"
       >

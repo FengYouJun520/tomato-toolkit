@@ -4,16 +4,11 @@
 )]
 
 use std::fs;
-
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
+use tomato_toolkit::commands::*;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![test_connection, mp_codegen])
         .setup(|app| {
             let resource_path = app
                 .path_resolver()

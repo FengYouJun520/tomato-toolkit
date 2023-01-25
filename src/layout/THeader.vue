@@ -6,7 +6,7 @@ const uiState = useUiState()
 </script>
 
 <template>
-  <n-layout-header position="absolute" class="h-16">
+  <n-layout-header position="absolute" class="h-16 px-5">
     <div class="h-full flex justify-between items-center">
       <n-button quaternary @click="uiState.toggleCollapse">
         <template #icon>

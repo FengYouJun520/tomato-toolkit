@@ -3,12 +3,12 @@
 </script>
 
 <template>
-  <div>
+  <n-card>
     <div>dashboard</div>
     <div v-for="i in 50" :key="i">
       {{ i }}
     </div>
-  </div>
+  </n-card>
 </template>
 
 <style lang="css" scoped>

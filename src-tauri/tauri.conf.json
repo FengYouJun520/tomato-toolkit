@@ -64,10 +64,12 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 750,
+        "width": 1200,
         "resizable": true,
         "title": "tomato-toolkit",
-        "width": 800
+        "x": 30,
+        "y": 30
       }
     ]
   }
