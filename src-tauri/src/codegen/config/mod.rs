@@ -24,16 +24,6 @@ pub struct DataSourceConfig {
 }
 
 impl DataSourceConfig {
-    pub fn url(&self) -> String {
-        match self.r#type.as_ref() {
-            "sqlite" => format!("sqlite://{}", self.database),
-            _ => format!(
-                "{}://{}:{}@{}:{}/{}",
-                &self.r#type, &self.username, &self.password, &self.host, self.port, &self.database
-            ),
-        }
-    }
-
     pub async fn connect(&self) -> Result<AnyConnection> {
         let options: AnyConnectOptions = match self.r#type.as_ref() {
             "mysql" => MySqlConnectOptions::new()
@@ -213,6 +203,7 @@ pub struct StrategyConfig {
     pub enable_sql_filter: bool,
     /// 启用 schema 默认 false
     pub enable_schema: bool,
+    pub entity: Entity,
     pub controller: Controller,
     pub mapper: Mapper,
     pub service: Service,
