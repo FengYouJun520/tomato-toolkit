@@ -12,7 +12,7 @@ import GenerateConfig from './GenerateConfig.vue'
     </template>
     <n-form label-placement="left" :label-width="100" label-align="left">
       <DatasourceConfig />
-      <GenerateConfig />
+      <GenerateConfig class="mt-5" />
     </n-form>
   </n-card>
 </template>

@@ -1,3 +1,11 @@
+export interface MpConfig {
+  datasourceConfig: DatasourceConfig
+  globalConfig: GlobalConfig
+  packageConfig: PackageConfig
+  templateConfig: TemplateConfig
+  strategyConfig: StrategyConfig
+}
+
 export interface DatasourceConfig {
   type: string
   database: string

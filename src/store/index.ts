@@ -1,7 +1,7 @@
 import { createPinia } from 'pinia'
-import PiniaPersisted from 'pinia-plugin-persistedstate'
-const store = createPinia()
+import { createPersistedStatePlugin } from 'pinia-plugin-persistedstate-2'
 
-store.use(PiniaPersisted)
+const pinia = createPinia()
+pinia.use(createPersistedStatePlugin())
 
-export default store
+export default pinia

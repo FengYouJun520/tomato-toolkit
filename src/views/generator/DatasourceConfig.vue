@@ -9,16 +9,10 @@ import lockIcon from '@/assets/lock.png'
 import { invoke } from '@tauri-apps/api'
 import { DatasourceConfig } from '@/types/type'
 import rocketIcon from '@/assets/rocket.svg'
+import { useDatesource } from '@/store/modules/mp/datasource'
 
 const message = useMessage()
-const datasourceConfig: DatasourceConfig = reactive({
-  type: 'mysql',
-  database: 'blog',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: 'root',
-})
+const datasourceConfig = useDatesource()
 
 const options: SelectOption[] = [
   {
@@ -84,7 +78,7 @@ const testLoading = ref(false)
 const handleTestConnection = async () => {
   testLoading.value = true
   try {
-    await invoke('test_connection', { config: toRaw(datasourceConfig) })
+    await invoke('test_connection', { config: datasourceConfig.$state })
     message.success('测试连接成功')
   } catch (error) {
     message.error(error as string)
