@@ -1,8 +1,14 @@
 use serde::Deserialize;
+use sqlx::{
+    any::AnyConnectOptions, mssql::MssqlConnectOptions, mysql::MySqlConnectOptions,
+    postgres::PgConnectOptions, sqlite::SqliteConnectOptions, AnyConnection, ConnectOptions,
+};
 use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
 };
+
+use crate::error::Result;
 
 use super::protocol::types::DateType;
 
@@ -15,6 +21,47 @@ pub struct DataSourceConfig {
     pub port: u16,
     pub username: String,
     pub password: String,
+}
+
+impl DataSourceConfig {
+    pub fn url(&self) -> String {
+        match self.r#type.as_ref() {
+            "sqlite" => format!("sqlite://{}", self.database),
+            _ => format!(
+                "{}://{}:{}@{}:{}/{}",
+                &self.r#type, &self.username, &self.password, &self.host, self.port, &self.database
+            ),
+        }
+    }
+
+    pub async fn connect(&self) -> Result<AnyConnection> {
+        let options: AnyConnectOptions = match self.r#type.as_ref() {
+            "mysql" => MySqlConnectOptions::new()
+                .host(&self.host)
+                .port(self.port)
+                .username(&self.username)
+                .password(&self.password)
+                .into(),
+            "sqlite" => SqliteConnectOptions::new().filename(&self.database).into(),
+            "mssql" => MssqlConnectOptions::new()
+                .host(&self.host)
+                .port(self.port)
+                .database(&self.database)
+                .username(&self.username)
+                .password(&self.password)
+                .into(),
+            "postgres" => PgConnectOptions::new()
+                .host(&self.host)
+                .port(self.port)
+                .database(&self.database)
+                .username(&self.username)
+                .password(&self.password)
+                .into(),
+            _ => return Err(format!("不支持的数据库类型: {}", self.r#type).into()),
+        };
+
+        Ok(options.connect().await?)
+    }
 }
 
 #[derive(Deserialize)]

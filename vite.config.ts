@@ -35,7 +35,7 @@ export default defineConfig({
       },
     }),
     Components({
-      dts: resolve(__dirname, 'src/types/components.d.ts'),
+      dts: false,
       resolvers: [NaiveUiResolver()],
     })],
 
