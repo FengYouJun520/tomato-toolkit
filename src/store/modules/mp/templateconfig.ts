@@ -1,6 +1,6 @@
 import { TemplateConfig } from '@/types/type'
 
-export const useTemplateConfig = defineStore('templateConfigState', {
+export const useTemplateConfigStore = defineStore('templateConfigState', {
   state: (): TemplateConfig => ({
     entity: '',
     entityKt: '',

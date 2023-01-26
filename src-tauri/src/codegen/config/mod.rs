@@ -6,9 +6,10 @@ use sqlx::{
 use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
+    str::FromStr,
 };
 
-use crate::error::Result;
+use crate::error::{Result, SerializeError};
 
 use super::protocol::types::DateType;
 
@@ -320,11 +321,40 @@ pub enum OutputFile {
     Parent,
 }
 
+impl FromStr for OutputFile {
+    type Err = SerializeError;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        match s {
+            "entity" => Ok(Self::Entity),
+            "service" => Ok(Self::Service),
+            "serviceImpl" => Ok(Self::ServiceImpl),
+            "mapper" => Ok(Self::Mapper),
+            "xml" => Ok(Self::Xml),
+            "controller" => Ok(Self::Controller),
+            "parent" => Ok(Self::Parent),
+            _ => Err(format!("不支持的输出文件类型: {}", s).into()),
+        }
+    }
+}
+
 #[derive(Default, Deserialize)]
 pub enum NamingStrategy {
     NoChange,
     #[default]
     UnderlineToCamel,
+}
+
+impl FromStr for NamingStrategy {
+    type Err = SerializeError;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        match s {
+            "noChange" => Ok(Self::NoChange),
+            "underlineToCamel" => Ok(Self::UnderlineToCamel),
+            _ => Err(format!("不支持的命名策略: {}", s).into()),
+        }
+    }
 }
 
 impl NamingStrategy {
@@ -354,4 +384,19 @@ pub enum IdType {
     ASSIGN_ID,
     ///分配UUID (主键类型为 string) 默认实现类 com.baomidou.mybatisplus.core.incrementer.DefaultIdentifierGenerator(UUID.replace("-",""))
     ASSIGN_UUID,
+}
+
+impl FromStr for IdType {
+    type Err = SerializeError;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        match s {
+            "auto" => Ok(Self::AUTO),
+            "none" => Ok(Self::NONE),
+            "input" => Ok(Self::INPUT),
+            "assignId" => Ok(Self::ASSIGN_ID),
+            "assignUuid" => Ok(Self::ASSIGN_UUID),
+            _ => Err(format!("不支持的主键类型: {}", s).into()),
+        }
+    }
 }

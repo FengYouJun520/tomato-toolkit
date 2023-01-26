@@ -22,15 +22,11 @@ export interface GlobalConfig {
   kotlin: boolean
   swagger: boolean
   springdoc: boolean
-  dateType: DateType
+  dateType: DataType
   commentDate: string
 }
 
-export enum DataType {
-  ONLY_DATE,
-  SQL_PACK,
-  TIME_PACK
-}
+export type DataType = 'ONLY_DATE' | 'SQL_PACK' | 'TIME_PACK'
 
 export interface PackageConfig {
   parent: string
@@ -45,15 +41,7 @@ export interface PackageConfig {
   packageInfos?: Map<string, string>
 }
 
-export enum OutputFile {
-  ENTITY,
-  SERVICE,
-  SERVICE_IMPL,
-  MAPPER,
-  XML,
-  CONTROLLER,
-  PARENT
-}
+export type OutputFile = 'entity'|'service'|'serviceImpl'|'mapper'|'xml'|'controller'|'parent'
 
 export interface TemplateConfig {
   entity: string
@@ -138,31 +126,6 @@ export interface TableFill {
   value: string
 }
 
-export enum NamingStrategy {
-  NO_CHANGE,
-  UNDERLINE_TO_CAMEL
-}
+export type NamingStrategy = 'noChange' | 'underlineToCamel'
 
-export enum IdType {
-    /**
-     * 数据库ID自增, 该类型请确保数据库设置了 ID自增 否则无效
-     */
-    AUTO,
-    /**
-     * 该类型为未设置主键类型(注解里等于跟随全局,全局里约等于 INPUT)
-     */
-    NONE,
-    /**
-     * 用户输入ID, 该类型可以通过自己注册自动填充插件进行填充
-     */
-    INPUT,
-    /** 
-     * 以下2种类型、只有当插入对象ID 为空，才自动填充。
-     * 分配ID (主键类型为number或string）, 默认实现类 com.baomidou.mybatisplus.core.incrementer.DefaultIdentifierGenerator(雪花算法)
-     */
-    ASSIGN_ID,
-    /**
-     * 分配UUID (主键类型为 string) 默认实现类 com.baomidou.mybatisplus.core.incrementer.DefaultIdentifierGenerator(UUID.replace("-",""))
-     */
-    ASSIGN_UUID,
-}
+export type IdType = 'auto' | 'none'|'input'|'assignId'|'assignUuid'

@@ -1,6 +1,6 @@
 import { DataType, GlobalConfig } from '@/types/type'
 
-export const useGlobalConfig = defineStore('globalConfigState', {
+export const useGlobalConfigStore = defineStore('globalConfigState', {
   state: (): GlobalConfig => ({
     outputDir: 'D://',
     open: false,
@@ -8,7 +8,7 @@ export const useGlobalConfig = defineStore('globalConfigState', {
     kotlin: false,
     swagger: false,
     springdoc: false,
-    dateType: DataType.TIME_PACK,
+    dateType: 'TIME_PACK',
     commentDate: '%Y-%M-%S',
   }),
   persistedState: {

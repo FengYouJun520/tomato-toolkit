@@ -1,6 +1,6 @@
 import { IdType, NamingStrategy, StrategyConfig } from '@/types/type'
 
-export const useStrategyConfig = defineStore('strategyConfigState', {
+export const useStrategyConfigStore = defineStore('strategyConfigState', {
   state: (): StrategyConfig => ({
     isCapitalMode: false,
     skipView: false,
@@ -27,9 +27,9 @@ export const useStrategyConfig = defineStore('strategyConfigState', {
       logicDeleteColumnName: '',
       logicDeletePropertyName: '',
       tableFillList: [],
-      naming: NamingStrategy.UNDERLINE_TO_CAMEL,
+      naming: 'underlineToCamel',
       activeRecord: false,
-      idType: IdType.AUTO,
+      idType: 'auto',
       fileOverride: true,
       formatFilename: '',
     },

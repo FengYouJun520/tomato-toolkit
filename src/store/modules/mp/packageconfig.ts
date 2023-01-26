@@ -1,6 +1,6 @@
 import { PackageConfig } from '@/types/type'
 
-export const usePackageConfig = defineStore('packageConfigState', {
+export const usePackageConfigStore = defineStore('packageConfigState', {
   state: (): PackageConfig => ({
     parent: '',
     moduleName: '',

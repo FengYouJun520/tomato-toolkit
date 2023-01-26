@@ -7,12 +7,11 @@ import postgresIcon from '@/assets/postgres.svg'
 import userIcon from '@/assets/user.png'
 import lockIcon from '@/assets/lock.png'
 import { invoke } from '@tauri-apps/api'
-import { DatasourceConfig } from '@/types/type'
 import rocketIcon from '@/assets/rocket.svg'
-import { useDatesource } from '@/store/modules/mp/datasource'
+import { useDatesourceStore } from '@/store/modules/mp/datasource'
 
 const message = useMessage()
-const datasourceConfig = useDatesource()
+const datasourceConfigStore = useDatesourceStore()
 
 const options: SelectOption[] = [
   {
@@ -78,42 +77,50 @@ const testLoading = ref(false)
 const handleTestConnection = async () => {
   testLoading.value = true
   try {
-    await invoke('test_connection', { config: datasourceConfig.$state })
+    await invoke('test_connection', { config: datasourceConfigStore.$state })
     message.success('测试连接成功')
   } catch (error) {
     message.error(error as string)
   }
   testLoading.value = false
 }
+
+const handleReset = () => {
+  datasourceConfigStore.$reset()
+}
 </script>
 
 <template>
   <n-form-item label="数据库类型">
     <n-select
-      v-model:value="datasourceConfig.type"
+      v-model:value="datasourceConfigStore.type"
       :options="options"
       :render-tag="renderTag"
       :render-label="renderLabel"
     />
   </n-form-item>
   <n-form-item label="数据库名称">
-    <n-input v-model:value="datasourceConfig.database" />
+    <n-input v-model:value="datasourceConfigStore.database" />
   </n-form-item>
   <n-form-item label="Host">
-    <n-input v-model:value="datasourceConfig.host" />
+    <n-input v-model:value="datasourceConfigStore.host" />
   </n-form-item>
   <n-form-item label="Port">
-    <n-input-number v-model:value="datasourceConfig.port" :min="0" :max="65565" />
+    <n-input-number v-model:value="datasourceConfigStore.port" :min="0" :max="65565" />
   </n-form-item>
   <n-form-item label="用户名">
-    <n-input v-model:value="datasourceConfig.username">
+    <n-input v-model:value="datasourceConfigStore.username">
       <template #prefix>
         <img :src="userIcon" alt="user">
       </template>
     </n-input>
   </n-form-item>
   <n-form-item label="密码">
-    <n-input v-model:value="datasourceConfig.password" type="password">
+    <n-input
+      v-model:value="datasourceConfigStore.password"
+      type="password"
+      show-password-on="click"
+    >
       <template #prefix>
         <img :src="lockIcon" alt="lock">
       </template>
@@ -130,7 +137,7 @@ const handleTestConnection = async () => {
       </template>
       测试
     </n-button>
-    <n-button type="error">
+    <n-button type="warning" @click="handleReset">
       重置
     </n-button>
   </div>

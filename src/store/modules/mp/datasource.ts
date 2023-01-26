@@ -1,6 +1,6 @@
 import { DatasourceConfig } from '@/types/type'
 
-export const useDatesource = defineStore('datasourceConfigState', {
+export const useDatesourceStore = defineStore('datasourceConfigState', {
   state: (): DatasourceConfig => ({
     type: 'mysql',
     database: 'blog',
