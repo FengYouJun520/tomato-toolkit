@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GlobalConfig from './GlobalConfig.vue'
 import PackageConfig from './PackageConfig.vue'
-import StrategyConfig from './StrategyConfig.vue'
+import StrategyConfig from './strategy/StrategyConfig.vue'
 import TemplateConfig from './TemplateConfig.vue'
 </script>
 

@@ -10,15 +10,21 @@ const handleReset = () => {
 </script>
 
 <template>
-  <n-form label-placement="left" :label-width="120" label-align="right">
-    <n-form-item>
-      <n-button type="warning" @click="handleReset">
-        重置
-      </n-button>
-    </n-form-item>
+  <n-form-item>
+    <n-button type="warning" @click="handleReset">
+      重置
+    </n-button>
+  </n-form-item>
+
+  <n-form
+    label-placement="left"
+    :label-width="120"
+    label-align="right"
+    :disabled="templateConfigStore.disable"
+  >
     <n-grid :cols="2" :x-gap="24">
-      <n-form-item-gi label="禁用所有模板">
-        <n-radio-group v-model:value="templateConfigStore.disable">
+      <n-form-item-gi label="禁用所有模板" label-placement="left">
+        <n-radio-group v-model:value="templateConfigStore.disable" :disabled="false">
           <n-radio-button :value="true">
             开启
           </n-radio-button>

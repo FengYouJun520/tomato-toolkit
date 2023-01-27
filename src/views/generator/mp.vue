@@ -7,15 +7,9 @@ import { createTableContext } from './useTables'
 import { BasicTableInfo } from '@/types/type'
 
 const strategyStore = useStrategyConfigStore()
-const disabled = computed(() => strategyStore.include.size <= 0)
-watchEffect(() => {
-  console.log(strategyStore.include.size)
-})
+const disabled = computed(() => strategyStore.include.length <= 0)
 
-const tables = ref<BasicTableInfo[]>([{
-  name: 'sys_user',
-  comment: '用户表',
-}])
+const tables = ref<BasicTableInfo[]>([])
 
 createTableContext(tables)
 </script>

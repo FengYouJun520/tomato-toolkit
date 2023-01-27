@@ -9,7 +9,10 @@ import lockIcon from '@/assets/lock.png'
 import { invoke } from '@tauri-apps/api'
 import rocketIcon from '@/assets/rocket.svg'
 import { useDatesourceStore } from '@/store/modules/mp/datasource'
+import { useTables } from './useTables'
+import { BasicTableInfo } from '@/types/type'
 
+const tablesContext = useTables()
 const message = useMessage()
 const datasourceConfigStore = useDatesourceStore()
 
@@ -77,7 +80,8 @@ const testLoading = ref(false)
 const handleTestConnection = async () => {
   testLoading.value = true
   try {
-    await invoke('test_connection', { config: datasourceConfigStore.$state })
+    const tables = await invoke<BasicTableInfo[]>('test_connection', { config: datasourceConfigStore.$state })
+    tablesContext.tables.value = tables
     message.success('测试连接成功')
   } catch (error) {
     message.error(error as string)

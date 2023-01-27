@@ -21,6 +21,7 @@ tera = "1.17.1"
 sqlx = { version = "0.6.2", features = ["runtime-tokio-rustls", "all"] }
 anyhow = "1.0.68"
 convert_case = "0.6.0"
+open = "3.2.0"
 
 [features]
 # by default Tauri runs in production mode

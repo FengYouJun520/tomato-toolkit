@@ -20,6 +20,7 @@ const handleReset = () => {
     <n-form-item label="作者">
       <n-input v-model:value="globalConfigStore.author" />
     </n-form-item>
+
     <n-grid :cols="2" :x-gap="24">
       <n-form-item-gi label="打开输出目录">
         <n-radio-group v-model:value="globalConfigStore.open">
@@ -31,8 +32,8 @@ const handleReset = () => {
           </n-radio-button>
         </n-radio-group>
       </n-form-item-gi>
-      <n-form-item-gi label="开启kotlin模式">
-        <n-radio-group v-model:value="globalConfigStore.kotlin">
+      <n-form-item-gi label="覆盖已生成文件">
+        <n-radio-group v-model:value="globalConfigStore.fileOverride">
           <n-radio-button :value="true">
             开启
           </n-radio-button>
@@ -41,6 +42,7 @@ const handleReset = () => {
           </n-radio-button>
         </n-radio-group>
       </n-form-item-gi>
+
       <n-form-item-gi label="开启swagger">
         <n-radio-group v-model:value="globalConfigStore.swagger" :disabled="globalConfigStore.springdoc">
           <n-radio-button :value="true">
@@ -53,6 +55,17 @@ const handleReset = () => {
       </n-form-item-gi>
       <n-form-item-gi label="开启springdoc">
         <n-radio-group v-model:value="globalConfigStore.springdoc">
+          <n-radio-button :value="true">
+            开启
+          </n-radio-button>
+          <n-radio-button :value="false">
+            关闭
+          </n-radio-button>
+        </n-radio-group>
+      </n-form-item-gi>
+
+      <n-form-item-gi label="开启kotlin模式">
+        <n-radio-group v-model:value="globalConfigStore.kotlin">
           <n-radio-button :value="true">
             开启
           </n-radio-button>
@@ -77,11 +90,11 @@ const handleReset = () => {
           },
         ]" />
       </n-form-item-gi>
-      <n-form-item-gi label="注释日期格式">
-        <n-input v-model:value="globalConfigStore.commentDate" />
-      </n-form-item-gi>
     </n-grid>
 
+    <n-form-item label="注释日期格式">
+      <n-input v-model:value="globalConfigStore.commentDate" />
+    </n-form-item>
     <n-form-item label="输出目录">
       <n-input v-model:value="globalConfigStore.outputDir" />
     </n-form-item>

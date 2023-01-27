@@ -64,6 +64,8 @@ pub struct GlobalConfig {
     pub open: bool,
     /// 作者
     pub author: String,
+    /// 覆盖已生成文件
+    pub file_override: bool,
     /// 开启 Kotlin 模式（默认 false）
     pub kotlin: bool,
     /// 开启 swagger 模式（默认 false 与 springdoc 不可同时使用）
@@ -234,7 +236,7 @@ pub struct Entity {
     /// 在映射实体的时候则会去掉is,在实体类中映射最终结果为 xxx
     pub boolean_column_remove_is_prefix: bool,
     /// 是否生成实体时，生成字段注解（默认 false）
-    pub table_field_annotation_enable: bool,
+    pub enable_table_field_annotation: bool,
     /// 乐观锁字段名称(数据库字段)
     pub version_column_name: String,
     /// 乐观锁属性名称(实体字段)

@@ -24,6 +24,7 @@ export interface GlobalConfig {
   outputDir: string
   open: boolean
   author: string
+  fileOverride: boolean
   kotlin: boolean
   swagger: boolean
   springdoc: boolean
@@ -62,12 +63,12 @@ export interface TemplateConfig {
 export interface StrategyConfig {
   isCapitalMode: boolean
   skipView: boolean
-  tablePrefix: Set<string>
-  tablesuffix: Set<string>
-  fieldPrefix: Set<string>
-  fieldsuffix: Set<string>
-  include: Set<string>
-  exclude: Set<string>
+  tablePrefix: string[]
+  tablesuffix: string[]
+  fieldPrefix: string[]
+  fieldsuffix: string[]
+  include: string[]
+  exclude: string[]
   enableSqlFilter: boolean
   enableSchema: boolean
   entity: Entity
@@ -78,14 +79,14 @@ export interface StrategyConfig {
 
 export interface Entity {
   superClass: string
-  superEntityColumns: Set<string>
-  ignoreColumns: Set<string>
+  superEntityColumns: string[]
+  ignoreColumns: string[]
   disableSerialVersionUid: boolean
   columnContant: boolean
   chainMode: boolean
   lombok: boolean
   booleanColumnRemoveIsPrefix: boolean
-  tableFieldAnnotationEnable: boolean
+  enableTableFieldAnnotation: boolean
   versionColumnName: string
   versionPropertyName: string
   logicDeleteColumnName: string

@@ -3842,6 +3842,7 @@ version = "0.0.0"
 dependencies = [
  "anyhow",
  "convert_case 0.6.0",
+ "open",
  "serde",
  "serde_json",
  "sqlx",
