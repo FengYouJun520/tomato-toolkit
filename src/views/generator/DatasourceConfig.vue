@@ -91,56 +91,58 @@ const handleReset = () => {
 </script>
 
 <template>
-  <n-form-item label="数据库类型">
-    <n-select
-      v-model:value="datasourceConfigStore.type"
-      :options="options"
-      :render-tag="renderTag"
-      :render-label="renderLabel"
-    />
-  </n-form-item>
-  <n-form-item label="数据库名称">
-    <n-input v-model:value="datasourceConfigStore.database" />
-  </n-form-item>
-  <n-form-item label="Host">
-    <n-input v-model:value="datasourceConfigStore.host" />
-  </n-form-item>
-  <n-form-item label="Port">
-    <n-input-number v-model:value="datasourceConfigStore.port" :min="0" :max="65565" />
-  </n-form-item>
-  <n-form-item label="用户名">
-    <n-input v-model:value="datasourceConfigStore.username">
-      <template #prefix>
-        <img :src="userIcon" alt="user">
-      </template>
-    </n-input>
-  </n-form-item>
-  <n-form-item label="密码">
-    <n-input
-      v-model:value="datasourceConfigStore.password"
-      type="password"
-      show-password-on="click"
-    >
-      <template #prefix>
-        <img :src="lockIcon" alt="lock">
-      </template>
-    </n-input>
-  </n-form-item>
-  <div class="flex justify-center items-center space-x-2">
-    <n-button
-      type="primary"
-      :loading="testLoading"
-      @click="handleTestConnection"
-    >
-      <template #icon>
-        <img :src="rocketIcon" alt="rocket">
-      </template>
-      测试
-    </n-button>
-    <n-button type="warning" @click="handleReset">
-      重置
-    </n-button>
-  </div>
+  <n-form label-placement="left" :label-width="100" label-align="left">
+    <n-form-item label="数据库类型">
+      <n-select
+        v-model:value="datasourceConfigStore.type"
+        :options="options"
+        :render-tag="renderTag"
+        :render-label="renderLabel"
+      />
+    </n-form-item>
+    <n-form-item label="数据库名称">
+      <n-input v-model:value="datasourceConfigStore.database" />
+    </n-form-item>
+    <n-form-item label="Host">
+      <n-input v-model:value="datasourceConfigStore.host" />
+    </n-form-item>
+    <n-form-item label="Port">
+      <n-input-number v-model:value="datasourceConfigStore.port" :min="0" :max="65565" />
+    </n-form-item>
+    <n-form-item label="用户名">
+      <n-input v-model:value="datasourceConfigStore.username">
+        <template #prefix>
+          <img :src="userIcon" alt="user">
+        </template>
+      </n-input>
+    </n-form-item>
+    <n-form-item label="密码">
+      <n-input
+        v-model:value="datasourceConfigStore.password"
+        type="password"
+        show-password-on="click"
+      >
+        <template #prefix>
+          <img :src="lockIcon" alt="lock">
+        </template>
+      </n-input>
+    </n-form-item>
+    <div class="flex justify-center items-center space-x-2">
+      <n-button
+        type="primary"
+        :loading="testLoading"
+        @click="handleTestConnection"
+      >
+        <template #icon>
+          <img :src="rocketIcon" alt="rocket">
+        </template>
+        测试
+      </n-button>
+      <n-button type="warning" @click="handleReset">
+        重置
+      </n-button>
+    </div>
+  </n-form>
 </template>
 
 <style lang="css" scoped>

@@ -9,7 +9,7 @@ export const useGlobalConfigStore = defineStore('globalConfigState', {
     swagger: false,
     springdoc: false,
     dateType: 'TIME_PACK',
-    commentDate: '%Y-%M-%S',
+    commentDate: '%Y-%m-%d',
   }),
   persistedState: {
   },

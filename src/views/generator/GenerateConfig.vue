@@ -1,6 +1,5 @@
 <script setup lang="ts">
-
-
+import GlobalConfig from './GlobalConfig.vue'
 </script>
 
 <template>
@@ -9,7 +8,7 @@
     type="card"
   >
     <n-tab-pane tab="全局配置" name="global-config">
-      全局配置
+      <GlobalConfig />
     </n-tab-pane>
     <n-tab-pane tab="包配置" name="package-config">
       包配置

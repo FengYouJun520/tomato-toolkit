@@ -2,28 +2,33 @@
 import { useStrategyConfigStore } from '@/store/modules/mp/strategyconfig'
 import DatasourceConfig from './DatasourceConfig.vue'
 import GenerateConfig from './GenerateConfig.vue'
+import mybatisIcon from '@/assets/mybatis.svg'
 
 const strategyStore = useStrategyConfigStore()
-const disabled = computed(() => !strategyStore.include || strategyStore.include.size <= 0)
+const disabled = computed(() => strategyStore.include.size <= 0)
 </script>
 
 <template>
   <n-card>
     <template #header>
-      <div>
+      <div class="flex items-center space-x-2">
+        <n-image
+          :src="mybatisIcon"
+          :width="64"
+          :height="64"
+          preview-disabled
+        />
         <h1>MyBatisPlus代码生成器</h1>
       </div>
     </template>
-    <n-form label-placement="left" :label-width="100" label-align="left">
-      <DatasourceConfig />
-      <GenerateConfig class="mt-5" />
+    <DatasourceConfig />
+    <GenerateConfig class="mt-5" />
 
-      <n-form-item class="mt-5">
-        <n-button block type="primary" :disabled="disabled">
-          生成
-        </n-button>
-      </n-form-item>
-    </n-form>
+    <template #footer>
+      <n-button block type="primary" :disabled="disabled">
+        生成
+      </n-button>
+    </template>
   </n-card>
 </template>
 
