@@ -159,6 +159,8 @@ impl PackageConfig {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TemplateConfig {
+    /// 禁用所有模板
+    pub disable: bool,
     /// 设置实体模板路径
     pub entity: String,
     /// 设置实体模板路径(kotlin模板)
@@ -173,8 +175,6 @@ pub struct TemplateConfig {
     pub service: String,
     /// 设置ServiceImpl模板路径
     pub service_impl: String,
-    /// 是否禁用实体模板（默认 false）
-    pub disable_entity: bool,
 }
 
 #[derive(Deserialize)]

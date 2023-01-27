@@ -3,9 +3,21 @@ import { useStrategyConfigStore } from '@/store/modules/mp/strategyconfig'
 import DatasourceConfig from './DatasourceConfig.vue'
 import GenerateConfig from './GenerateConfig.vue'
 import mybatisIcon from '@/assets/mybatis.svg'
+import { createTableContext } from './useTables'
+import { BasicTableInfo } from '@/types/type'
 
 const strategyStore = useStrategyConfigStore()
 const disabled = computed(() => strategyStore.include.size <= 0)
+watchEffect(() => {
+  console.log(strategyStore.include.size)
+})
+
+const tables = ref<BasicTableInfo[]>([{
+  name: 'sys_user',
+  comment: '用户表',
+}])
+
+createTableContext(tables)
 </script>
 
 <template>

@@ -59,6 +59,6 @@ export const useStrategyConfigStore = defineStore('strategyConfigState', {
     },
   }),
   persistedState: {
-    excludePaths: ['include'],
+    excludePaths: ['include', 'exclude'],
   },
 })

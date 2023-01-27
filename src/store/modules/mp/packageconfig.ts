@@ -2,14 +2,14 @@ import { PackageConfig } from '@/types/type'
 
 export const usePackageConfigStore = defineStore('packageConfigState', {
   state: (): PackageConfig => ({
-    parent: '',
+    parent: 'com.baomidou',
     moduleName: '',
-    entity: '',
-    service: '',
-    serviceImpl: '',
-    mapper: '',
-    xml: '',
-    controller: '',
+    entity: 'entity',
+    service: 'service',
+    serviceImpl: 'service.impl',
+    mapper: 'mapper',
+    xml: 'mapper.xml',
+    controller: 'controller',
   }),
   persistedState: {
   },

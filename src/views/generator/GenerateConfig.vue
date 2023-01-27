@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import GlobalConfig from './GlobalConfig.vue'
+import PackageConfig from './PackageConfig.vue'
+import StrategyConfig from './StrategyConfig.vue'
+import TemplateConfig from './TemplateConfig.vue'
 </script>
 
 <template>
@@ -11,13 +14,13 @@ import GlobalConfig from './GlobalConfig.vue'
       <GlobalConfig />
     </n-tab-pane>
     <n-tab-pane tab="包配置" name="package-config">
-      包配置
+      <PackageConfig />
     </n-tab-pane>
     <n-tab-pane tab="模板配置" name="template-config">
-      模板配置
+      <TemplateConfig />
     </n-tab-pane>
     <n-tab-pane tab="策略配置" name="strategy-config">
-      策略配置
+      <StrategyConfig />
     </n-tab-pane>
   </n-tabs>
 </template>

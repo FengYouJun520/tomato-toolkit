@@ -6,6 +6,11 @@ export interface MpConfig {
   strategyConfig: StrategyConfig
 }
 
+export interface BasicTableInfo {
+  name: string
+  comment: string
+}
+
 export interface DatasourceConfig {
   type: string
   database: string
@@ -44,6 +49,7 @@ export interface PackageConfig {
 export type OutputFile = 'entity'|'service'|'serviceImpl'|'mapper'|'xml'|'controller'|'parent'
 
 export interface TemplateConfig {
+  disable: boolean
   entity: string
   entityKt: string
   controller: string
@@ -51,7 +57,6 @@ export interface TemplateConfig {
   xml: string
   service: string
   serviceImpl: string
-  disableEntity: boolean
 }
 
 export interface StrategyConfig {
