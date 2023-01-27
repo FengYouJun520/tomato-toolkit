@@ -22,7 +22,7 @@ const handleReset = () => {
     label-align="right"
     :disabled="templateConfigStore.disable"
   >
-    <n-grid :cols="2" :x-gap="24">
+    <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
       <n-form-item-gi label="禁用所有模板" label-placement="left">
         <n-radio-group v-model:value="templateConfigStore.disable" :disabled="false">
           <n-radio-button :value="true">

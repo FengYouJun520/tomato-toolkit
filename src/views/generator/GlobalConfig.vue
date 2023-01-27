@@ -21,7 +21,7 @@ const handleReset = () => {
       <n-input v-model:value="globalConfigStore.author" />
     </n-form-item>
 
-    <n-grid :cols="2" :x-gap="24">
+    <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
       <n-form-item-gi label="打开输出目录">
         <n-radio-group v-model:value="globalConfigStore.open">
           <n-radio-button :value="true">

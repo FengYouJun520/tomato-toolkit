@@ -33,14 +33,14 @@ const onCreate = () =>({
       </n-button>
     </n-form-item>
 
-    <n-grid :cols="2" :x-gap="24">
+    <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
       <n-form-item-gi label="禁用SerialVersionUID">
         <n-radio-group v-model:value="strategyconfigStore.entity.disableSerialVersionUid">
           <n-radio-button :value="true" label="开启" />
           <n-radio-button :value="false" label="关闭" />
         </n-radio-group>
       </n-form-item-gi>
-      <n-form-item-gi label="使用链式模式">
+      <n-form-item-gi label="开启链式模型">
         <n-radio-group v-model:value="strategyconfigStore.entity.chainMode">
           <n-radio-button :value="true" label="开启" />
           <n-radio-button :value="false" label="关闭" />
@@ -60,30 +60,51 @@ const onCreate = () =>({
         </n-radio-group>
       </n-form-item-gi>
 
-      <n-form-item-gi label="生成字段常量">
-        <n-radio-group v-model:value="strategyconfigStore.entity.columnContant">
-          <n-radio-button :value="true" label="开启" />
-          <n-radio-button :value="false" label="关闭" />
-        </n-radio-group>
-      </n-form-item-gi>
       <n-form-item-gi label="Boolean类型移除is前缀">
         <n-radio-group v-model:value="strategyconfigStore.entity.booleanColumnRemoveIsPrefix">
           <n-radio-button :value="true" label="开启" />
           <n-radio-button :value="false" label="关闭" />
         </n-radio-group>
       </n-form-item-gi>
-
       <n-form-item-gi label="生成实体时生成字段注解">
         <n-radio-group v-model:value="strategyconfigStore.entity.enableTableFieldAnnotation">
           <n-radio-button :value="true" label="开启" />
           <n-radio-button :value="false" label="关闭" />
         </n-radio-group>
       </n-form-item-gi>
+
       <n-form-item-gi label="开启ActiveRecord模型">
         <n-radio-group v-model:value="strategyconfigStore.entity.activeRecord">
           <n-radio-button :value="true" label="开启" />
           <n-radio-button :value="false" label="关闭" />
         </n-radio-group>
+      </n-form-item-gi>
+      <n-form-item-gi label="全局主键类型">
+        <n-select
+          v-model:value="strategyconfigStore.entity.idType"
+          :options="[
+            {
+              label: 'AUTO',
+              value: 'auto',
+            },
+            {
+              label: 'NONE',
+              value: 'none',
+            },
+            {
+              label: 'INPUT',
+              value: 'input',
+            },
+            {
+              label: 'ASSIGN_ID',
+              value: 'assignId',
+            },
+            {
+              label: 'ASSIGN_UUID',
+              value: 'assignUuid',
+            },
+          ]"
+        />
       </n-form-item-gi>
     </n-grid>
 
@@ -151,7 +172,7 @@ const onCreate = () =>({
         :on-create="onCreate"
         #="{ index, value }"
       >
-        <div class="flex">
+        <div class="flex w-full">
           <!--
           通常，path 的变化会导致 form-item 验证内容或规则的改变，所以 naive-ui 会清理掉
           表项已有的验证信息。但是这个例子是个特殊情况，我们明确的知道，path 的改变不会导致
@@ -164,7 +185,7 @@ const onCreate = () =>({
           >
             <n-input
               v-model:value="strategyconfigStore.entity.tableFillList[index].key"
-              placeholder="Name"
+              placeholder="e.g: updateTime"
               @keydown.enter.prevent
             />
           <!--
@@ -177,7 +198,7 @@ const onCreate = () =>({
           <n-form-item
             ignore-path-change
             :show-label="false"
-            class="min-w-[180px]"
+            class="w-full"
             :path="`dynamicInputValue[${index}].value`"
           >
             <n-select
@@ -205,34 +226,6 @@ const onCreate = () =>({
           </n-form-item>
         </div>
       </n-dynamic-input>
-    </n-form-item>
-
-    <n-form-item label="全局主键类型">
-      <n-select
-        v-model:value="strategyconfigStore.entity.idType"
-        :options="[
-          {
-            label: 'AUTO',
-            value: 'auto',
-          },
-          {
-            label: 'NONE',
-            value: 'none',
-          },
-          {
-            label: 'INPUT',
-            value: 'input',
-          },
-          {
-            label: 'ASSIGN_ID',
-            value: 'assignId',
-          },
-          {
-            label: 'ASSIGN_UUID',
-            value: 'assignUuid',
-          },
-        ]"
-      />
     </n-form-item>
 
     <n-form-item label="格式化文件名称">

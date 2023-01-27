@@ -34,8 +34,6 @@ const generateMenuOptions = (routes: RouteRecordRaw[]): MenuMixedOption[] => rou
 })
 
 const menuOptions: MenuMixedOption[] = generateMenuOptions(routes)
-console.log(routes)
-
 
 const handleUpdateValue = (key: string, item: MenuOption) =>{
   message.info(`[onUpdate:value]: ${JSON.stringify(key)}`)

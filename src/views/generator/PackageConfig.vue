@@ -16,7 +16,7 @@ const handleReset = () => {
       </n-button>
     </n-form-item>
 
-    <n-grid :cols="2" :x-gap="24">
+    <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
       <n-form-item-gi label="父包名">
         <n-input v-model:value="packageConfigStore.parent" />
       </n-form-item-gi>

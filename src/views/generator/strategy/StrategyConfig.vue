@@ -94,7 +94,7 @@ const renderTag: SelectRenderTag = ({ option, handleClose }) => h(
         </n-button>
       </n-form-item>
 
-      <n-grid :cols="2" :x-gap="24">
+      <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
         <n-form-item-gi label="开启大写命名">
           <n-radio-group v-model:value="strategyConfigStore.isCapitalMode">
             <n-radio-button :value="true">
