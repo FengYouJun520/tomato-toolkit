@@ -17,16 +17,7 @@ pub async fn test_connection(config: DataSourceConfig) -> Result<Vec<BasicTableI
     conn.ping().await?;
 
     let tables = conn
-        .fetch_all(
-            format!(
-                r#"SELECT table_name name,IFNULL(TABLE_COMMENT,table_name) comment
-FROM INFORMATION_SCHEMA.TABLES
-WHERE UPPER(table_type)='BASE TABLE'
-  AND LOWER(table_schema) = '{}'"#,
-                &config.database
-            )
-            .as_ref(),
-        )
+        .fetch_all(config.table_info_query_sql()?.as_ref())
         .await?;
 
     let tables = tables

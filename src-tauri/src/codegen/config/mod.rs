@@ -11,9 +11,12 @@ use std::{
 
 use crate::error::{Result, SerializeError};
 
-use super::protocol::types::DateType;
+use super::protocol::{
+    db_query::{DbQuery, MsSqlDbQuery, MysqlDbQuery, PostgresDbQuery, SqliteDbQuery},
+    types::DateType,
+};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DataSourceConfig {
     pub r#type: String,
@@ -25,6 +28,16 @@ pub struct DataSourceConfig {
 }
 
 impl DataSourceConfig {
+    pub fn db_url(&self) -> String {
+        match self.r#type.as_ref() {
+            "sqlite" => format!("{}://{}", &self.r#type, &self.database),
+            _ => format!(
+                "{}://{}:{}@{}:{}/{}",
+                &self.r#type, &self.username, &self.password, &self.host, self.port, &self.database
+            ),
+        }
+    }
+
     pub async fn connect(&self) -> Result<AnyConnection> {
         let options: AnyConnectOptions = match self.r#type.as_ref() {
             "mysql" => MySqlConnectOptions::new()
@@ -53,9 +66,38 @@ impl DataSourceConfig {
 
         Ok(options.connect().await?)
     }
+
+    pub fn db_query(&self) -> Box<dyn DbQuery> {
+        match self.r#type.as_ref() {
+            "mysql" => Box::new(MysqlDbQuery),
+            "sqlite" => Box::new(SqliteDbQuery),
+            "mssql" => Box::new(MsSqlDbQuery),
+            "postgres" => Box::new(PostgresDbQuery),
+            _ => Box::new(MysqlDbQuery),
+        }
+    }
+
+    pub fn table_info_query_sql(&self) -> Result<String> {
+        match self.r#type.as_ref() {
+            "mysql" => Ok(format!(
+                r#"SELECT table_name name,IFNULL(TABLE_COMMENT,table_name) comment
+FROM INFORMATION_SCHEMA.TABLES
+WHERE UPPER(table_type)='BASE TABLE'
+  AND LOWER(table_schema) = '{}'"#,
+                &self.database
+            )),
+            "sqlite" => Ok(
+                "select name, '' comment from sqlite_master where type='table' order by name"
+                    .to_string(),
+            ),
+            "mssql" => Ok("".to_string()),
+            "postgres" => Ok("".to_string()),
+            _ => Err(format!("不支持的数据库类型: {}", self.r#type).into()),
+        }
+    }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GlobalConfig {
     /// 生成文件的输出目录【 windows:D:// linux or mac:/tmp 】
@@ -89,7 +131,7 @@ impl GlobalConfig {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PackageConfig {
     /// 父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名, 默认："com.baomidou"
@@ -158,7 +200,7 @@ impl PackageConfig {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TemplateConfig {
     /// 禁用所有模板
@@ -179,11 +221,11 @@ pub struct TemplateConfig {
     pub service_impl: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct InjectConfig {}
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct StrategyConfig {
     /// 是否大写命名（默认 false）
@@ -212,7 +254,7 @@ pub struct StrategyConfig {
     pub service: Service,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Entity {
     /// 自定义继承的Entity类全称，带包名
@@ -261,7 +303,7 @@ pub struct Entity {
     pub format_filename: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Controller {
     /// 自定义继承的Controller类全称，带包名
@@ -276,7 +318,7 @@ pub struct Controller {
     pub format_filename: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Mapper {
     /// 自定义继承的Mapper类全称，带包名, 默认 "com.baomidou.mybatisplus.core.mapper.BaseMapper"
@@ -297,7 +339,7 @@ pub struct Mapper {
     pub format_xml_filename: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Service {
     ///自定义继承的Service类全称，带包名, 默认: "com.baomidou.mybatisplus.extension.service.IService"
@@ -340,7 +382,7 @@ impl FromStr for OutputFile {
     }
 }
 
-#[derive(Default, Deserialize)]
+#[derive(Default, Deserialize, Clone)]
 pub enum NamingStrategy {
     NoChange,
     #[default]
@@ -365,14 +407,14 @@ impl NamingStrategy {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TableFill {
     pub key: String,
     pub value: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[allow(non_camel_case_types)]
 pub enum IdType {
     /// 数据库ID自增, 该类型请确保数据库设置了 ID自增 否则无效

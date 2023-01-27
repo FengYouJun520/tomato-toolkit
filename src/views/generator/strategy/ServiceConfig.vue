@@ -4,7 +4,7 @@ import { useStrategyConfigStore } from '@/store/modules/mp/strategyconfig'
 const strategyconfigStore = useStrategyConfigStore()
 
 const handleReset = () => {
-  strategyconfigStore.resetController()
+  strategyconfigStore.resetService()
 }
 </script>
 

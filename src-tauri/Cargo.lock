@@ -845,6 +845,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0bd4b30a6560bbd9b4620f4de34c3f14f60848e58a9b7216801afcb4c7b31c3c"
 
 [[package]]
+name = "dyn-fmt"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c2a0836c9bd73a9d3ca55b0effc5b1eedf96dd13ef994389bcac6d4d33c46188"
+
+[[package]]
 name = "either"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3842,6 +3848,7 @@ version = "0.0.0"
 dependencies = [
  "anyhow",
  "convert_case 0.6.0",
+ "dyn-fmt",
  "open",
  "serde",
  "serde_json",
