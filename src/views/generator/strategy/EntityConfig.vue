@@ -109,7 +109,10 @@ const onCreate = () =>({
     </n-grid>
 
     <n-form-item label="父类包名">
-      <n-input v-model:value="strategyconfigStore.entity.superClass" />
+      <n-input
+        v-model:value="strategyconfigStore.entity.superClass"
+        placeholder="示例: com.baomidou.global.BaseEntity"
+      />
     </n-form-item>
     <n-form-item label="乐观锁字段名(数据库)">
       <n-input v-model:value="strategyconfigStore.entity.versionColumnName" />
@@ -229,7 +232,10 @@ const onCreate = () =>({
     </n-form-item>
 
     <n-form-item label="格式化文件名称">
-      <n-input v-model:value="strategyconfigStore.entity.formatFilename" />
+      <n-input
+        v-model:value="strategyconfigStore.entity.formatFilename"
+        placeholder="示例: {}Entity, {}表示占位符"
+      />
     </n-form-item>
   </n-form>
 </template>

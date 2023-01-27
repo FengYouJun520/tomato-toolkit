@@ -93,7 +93,10 @@ const handleReset = () => {
     </n-grid>
 
     <n-form-item label="注释日期格式">
-      <n-input v-model:value="globalConfigStore.commentDate" />
+      <n-input
+        v-model:value="globalConfigStore.commentDate"
+        placeholder="示例：%Y-%m-%d %H:%M:%S"
+      />
     </n-form-item>
     <n-form-item label="输出目录">
       <n-input v-model:value="globalConfigStore.outputDir" />

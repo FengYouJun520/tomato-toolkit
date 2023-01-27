@@ -216,7 +216,7 @@ pub struct StrategyConfig {
 #[serde(rename_all = "camelCase")]
 pub struct Entity {
     /// 自定义继承的Entity类全称，带包名
-    pub super_class: Option<String>,
+    pub super_class: String,
     /// 自定义基础的Entity类，公共字段
     pub super_entity_columns: HashSet<String>,
     /// 自定义忽略字段 https://github.com/baomidou/generator/issues/46
@@ -256,7 +256,7 @@ pub struct Entity {
     /// 指定生成的主键的ID类型
     pub id_type: IdType,
     /// 是否覆盖已有文件（默认 false）
-    pub file_override: bool,
+    pub file_override: Option<bool>,
     /// 格式化文件名称
     pub format_filename: String,
 }
@@ -264,14 +264,14 @@ pub struct Entity {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Controller {
+    /// 自定义继承的Controller类全称，带包名
+    pub super_class: String,
     ///生成 @RestController 控制器（默认 false）, @Controller -> @RestController
     pub rest_style: bool,
     ///驼峰转连字符（默认 false）,  @RequestMapping("/managerUserActionHistory") -> @RequestMapping("/manager-user-action-history")
     pub hyphen_style: bool,
-    /// 自定义继承的Controller类全称，带包名
-    pub super_class: Option<String>,
     ///是否覆盖已有文件（默认 false）
-    pub file_override: bool,
+    pub file_override: Option<bool>,
     /// 格式化文件名称
     pub format_filename: String,
 }
@@ -290,7 +290,7 @@ pub struct Mapper {
     /// 是否开启baseColumnList（默认 false）
     pub base_column_list: bool,
     ///是否覆盖已有文件（默认 false）
-    pub file_override: bool,
+    pub file_override: Option<bool>,
     /// 格式化 mapper 文件名称
     pub format_mapper_filename: String,
     /// 格式化 xml 实现类文件名称
@@ -301,11 +301,11 @@ pub struct Mapper {
 #[serde(rename_all = "camelCase")]
 pub struct Service {
     ///自定义继承的Service类全称，带包名, 默认: "com.baomidou.mybatisplus.extension.service.IService"
-    pub super_service_class: Option<String>,
+    pub super_service_class: String,
     /// 自定义继承的ServiceImpl类全称，带包名，默认："com.baomidou.mybatisplus.extension.service.impl.ServiceImpl"
-    pub super_service_impl_class: Option<String>,
+    pub super_service_impl_class: String,
     ///是否覆盖已有文件（默认 false）
-    pub file_override: bool,
+    pub file_override: Option<bool>,
     /// 格式化 service 接口文件名称
     pub format_service_filename: String,
     /// 格式化 service 实现类文件名称

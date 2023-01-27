@@ -96,7 +96,7 @@ export interface Entity {
   columnNaming?: NamingStrategy
   activeRecord: boolean
   idType: IdType
-  fileOverride: boolean
+  fileOverride?: boolean
   formatFilename: string
 }
 
@@ -104,7 +104,7 @@ export interface Controller {
   restStyle: boolean
   hyphenStyle: boolean
   superClass: string
-  fileOverride: boolean
+  fileOverride?: boolean
   formatFilename: string
 }
 
@@ -114,7 +114,7 @@ export interface Mapper {
   mapperAnnotationClass?: String
   baseResultMap: boolean
   baseColumnList: boolean
-  fileOverride: boolean
+  fileOverride?: boolean
   formatMapperFilename: string
   formatXmlFilename: string
 }
@@ -122,7 +122,7 @@ export interface Mapper {
 export interface Service {
   superServiceClass: string
   superServiceImplClass: string
-  fileOverride: boolean
+  fileOverride?: boolean
   formatServiceFilename: string
   formatServiceImplFilename: string
 }

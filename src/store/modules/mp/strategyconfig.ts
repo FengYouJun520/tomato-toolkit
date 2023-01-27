@@ -1,4 +1,4 @@
-import { Controller, Entity, IdType, Mapper, NamingStrategy, Service, StrategyConfig } from '@/types/type'
+import { Controller, Entity, Mapper, Service, StrategyConfig } from '@/types/type'
 
 const defaultEntity: Entity = {
   superClass: '',
@@ -18,35 +18,31 @@ const defaultEntity: Entity = {
   naming: 'underlineToCamel',
   activeRecord: false,
   idType: 'auto',
-  fileOverride: true,
-  formatFilename: '',
+  formatFilename: '{}',
 }
 
 const defaultController: Controller = {
   superClass: '',
   restStyle: false,
   hyphenStyle: false,
-  fileOverride: true,
-  formatFilename: '',
+  formatFilename: '{}Controller',
 }
 
 const defaultMapper: Mapper = {
   superClass: '',
-  mapperAnnotation: true,
+  mapperAnnotation: false,
   mapperAnnotationClass: '',
   baseResultMap: false,
   baseColumnList: false,
-  fileOverride: true,
-  formatMapperFilename: '',
-  formatXmlFilename: '',
+  formatMapperFilename: '{}Mapper',
+  formatXmlFilename: '{}Mapper',
 }
 
 const defaultService: Service = {
   superServiceClass: '',
   superServiceImplClass: '',
-  fileOverride: true,
-  formatServiceFilename: '',
-  formatServiceImplFilename: '',
+  formatServiceFilename: '{}IService',
+  formatServiceImplFilename: '{}ServiceImpl',
 }
 
 export const useStrategyConfigStore = defineStore('strategyConfigState', {
