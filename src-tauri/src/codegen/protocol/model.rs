@@ -1,4 +1,5 @@
 /// 表信息
+#[derive(Clone)]
 pub struct TableInfo {
     /// 表名
     pub name: String,
@@ -7,11 +8,12 @@ pub struct TableInfo {
     /// 表所属数据库名
     pub schema: String,
     /// 表所有列信息
-    pub columns: Vec<ColumnInfo>,
+    pub fields: Vec<TableField>,
 }
 
 /// 列信息
-pub struct ColumnInfo {
+#[derive(Clone)]
+pub struct TableField {
     /// 列名
     pub name: String,
     ///注释

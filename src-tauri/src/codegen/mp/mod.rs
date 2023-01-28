@@ -1,2 +1,2 @@
 pub mod command;
-pub mod mp_manager;
+pub mod mp_generator;

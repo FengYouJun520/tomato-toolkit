@@ -1,3 +1,4 @@
+pub mod builder;
 use serde::Deserialize;
 use sqlx::{
     any::AnyConnectOptions, mssql::MssqlConnectOptions, mysql::MySqlConnectOptions,
@@ -6,6 +7,7 @@ use sqlx::{
 use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
+    rc::Rc,
     str::FromStr,
 };
 
@@ -67,13 +69,13 @@ impl DataSourceConfig {
         Ok(options.connect().await?)
     }
 
-    pub fn db_query(&self) -> Box<dyn DbQuery> {
+    pub fn db_query(&self) -> Rc<dyn DbQuery> {
         match self.r#type.as_ref() {
-            "mysql" => Box::new(MysqlDbQuery),
-            "sqlite" => Box::new(SqliteDbQuery),
-            "mssql" => Box::new(MsSqlDbQuery),
-            "postgres" => Box::new(PostgresDbQuery),
-            _ => Box::new(MysqlDbQuery),
+            "mysql" => Rc::new(MysqlDbQuery),
+            "sqlite" => Rc::new(SqliteDbQuery),
+            "mssql" => Rc::new(MsSqlDbQuery),
+            "postgres" => Rc::new(PostgresDbQuery),
+            _ => Rc::new(MysqlDbQuery),
         }
     }
 

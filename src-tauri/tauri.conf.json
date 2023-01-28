@@ -14,8 +14,10 @@
     "allowlist": {
       "all": false,
       "shell": {
-        "all": false,
-        "open": true
+        "all": true
+      },
+      "path": {
+        "all": true
       },
       "fs": {
         "all": true,

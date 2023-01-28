@@ -3,7 +3,7 @@ use sqlx::{Connection, Executor, Row};
 
 use crate::{codegen::config::DataSourceConfig, error::Result};
 
-pub use super::mp_manager::MpManager;
+pub use super::mp_generator::MpGenerator;
 
 #[derive(Debug, Serialize)]
 pub struct BasicTableInfo {

@@ -1,27 +1,42 @@
 <script setup lang="ts">
 import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
+import { shell, path } from '@tauri-apps/api'
 
-
+const message = useMessage()
 const templateConfigStore = useTemplateConfigStore()
 
 const handleReset = () => {
   templateConfigStore.$reset()
 }
+
+const handleOpenTempelate = async () => {
+  try {
+    const resourcePath = await path.resolveResource('templates')
+    shell.open(resourcePath)
+  } catch (error) {
+    message.error(error as string)
+  }
+}
 </script>
 
 <template>
-  <n-form-item>
-    <n-button type="warning" @click="handleReset">
-      重置
-    </n-button>
-  </n-form-item>
-
   <n-form
     label-placement="left"
     :label-width="120"
     label-align="right"
     :disabled="templateConfigStore.disable"
   >
+    <n-form-item>
+      <n-space class="y-0">
+        <n-button type="warning" @click="handleReset">
+          重置
+        </n-button>
+        <n-button type="info" @click="handleOpenTempelate">
+          打开模板文件目录
+        </n-button>
+      </n-space>
+    </n-form-item>
+
     <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
       <n-form-item-gi label="禁用所有模板" label-placement="left">
         <n-radio-group v-model:value="templateConfigStore.disable" :disabled="false">
