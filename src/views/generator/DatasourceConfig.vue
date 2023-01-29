@@ -8,13 +8,13 @@ import userIcon from '@/assets/user.png'
 import lockIcon from '@/assets/lock.png'
 import { invoke } from '@tauri-apps/api'
 import rocketIcon from '@/assets/rocket.svg'
-import { useDatesourceStore } from '@/store/modules/mp/datasource'
+import { useDatasourceStore } from '@/store/modules/mp/datasource'
 import { useTables } from './useTables'
 import { BasicTableInfo } from '@/types/type'
 
 const tablesContext = useTables()
 const message = useMessage()
-const datasourceConfigStore = useDatesourceStore()
+const datasourceConfigStore = useDatasourceStore()
 
 const options: SelectOption[] = [
   {

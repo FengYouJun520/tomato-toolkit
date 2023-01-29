@@ -70,9 +70,9 @@ export interface StrategyConfig {
   isCapitalMode: boolean
   skipView: boolean
   tablePrefix: string[]
-  tablesuffix: string[]
+  tableSuffix: string[]
   fieldPrefix: string[]
-  fieldsuffix: string[]
+  fieldSuffix: string[]
   include: string[]
   exclude: string[]
   enableSqlFilter: boolean
@@ -88,7 +88,7 @@ export interface Entity {
   superEntityColumns: string[]
   ignoreColumns: string[]
   disableSerialVersionUid: boolean
-  columnContant: boolean
+  columnConstant: boolean
   chainMode: boolean
   lombok: boolean
   booleanColumnRemoveIsPrefix: boolean
@@ -138,6 +138,6 @@ export interface TableFill {
   value: string
 }
 
-export type NamingStrategy = 'noChange' | 'underlineToCamel'
+export type NamingStrategy = 'NoChange' | 'UnderlineToCamel'
 
-export type IdType = 'auto' | 'none'|'input'|'assignId'|'assignUuid'
+export type IdType = 'AUTO' | 'NONE'|'INPUT'|'ASSIGN_ID'|'ASSIGN_UUID'

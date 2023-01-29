@@ -48,7 +48,7 @@ const onCreate = () =>({
       </n-form-item-gi>
 
       <n-form-item-gi label="生成字段常量">
-        <n-radio-group v-model:value="strategyconfigStore.entity.columnContant">
+        <n-radio-group v-model:value="strategyconfigStore.entity.columnConstant">
           <n-radio-button :value="true" label="开启" />
           <n-radio-button :value="false" label="关闭" />
         </n-radio-group>
@@ -85,23 +85,23 @@ const onCreate = () =>({
           :options="[
             {
               label: 'AUTO',
-              value: 'auto',
+              value: 'AUTO',
             },
             {
               label: 'NONE',
-              value: 'none',
+              value: 'NONE',
             },
             {
               label: 'INPUT',
-              value: 'input',
+              value: 'INPUT',
             },
             {
               label: 'ASSIGN_ID',
-              value: 'assignId',
+              value: 'ASSIGN_ID',
             },
             {
               label: 'ASSIGN_UUID',
-              value: 'assignUuid',
+              value: 'ASSIGN_UUID',
             },
           ]"
         />
@@ -132,11 +132,11 @@ const onCreate = () =>({
       <n-select v-model:value="strategyconfigStore.entity.naming" :options="[
         {
           label: '无操作',
-          value: 'noChange',
+          value: 'NoChange',
         },
         {
           label: '下划线转驼峰',
-          value: 'underlineToCamel',
+          value: 'UnderlineToCamel',
         },
       ]" />
     </n-form-item>

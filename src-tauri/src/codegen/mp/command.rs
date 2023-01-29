@@ -2,8 +2,8 @@ use crate::error::Result;
 use serde::Serialize;
 use sqlx::{Connection, Executor, Row};
 
-use super::config::DataSourceConfig;
 pub use super::mp_generator::MpGenerator;
+use super::{config::DataSourceConfig, db_query::MpConfig};
 
 #[derive(Debug, Serialize)]
 pub struct BasicTableInfo {
@@ -32,6 +32,8 @@ pub async fn test_connection(config: DataSourceConfig) -> Result<Vec<BasicTableI
 }
 
 #[tauri::command]
-pub async fn mp_codegen() -> Result<()> {
+pub async fn mp_codegen(config: MpConfig) -> Result<()> {
+    let generator = MpGenerator::new(config);
+    generator.execute().await?;
     Ok(())
 }

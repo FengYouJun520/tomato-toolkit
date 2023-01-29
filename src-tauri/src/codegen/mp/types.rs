@@ -87,7 +87,7 @@ impl FieldFill {
     }
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Deserialize)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Deserialize)]
 #[allow(non_camel_case_types)]
 pub enum DateType {
     ONLY_DATE,

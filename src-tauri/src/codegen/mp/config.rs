@@ -5,7 +5,8 @@ use sqlx::{
     mysql::MySqlConnectOptions,
     postgres::PgConnectOptions,
     sqlite::SqliteConnectOptions,
-    AnyConnection, ConnectOptions,
+    AnyConnection, ConnectOptions, Connection, MssqlConnection, MySqlConnection, PgConnection,
+    SqliteConnection,
 };
 use std::{
     collections::{HashMap, HashSet},
@@ -15,7 +16,10 @@ use std::{
 
 use crate::error::{Result, SerializeError};
 
-use super::types::DateType;
+use super::{
+    db_query::{DbQuery, MsSqlQuery, MysqlQuery, PostgresQuery, SqliteQuery},
+    types::DateType,
+};
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -41,6 +45,54 @@ impl DataSourceConfig {
                 &self.r#type, &self.username, &self.password, &self.host, self.port, &self.database
             ),
         }
+    }
+
+    pub fn db_query(&self) -> Box<dyn DbQuery> {
+        match self.db_type() {
+            AnyKind::Postgres => Box::new(PostgresQuery),
+            AnyKind::MySql => Box::new(MysqlQuery),
+            AnyKind::Sqlite => Box::new(SqliteQuery),
+            AnyKind::Mssql => Box::new(MsSqlQuery),
+        }
+    }
+
+    pub async fn connect_mysql(&self) -> Result<MySqlConnection> {
+        Ok(MySqlConnectOptions::new()
+            .host(&self.host)
+            .port(self.port)
+            .username(&self.username)
+            .password(&self.password)
+            .connect()
+            .await?)
+    }
+
+    pub async fn connect_sqlite(&self) -> Result<SqliteConnection> {
+        Ok(SqliteConnectOptions::new()
+            .filename(&self.database)
+            .connect()
+            .await?)
+    }
+
+    pub async fn connect_mssql(&self) -> Result<MssqlConnection> {
+        Ok(MssqlConnectOptions::new()
+            .host(&self.host)
+            .port(self.port)
+            .database(&self.database)
+            .username(&self.username)
+            .password(&self.password)
+            .connect()
+            .await?)
+    }
+
+    pub async fn connect_postgres(&self) -> Result<PgConnection> {
+        Ok(PgConnectOptions::new()
+            .host(&self.host)
+            .port(self.port)
+            .database(&self.database)
+            .username(&self.username)
+            .password(&self.password)
+            .connect()
+            .await?)
     }
 
     pub async fn connect(&self) -> Result<AnyConnection> {
@@ -72,17 +124,6 @@ impl DataSourceConfig {
         Ok(options.connect().await?)
     }
 
-    /// TODO:
-    // pub fn db_query(&self) -> Rc<dyn DbQuery> {
-    //     match self.r#type.as_ref() {
-    //         "mysql" => Rc::new(MysqlDbQuery),
-    //         "sqlite" => Rc::new(SqliteDbQuery),
-    //         "mssql" => Rc::new(MsSqlDbQuery),
-    //         "postgres" => Rc::new(PostgresDbQuery),
-    //         _ => Rc::new(MysqlDbQuery),
-    //     }
-    // }
-
     pub fn table_info_query_sql(&self) -> Result<String> {
         match self.r#type.as_ref() {
             "mysql" => Ok(format!(
@@ -103,7 +144,7 @@ WHERE UPPER(table_type)='BASE TABLE'
     }
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GlobalConfig {
     /// 生成文件的输出目录【 windows:D:// linux or mac:/tmp 】
@@ -137,7 +178,7 @@ impl GlobalConfig {
     }
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PackageConfig {
     /// 父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名, 默认："com.baomidou"
@@ -157,15 +198,15 @@ pub struct PackageConfig {
     /// Controller包名
     pub controller: String,
     /// 路径配置信息
-    pub pathinfo: HashMap<OutputFile, String>,
+    pub pathinfo: Option<HashMap<OutputFile, String>>,
     /// 包配置信息
-    pub package_infos: HashMap<String, String>,
+    pub package_infos: Option<HashMap<String, String>>,
 }
 
 impl PackageConfig {
     pub fn get_package_infos(&self) -> HashMap<String, String> {
-        if !self.package_infos.is_empty() {
-            self.package_infos.clone()
+        if self.package_infos.is_some() {
+            self.package_infos.clone().unwrap()
         } else {
             let mut package_infos = HashMap::new();
             package_infos.insert("ModuleName".to_string(), self.module_name.clone());
@@ -206,7 +247,7 @@ impl PackageConfig {
     }
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TemplateConfig {
     /// 禁用所有模板
@@ -227,11 +268,11 @@ pub struct TemplateConfig {
     pub service_impl: String,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct InjectConfig {}
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct StrategyConfig {
     /// 是否大写命名（默认 false）
@@ -260,7 +301,7 @@ pub struct StrategyConfig {
     pub service: Service,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Entity {
     /// 自定义继承的Entity类全称，带包名
@@ -309,7 +350,7 @@ pub struct Entity {
     pub format_filename: String,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Controller {
     /// 自定义继承的Controller类全称，带包名
@@ -324,7 +365,7 @@ pub struct Controller {
     pub format_filename: String,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Mapper {
     /// 自定义继承的Mapper类全称，带包名, 默认 "com.baomidou.mybatisplus.core.mapper.BaseMapper"
@@ -345,7 +386,7 @@ pub struct Mapper {
     pub format_xml_filename: String,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Service {
     ///自定义继承的Service类全称，带包名, 默认: "com.baomidou.mybatisplus.extension.service.IService"
@@ -360,7 +401,7 @@ pub struct Service {
     pub format_service_impl_filename: String,
 }
 
-#[derive(Deserialize, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash)]
+#[derive(Debug, Deserialize, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash)]
 pub enum OutputFile {
     Entity,
     Service,
@@ -388,7 +429,7 @@ impl FromStr for OutputFile {
     }
 }
 
-#[derive(Default, Deserialize, Clone)]
+#[derive(Debug, Default, Deserialize, Clone)]
 pub enum NamingStrategy {
     NoChange,
     #[default]
@@ -413,14 +454,14 @@ impl NamingStrategy {
     }
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TableFill {
     pub key: String,
     pub value: String,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 #[allow(non_camel_case_types)]
 pub enum IdType {
     /// 数据库ID自增, 该类型请确保数据库设置了 ID自增 否则无效
