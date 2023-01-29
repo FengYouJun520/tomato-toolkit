@@ -14,8 +14,8 @@ onMounted(async () => {
 <template>
   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
     <n-image
-      :width="500"
-      :height="500"
+      :width="300"
+      :height="300"
       object-fit="cover"
       :src="tomatoIcon"
       preview-disabled
