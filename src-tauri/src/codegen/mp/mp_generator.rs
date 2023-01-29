@@ -1,26 +1,16 @@
-use derive_builder::Builder;
+use crate::error::Result;
 
-use crate::{
-    codegen::config::{
-        builder::ConfigBuilder, DataSourceConfig, GlobalConfig, InjectConfig, PackageConfig,
-        StrategyConfig, TemplateConfig,
-    },
-    error::Result,
-};
+use super::db_query::MpConfig;
 
-#[derive(Builder)]
-#[builder(setter(strip_option))]
 pub struct MpGenerator {
-    config: ConfigBuilder,
-    injection: InjectConfig,
-    datasource: DataSourceConfig,
-    strategy: StrategyConfig,
-    package_info: PackageConfig,
-    tempate: TemplateConfig,
-    global: GlobalConfig,
+    config: MpConfig,
 }
 
 impl MpGenerator {
+    pub fn new(config: MpConfig) -> Self {
+        Self { config }
+    }
+
     pub async fn execute(&self) -> Result<()> {
         Ok(())
     }

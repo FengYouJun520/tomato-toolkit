@@ -4,7 +4,7 @@ pub struct TableInfo {
     /// 表名
     pub name: String,
     /// 注释
-    pub comment: String,
+    pub comment: Option<String>,
     /// 表所属数据库名
     pub schema: String,
     /// 表所有列信息
@@ -17,7 +17,7 @@ pub struct TableField {
     /// 列名
     pub name: String,
     ///注释
-    pub comment: String,
+    pub comment: Option<String>,
     /// 列类型
     pub r#type: String,
     /// 是否可为空

@@ -1,22 +1,21 @@
-pub mod builder;
 use serde::Deserialize;
 use sqlx::{
-    any::AnyConnectOptions, mssql::MssqlConnectOptions, mysql::MySqlConnectOptions,
-    postgres::PgConnectOptions, sqlite::SqliteConnectOptions, AnyConnection, ConnectOptions,
+    any::{AnyConnectOptions, AnyKind},
+    mssql::MssqlConnectOptions,
+    mysql::MySqlConnectOptions,
+    postgres::PgConnectOptions,
+    sqlite::SqliteConnectOptions,
+    AnyConnection, ConnectOptions,
 };
 use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
-    rc::Rc,
     str::FromStr,
 };
 
 use crate::error::{Result, SerializeError};
 
-use super::protocol::{
-    db_query::{DbQuery, MsSqlDbQuery, MysqlDbQuery, PostgresDbQuery, SqliteDbQuery},
-    types::DateType,
-};
+use super::types::DateType;
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -30,6 +29,10 @@ pub struct DataSourceConfig {
 }
 
 impl DataSourceConfig {
+    pub fn db_type(&self) -> AnyKind {
+        AnyKind::from_str(&self.db_url()).unwrap_or(AnyKind::MySql)
+    }
+
     pub fn db_url(&self) -> String {
         match self.r#type.as_ref() {
             "sqlite" => format!("{}://{}", &self.r#type, &self.database),
@@ -69,15 +72,16 @@ impl DataSourceConfig {
         Ok(options.connect().await?)
     }
 
-    pub fn db_query(&self) -> Rc<dyn DbQuery> {
-        match self.r#type.as_ref() {
-            "mysql" => Rc::new(MysqlDbQuery),
-            "sqlite" => Rc::new(SqliteDbQuery),
-            "mssql" => Rc::new(MsSqlDbQuery),
-            "postgres" => Rc::new(PostgresDbQuery),
-            _ => Rc::new(MysqlDbQuery),
-        }
-    }
+    /// TODO:
+    // pub fn db_query(&self) -> Rc<dyn DbQuery> {
+    //     match self.r#type.as_ref() {
+    //         "mysql" => Rc::new(MysqlDbQuery),
+    //         "sqlite" => Rc::new(SqliteDbQuery),
+    //         "mssql" => Rc::new(MsSqlDbQuery),
+    //         "postgres" => Rc::new(PostgresDbQuery),
+    //         _ => Rc::new(MysqlDbQuery),
+    //     }
+    // }
 
     pub fn table_info_query_sql(&self) -> Result<String> {
         match self.r#type.as_ref() {

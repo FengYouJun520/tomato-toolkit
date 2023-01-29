@@ -1,6 +1,8 @@
 use serde::Deserialize;
 
-use crate::{codegen::config::GlobalConfig, generateColumnType};
+use crate::generateColumnType;
+
+use super::config::GlobalConfig;
 
 pub trait TypeConvert {
     fn type_convert(&self, config: &GlobalConfig) -> DbColumnType;

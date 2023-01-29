@@ -1,9 +1,11 @@
+
 export interface MpConfig {
-  datasourceConfig: DatasourceConfig
-  globalConfig: GlobalConfig
-  packageConfig: PackageConfig
-  templateConfig: TemplateConfig
-  strategyConfig: StrategyConfig
+  datasource: DatasourceConfig
+  global: GlobalConfig
+  injection?: InjectConfig
+  package: PackageConfig
+  template: TemplateConfig
+  strategy: StrategyConfig
 }
 
 export interface BasicTableInfo {
@@ -30,6 +32,10 @@ export interface GlobalConfig {
   springdoc: boolean
   dateType: DataType
   commentDate: string
+}
+
+export interface InjectConfig {
+  custom_map?: Record<string, string>
 }
 
 export type DataType = 'ONLY_DATE' | 'SQL_PACK' | 'TIME_PACK'

@@ -1,8 +1,8 @@
+use crate::error::Result;
 use serde::Serialize;
 use sqlx::{Connection, Executor, Row};
 
-use crate::{codegen::config::DataSourceConfig, error::Result};
-
+use super::config::DataSourceConfig;
 pub use super::mp_generator::MpGenerator;
 
 #[derive(Debug, Serialize)]
