@@ -26,11 +26,12 @@ const options: SelectOption[] = [
     value: 'sqlite',
   },
   {
-    label: 'mssql',
+    label: 'mssql（目前不支持）',
     value: 'mssql',
+    disabled: true,
   },
   {
-    label: 'postgres',
+    label: 'postgres（未经过测试，有可能失败）',
     value: 'postgres',
   },
 ]
@@ -70,7 +71,7 @@ const renderLabel: SelectRenderLabel = option => h(
     h('img', { src: getIcon(option.value as string) }),
     h(
       NTag,
-      { type: 'info', bordered: false },
+      { type: 'info', bordered: false, disabled: !!option.disabled },
       { default: () => option.label }
     ),
   ] }

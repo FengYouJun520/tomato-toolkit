@@ -5,7 +5,7 @@ use sqlx::{
     mysql::MySqlConnectOptions,
     postgres::PgConnectOptions,
     sqlite::SqliteConnectOptions,
-    AnyConnection, ConnectOptions, Connection, MssqlConnection, MySqlConnection, PgConnection,
+    AnyConnection, ConnectOptions, MssqlConnection, MySqlConnection, PgConnection,
     SqliteConnection,
 };
 use std::{
