@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NIcon, NLayoutSider, NMenu } from 'naive-ui'
+import { NIcon } from 'naive-ui'
 
 import { Component } from 'vue'
 import { RouteRecordRaw, RouterLink } from 'vue-router'
@@ -40,18 +40,19 @@ const handleUpdateValue = (key: string, item: MenuOption) => {
 </script>
 
 <template>
-  <NLayoutSider
+  <n-layout-sider
     :native-scrollbar="false"
     collapse-mode="width"
     :collapsed="uiState.isCollapse"
+    class="border-r-2 border-r-gray-100"
   >
-    <NMenu
+    <n-menu
       :collapsed="uiState.isCollapse"
       :default-value="$route.path"
       :options="menuOptions"
       @update:value="handleUpdateValue"
     />
-  </NLayoutSider>
+  </n-layout-sider>
 </template>
 
 <style lang="css" scoped>
