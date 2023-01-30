@@ -198,7 +198,7 @@ pub struct PackageConfig {
     /// Controller包名
     pub controller: String,
     /// 路径配置信息
-    pub pathinfo: Option<HashMap<OutputFile, String>>,
+    pub pathinfo: Option<HashMap<OutputFile, PathBuf>>,
     /// 包配置信息
     pub package_infos: Option<HashMap<String, String>>,
 }
@@ -245,27 +245,98 @@ impl PackageConfig {
             self.parent.clone()
         }
     }
+
+    pub fn get_path_info(&self) -> Option<HashMap<OutputFile, PathBuf>> {
+        self.pathinfo.clone()
+    }
 }
 
 #[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TemplateConfig {
-    /// 禁用所有模板
-    pub disable: bool,
     /// 设置实体模板路径
-    pub entity: String,
+    pub entity: Option<PathBuf>,
     /// 设置实体模板路径(kotlin模板)
-    pub entity_kt: String,
+    pub entity_kt: Option<PathBuf>,
     /// 设置控制器模板路径
-    pub controller: String,
+    pub controller: Option<PathBuf>,
     /// 设置Mapper模板路径
-    pub mapper: String,
+    pub mapper: Option<PathBuf>,
     /// 设置MapperXml模板路径
-    pub xml: String,
+    pub xml: Option<PathBuf>,
     /// 设置Service模板路径
-    pub service: String,
+    pub service: Option<PathBuf>,
     /// 设置ServiceImpl模板路径
-    pub service_impl: String,
+    pub service_impl: Option<PathBuf>,
+    pub disable_entity: bool,
+    pub disable_controller: bool,
+    pub disable_mapper: bool,
+    pub disable_xml: bool,
+    pub disable_service: bool,
+    pub disable_service_impl: bool,
+}
+
+impl TemplateConfig {
+    pub fn get_entity(
+        &self,
+        is_kotlin: bool,
+        entity_path: PathBuf,
+        kt_path: PathBuf,
+    ) -> Option<PathBuf> {
+        if self.disable_entity {
+            return None;
+        }
+
+        if is_kotlin {
+            Some(self.get_path(self.entity_kt.clone(), kt_path))
+        } else {
+            Some(self.get_path(self.entity.clone(), entity_path))
+        }
+    }
+
+    pub fn get_controller(&self, default_controller: PathBuf) -> Option<PathBuf> {
+        if self.disable_controller {
+            return None;
+        }
+        Some(self.get_path(self.controller.clone(), default_controller))
+    }
+
+    pub fn get_mapper(&self, default_mapper: PathBuf) -> Option<PathBuf> {
+        if self.disable_mapper {
+            return None;
+        }
+        Some(self.get_path(self.mapper.clone(), default_mapper))
+    }
+
+    pub fn get_xml(&self, default_xml: PathBuf) -> Option<PathBuf> {
+        if self.disable_xml {
+            return None;
+        }
+        Some(self.get_path(self.xml.clone(), default_xml))
+    }
+
+    pub fn get_service(&self, default_servicer: PathBuf) -> Option<PathBuf> {
+        if self.disable_service {
+            return None;
+        }
+        Some(self.get_path(self.service.clone(), default_servicer))
+    }
+
+    pub fn get_service_impl(&self, default_service_impl: PathBuf) -> Option<PathBuf> {
+        if self.disable_service_impl {
+            return None;
+        }
+
+        Some(self.get_path(self.service_impl.clone(), default_service_impl))
+    }
+
+    fn get_path(&self, value: Option<PathBuf>, default_value: PathBuf) -> PathBuf {
+        match value {
+            Some(val) if val.to_string_lossy().is_empty() => default_value,
+            Some(val) => val,
+            None => default_value,
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Clone)]

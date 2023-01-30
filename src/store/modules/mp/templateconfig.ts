@@ -2,14 +2,19 @@ import { TemplateConfig } from '@/types/type'
 
 export const useTemplateConfigStore = defineStore('templateConfigState', {
   state: (): TemplateConfig => ({
-    disable: false,
-    entity: 'templates/entity.java',
-    entityKt: 'templates/entity.java',
-    controller: 'templates/controller.java',
-    mapper: 'templates/mapper.java',
-    xml: 'templates/mapper.xml',
-    service: 'templates/service.java',
-    serviceImpl: 'templates/serviceImpl.java',
+    entity: '',
+    entityKt: '',
+    controller: '',
+    mapper: '',
+    xml: '',
+    service: '',
+    serviceImpl: '',
+    disableEntity: false,
+    disableController: false,
+    disableMapper: false,
+    disableXml: false,
+    disableService: false,
+    disableServiceImpl: false,
   }),
   persistedState: {
   },

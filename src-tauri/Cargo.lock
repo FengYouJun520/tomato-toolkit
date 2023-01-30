@@ -3950,6 +3950,7 @@ dependencies = [
  "convert_case 0.6.0",
  "derive_builder",
  "dyn-fmt",
+ "glob",
  "serde",
  "serde_json",
  "sqlx",

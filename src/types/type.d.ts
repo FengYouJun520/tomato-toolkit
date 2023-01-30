@@ -56,7 +56,6 @@ export interface PackageConfig {
 export type OutputFile = 'entity'|'service'|'serviceImpl'|'mapper'|'xml'|'controller'|'parent'
 
 export interface TemplateConfig {
-  disable: boolean
   entity: string
   entityKt: string
   controller: string
@@ -64,6 +63,12 @@ export interface TemplateConfig {
   xml: string
   service: string
   serviceImpl: string
+  disableEntity: boolean
+  disableController: boolean
+  disableMapper: boolean
+  disableXml: boolean
+  disableService: boolean
+  disableServiceImpl: boolean
 }
 
 export interface StrategyConfig {

@@ -1,6 +1,7 @@
 use crate::error::Result;
 use serde::Serialize;
 use sqlx::{Connection, Executor, Row};
+use tauri::AppHandle;
 
 pub use super::mp_generator::MpGenerator;
 use super::{config::DataSourceConfig, db_query::MpConfig};
@@ -32,8 +33,11 @@ pub async fn test_connection(config: DataSourceConfig) -> Result<Vec<BasicTableI
 }
 
 #[tauri::command]
-pub async fn mp_codegen(config: MpConfig) -> Result<()> {
-    let generator = MpGenerator::new(config);
+pub async fn mp_codegen(app: AppHandle, config: MpConfig) -> Result<()> {
+    let Some(resource_path) =  app.path_resolver().resolve_resource("templates") else {
+        return Err("资源路径不存在".into());
+    };
+    let mut generator = MpGenerator::new(resource_path, config)?;
     generator.execute().await?;
     Ok(())
 }

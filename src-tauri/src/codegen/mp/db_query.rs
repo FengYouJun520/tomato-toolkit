@@ -1,7 +1,10 @@
+use std::fmt::Debug;
+
 use super::{
     config::{
         DataSourceConfig, GlobalConfig, InjectConfig, PackageConfig, StrategyConfig, TemplateConfig,
     },
+    config_builder::ConfigBuilder,
     model::{TableField, TableInfo},
 };
 use crate::error::Result;
@@ -22,27 +25,28 @@ pub struct MpConfig {
 }
 
 #[async_trait]
-pub trait DbQuery: Sync + Send {
+pub trait DbQuery: Sync + Send + Debug {
     /// 查询表元信息
-    async fn table_infos(&self, config: &MpConfig) -> Result<Vec<TableInfo>>;
+    async fn table_infos(&self, config: &ConfigBuilder) -> Result<Vec<TableInfo>>;
     /// 查询表中列的元信息
     async fn table_field(
         &self,
         table_info: &TableInfo,
-        config: &MpConfig,
+        config: &ConfigBuilder,
     ) -> Result<Vec<TableField>>;
 }
 
 /// mysql查询
+#[derive(Debug)]
 pub struct MysqlQuery;
 
 #[async_trait]
 impl DbQuery for MysqlQuery {
-    async fn table_infos(&self, config: &MpConfig) -> Result<Vec<TableInfo>> {
-        let mut conn = config.datasource.connect_mysql().await?;
-        let includes: Vec<&String> = config.strategy.include.iter().collect();
+    async fn table_infos(&self, config: &ConfigBuilder) -> Result<Vec<TableInfo>> {
+        let mut conn = config.datasource_config.connect_mysql().await?;
+        let includes: Vec<&String> = config.strategy_config.include.iter().collect();
         let table_names: Vec<String> = includes.into_iter().map(|tb| format!("'{}'", tb)).collect();
-        let datasource = &config.datasource;
+        let datasource = &config.datasource_config;
 
         let query = format!(
             r#"SELECT
@@ -76,10 +80,10 @@ WHERE
     async fn table_field(
         &self,
         table_info: &TableInfo,
-        config: &MpConfig,
+        config: &ConfigBuilder,
     ) -> Result<Vec<TableField>> {
-        let mut conn = config.datasource.connect_mysql().await?;
-        let datasource = &config.datasource;
+        let mut conn = config.datasource_config.connect_mysql().await?;
+        let datasource = &config.datasource_config;
         let query = format!(
             r#"SELECT
     COLUMN_NAME 'name',
@@ -118,14 +122,15 @@ WHERE
     }
 }
 
+#[derive(Debug)]
 pub struct SqliteQuery;
 
 #[async_trait]
 impl DbQuery for SqliteQuery {
-    async fn table_infos(&self, config: &MpConfig) -> Result<Vec<TableInfo>> {
-        let datasource = &config.datasource;
+    async fn table_infos(&self, config: &ConfigBuilder) -> Result<Vec<TableInfo>> {
+        let datasource = &config.datasource_config;
         let mut conn = datasource.connect_sqlite().await?;
-        let includes: Vec<&String> = config.strategy.include.iter().collect();
+        let includes: Vec<&String> = config.strategy_config.include.iter().collect();
         let table_names: Vec<String> = includes.into_iter().map(|tb| format!("'{}'", tb)).collect();
 
         let query = "SELECT name FROM sqlite_master WHERE type ='table'";
@@ -148,9 +153,9 @@ impl DbQuery for SqliteQuery {
     async fn table_field(
         &self,
         table_info: &TableInfo,
-        config: &MpConfig,
+        config: &ConfigBuilder,
     ) -> Result<Vec<TableField>> {
-        let datasource = &config.datasource;
+        let datasource = &config.datasource_config;
         let mut conn = datasource.connect_sqlite().await?;
 
         let query = format!("pragma table_info('{}');", table_info.name);
@@ -176,31 +181,34 @@ impl DbQuery for SqliteQuery {
     }
 }
 
+#[derive(Debug)]
 pub struct MsSqlQuery;
 
 #[async_trait]
 impl DbQuery for MsSqlQuery {
-    async fn table_infos(&self, _config: &MpConfig) -> Result<Vec<TableInfo>> {
+    async fn table_infos(&self, _config: &ConfigBuilder) -> Result<Vec<TableInfo>> {
         Ok(vec![])
     }
 
     async fn table_field(
         &self,
         _table_info: &TableInfo,
-        _config: &MpConfig,
+        _config: &ConfigBuilder,
     ) -> Result<Vec<TableField>> {
         Ok(vec![])
     }
 }
 
+#[derive(Debug)]
 pub struct PostgresQuery;
 
 #[async_trait]
 impl DbQuery for PostgresQuery {
-    async fn table_infos(&self, config: &MpConfig) -> Result<Vec<TableInfo>> {
-        let mut conn = config.datasource.connect_mysql().await?;
-        let datasource = &config.datasource;
-        let includes: Vec<&String> = config.strategy.include.iter().collect();
+    async fn table_infos(&self, config: &ConfigBuilder) -> Result<Vec<TableInfo>> {
+        let mut conn = config.datasource_config.connect_mysql().await?;
+        let datasource = &config.datasource_config;
+        let strategy = &config.strategy_config;
+        let includes: Vec<&String> = strategy.include.iter().collect();
         let table_names: Vec<String> = includes.into_iter().map(|tb| format!("'{}'", tb)).collect();
 
         let query = format!(
@@ -232,9 +240,9 @@ AND A.tablename = B.relname"#,
     async fn table_field(
         &self,
         table_info: &TableInfo,
-        config: &MpConfig,
+        config: &ConfigBuilder,
     ) -> Result<Vec<TableField>> {
-        let mut conn = config.datasource.connect_mysql().await?;
+        let mut conn = config.datasource_config.connect_mysql().await?;
         let query = format!(
             r#"SELECT
     A.attname AS name,
