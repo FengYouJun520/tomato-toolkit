@@ -1,3 +1,5 @@
+use serde::Serialize;
+
 use crate::error::Result;
 
 use super::{
@@ -10,7 +12,7 @@ use super::{
 };
 use std::{collections::HashMap, path::PathBuf};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct ConfigBuilder {
     pub datasource_config: DataSourceConfig,
     pub template_config: TemplateConfig,
@@ -20,6 +22,7 @@ pub struct ConfigBuilder {
     pub injection_config: Option<InjectConfig>,
     pub table_infos: Vec<TableInfo>,
     pub path_info: HashMap<OutputFile, PathBuf>,
+    #[serde(skip)]
     pub db_query: Box<dyn DbQuery>,
 }
 
@@ -46,16 +49,16 @@ impl ConfigBuilder {
         }
     }
 
-    pub async fn query_tables(&mut self) -> Result<&Vec<TableInfo>> {
+    pub async fn query_tables(&mut self) -> Result<Vec<TableInfo>> {
         let mut table_infos = self.db_query.table_infos(self).await?;
         for table_info in &mut table_infos {
             let table_field = self.db_query.table_field(table_info, self).await?;
             table_info.fields = Some(table_field);
         }
 
-        self.table_infos = table_infos;
+        self.table_infos = table_infos.clone();
 
-        Ok(&self.table_infos)
+        Ok(table_infos)
     }
 }
 

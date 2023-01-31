@@ -1,4 +1,4 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use sqlx::{
     any::{AnyConnectOptions, AnyKind},
     mssql::MssqlConnectOptions,
@@ -17,11 +17,12 @@ use std::{
 use crate::error::{Result, SerializeError};
 
 use super::{
+    context_data::{self, ControllerData, TemplateRender},
     db_query::{DbQuery, MsSqlQuery, MysqlQuery, PostgresQuery, SqliteQuery},
     types::DateType,
 };
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DataSourceConfig {
     pub r#type: String,
@@ -144,7 +145,7 @@ WHERE UPPER(table_type)='BASE TABLE'
     }
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GlobalConfig {
     /// 生成文件的输出目录【 windows:D:// linux or mac:/tmp 】
@@ -178,7 +179,7 @@ impl GlobalConfig {
     }
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PackageConfig {
     /// 父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名, 默认："com.baomidou"
@@ -251,7 +252,7 @@ impl PackageConfig {
     }
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TemplateConfig {
     /// 设置实体模板路径
@@ -339,11 +340,11 @@ impl TemplateConfig {
     }
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct InjectConfig {}
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct StrategyConfig {
     /// 是否大写命名（默认 false）
@@ -372,7 +373,7 @@ pub struct StrategyConfig {
     pub service: Service,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Entity {
     /// 自定义继承的Entity类全称，带包名
@@ -421,7 +422,7 @@ pub struct Entity {
     pub format_filename: String,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Controller {
     /// 自定义继承的Controller类全称，带包名
@@ -436,7 +437,17 @@ pub struct Controller {
     pub format_filename: String,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+impl TemplateRender for Controller {
+    type Item = ControllerData;
+
+    fn render_data(&self, table_info: &super::model::TableInfo) -> Result<Self::Item> {
+        let data = context_data::ControllerDataBuilder::default().build()?;
+
+        Ok(data)
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Mapper {
     /// 自定义继承的Mapper类全称，带包名, 默认 "com.baomidou.mybatisplus.core.mapper.BaseMapper"
@@ -457,7 +468,7 @@ pub struct Mapper {
     pub format_xml_filename: String,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Service {
     ///自定义继承的Service类全称，带包名, 默认: "com.baomidou.mybatisplus.extension.service.IService"
@@ -472,7 +483,7 @@ pub struct Service {
     pub format_service_impl_filename: String,
 }
 
-#[derive(Debug, Deserialize, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash)]
 pub enum OutputFile {
     Entity,
     Service,
@@ -500,7 +511,7 @@ impl FromStr for OutputFile {
     }
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub enum NamingStrategy {
     NoChange,
     #[default]
@@ -525,14 +536,14 @@ impl NamingStrategy {
     }
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TableFill {
     pub key: String,
     pub value: String,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[allow(non_camel_case_types)]
 pub enum IdType {
     /// 数据库ID自增, 该类型请确保数据库设置了 ID自增 否则无效
@@ -553,11 +564,11 @@ impl FromStr for IdType {
 
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
         match s {
-            "auto" => Ok(Self::AUTO),
-            "none" => Ok(Self::NONE),
-            "input" => Ok(Self::INPUT),
-            "assignId" => Ok(Self::ASSIGN_ID),
-            "assignUuid" => Ok(Self::ASSIGN_UUID),
+            "AUTO" => Ok(Self::AUTO),
+            "NONE" => Ok(Self::NONE),
+            "INPUT" => Ok(Self::INPUT),
+            "ASSIGN_ID" => Ok(Self::ASSIGN_ID),
+            "ASSIGN_UUID" => Ok(Self::ASSIGN_UUID),
             _ => Err(format!("不支持的主键类型: {}", s).into()),
         }
     }

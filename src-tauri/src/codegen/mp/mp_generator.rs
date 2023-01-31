@@ -3,7 +3,13 @@ use tera::Tera;
 
 use crate::error::Result;
 
-use super::{config::OutputFile, config_builder::ConfigBuilder, db_query::MpConfig};
+use super::{
+    config::OutputFile,
+    config_builder::ConfigBuilder,
+    context_data::{ContextDataBuilder, TemplateRender},
+    db_query::MpConfig,
+    model::TableInfo,
+};
 
 pub struct MpGenerator {
     config: ConfigBuilder,
@@ -83,7 +89,20 @@ impl MpGenerator {
 
         for table_info in table_infos {
             // 转化为模板数据
+            self.build_context(&table_info)?;
         }
         Ok(())
+    }
+
+    pub fn build_context(&mut self, table_info: &TableInfo) -> Result<tera::Context> {
+        let strategy = &self.config.strategy_config;
+        let controller_data = strategy.controller.render_data(table_info)?;
+
+        let data = ContextDataBuilder::default()
+            .controller(controller_data)
+            .build()?;
+
+        let context = tera::Context::from_serialize(data)?;
+        Ok(context)
     }
 }

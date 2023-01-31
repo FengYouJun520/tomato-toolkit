@@ -1,7 +1,8 @@
+use serde::Serialize;
 use sqlx::FromRow;
 
 /// 表信息
-#[derive(Debug, Clone, FromRow)]
+#[derive(Debug, Clone, FromRow, Serialize)]
 pub struct TableInfo {
     /// 表名
     pub name: String,
@@ -17,7 +18,7 @@ pub struct TableInfo {
 }
 
 /// 列信息
-#[derive(Debug, Clone, FromRow)]
+#[derive(Debug, Clone, FromRow, Serialize)]
 pub struct TableField {
     /// 列名
     pub name: String,
