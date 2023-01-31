@@ -90,7 +90,9 @@ WHERE
     DATA_TYPE 'data_type',
     IS_NULLABLE 'is_nullable',
     IFNULL( CHARACTER_MAXIMUM_LENGTH, 0 ) 'length',
-    COLUMN_KEY 'key_flag' 
+    COLUMN_KEY 'key_flag',
+    COLUMN_DEFAULT default_value,
+    EXTRA auto_increment
 FROM
 	information_schema.COLUMNS 
 WHERE
@@ -106,6 +108,7 @@ WHERE
             .map(|row| {
                 let nullable: String = row.get(3);
                 let primary: String = row.get(5);
+                let auto_increment: String = row.get(7);
                 Field {
                     name: row.get(0),
                     comment: row.get(1),
@@ -113,6 +116,8 @@ WHERE
                     is_nullable: nullable == "YES",
                     length: row.get(4),
                     key_flag: primary == "PRI",
+                    default_value: row.get(6),
+                    auto_increment: auto_increment == "auto_increment",
                 }
             })
             .collect();
@@ -171,6 +176,8 @@ impl DbQuery for SqliteQuery {
                     length: None,
                     is_nullable: not_null == 0,
                     key_flag: primary == 1,
+                    default_value: None,
+                    auto_increment: false,
                 }
             })
             .collect();

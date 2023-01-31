@@ -19,7 +19,7 @@ use crate::error::{Result, SerializeError};
 
 use super::{
     context_data::{self, ControllerData, EntityData, MapperData, ServiceData, TemplateRender},
-    convert::{DefaultNameConvert, NameConvert},
+    convert::{DefaultNameConvert, MysqlTypeConvert, NameConvert, TypeConverts},
     db_query::{DbQuery, MsSqlQuery, MysqlQuery, PostgresQuery, SqliteQuery},
     model::TableInfo,
     types::{DateType, DbType, MysqlColumnType, TypeConvert},
@@ -53,7 +53,7 @@ impl DataSourceConfig {
 
     pub fn db_query(&self) -> Arc<dyn DbQuery> {
         match self.db_type() {
-            DbType::POSTGRE_SQL => Arc::new(PostgresQuery),
+            DbType::POSTGRES_SQL => Arc::new(PostgresQuery),
             DbType::MYSQL => Arc::new(MysqlQuery),
             DbType::SQLITE => Arc::new(SqliteQuery),
             DbType::SQL_SERVER => Arc::new(MsSqlQuery),
@@ -116,7 +116,7 @@ impl DataSourceConfig {
                 .username(&self.username)
                 .password(&self.password)
                 .into(),
-            DbType::POSTGRE_SQL => PgConnectOptions::new()
+            DbType::POSTGRES_SQL => PgConnectOptions::new()
                 .host(&self.host)
                 .port(self.port)
                 .database(&self.database)
@@ -129,11 +129,9 @@ impl DataSourceConfig {
         Ok(options.connect().await?)
     }
 
-    // pub fn type_convert(&self) -> Option<Box<dyn TypeConvert>> {
-    //     match self.r#type.as_ref() {
-    //         "mysql" => Some(Box::new(MysqlColumnType)),
-    //     }
-    // }
+    pub fn get_type_convert(&self) -> Box<dyn TypeConvert> {
+        TypeConverts::get_type_convert(self.db_type())
+    }
 
     pub fn table_info_query_sql(&self) -> Result<String> {
         match self.r#type.as_ref() {

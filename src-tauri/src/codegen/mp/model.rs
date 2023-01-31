@@ -89,6 +89,10 @@ pub struct Field {
     pub length: Option<i64>,
     ///是否是主键
     pub key_flag: bool,
+    #[sqlx(default)]
+    pub default_value: Option<String>,
+    #[sqlx(default)]
+    pub auto_increment: bool,
 }
 
 /// 列信息

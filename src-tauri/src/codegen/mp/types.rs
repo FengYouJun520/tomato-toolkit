@@ -37,7 +37,7 @@ pub enum DbType {
     DB2,
     H2,
     SQLITE,
-    POSTGRE_SQL,
+    POSTGRES_SQL,
     SQL_SERVER,
     OTHER,
 }
@@ -50,7 +50,7 @@ impl From<&str> for DbType {
             "db2" => DbType::DB2,
             "h2" => DbType::H2,
             "sqlite" => DbType::SQLITE,
-            "postgressql" => DbType::POSTGRE_SQL,
+            "postgressql" => DbType::POSTGRES_SQL,
             "sqlserver" => DbType::SQL_SERVER,
             _ => DbType::OTHER,
         }

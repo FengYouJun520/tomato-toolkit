@@ -94,8 +94,8 @@ impl TypeConverts {
         match db_type {
             DbType::MYSQL => Box::new(MysqlTypeConvert),
             DbType::SQLITE => Box::new(SqliteTypeConvert),
-            DbType::POSTGRE_SQL => todo!(),
-            DbType::SQL_SERVER => todo!(),
+            DbType::POSTGRES_SQL => Box::new(PostgresSqlTypeConvert),
+            DbType::SQL_SERVER => Box::new(SqliteTypeConvert),
             _ => Box::new(MysqlTypeConvert),
         }
     }
