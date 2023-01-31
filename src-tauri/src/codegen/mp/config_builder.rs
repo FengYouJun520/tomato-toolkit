@@ -8,7 +8,7 @@ use super::{
         TemplateConfig,
     },
     db_query::{DbQuery, MpConfig},
-    model::TableInfo,
+    model::{TableField, TableInfo},
 };
 use std::{collections::HashMap, path::PathBuf, sync::Arc};
 
@@ -50,15 +50,40 @@ impl ConfigBuilder {
     }
 
     pub async fn query_tables(&mut self) -> Result<Vec<TableInfo>> {
-        let mut table_infos = self.db_query.table_infos(self).await?;
-        for table_info in &mut table_infos {
-            let table_field = self.db_query.table_field(table_info, self).await?;
-            table_info.fields = Some(table_field);
+        let tables = self.db_query.query_tables(self).await?;
+        let mut table_infos = vec![];
+
+        for table in tables {
+            let mut table_info = TableInfo::new(self, table.comment, table.name);
+            self.convert_table_fields(&mut table_info).await?;
+            table_infos.push(table_info);
         }
 
         self.table_infos = table_infos.clone();
 
         Ok(table_infos)
+    }
+
+    async fn convert_table_fields(&self, table_info: &mut TableInfo) -> Result<()> {
+        let table_name = &table_info.name;
+        let fields = self.db_query.query_table_fields(table_info, self).await?;
+
+        let table_field = TableField {
+            name: todo!(),
+            comment: todo!(),
+            r#type: todo!(),
+            is_nullable: todo!(),
+            length: todo!(),
+            key_flag: todo!(),
+            proper_name: todo!(),
+        };
+
+        // 类型转换
+
+        table_info.fields.push(table_field);
+
+        table_info.process_table()?;
+        Ok(())
     }
 }
 

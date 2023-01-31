@@ -5,7 +5,7 @@ use super::{
         DataSourceConfig, GlobalConfig, InjectConfig, PackageConfig, StrategyConfig, TemplateConfig,
     },
     config_builder::ConfigBuilder,
-    model::{TableField, TableInfo},
+    model::{Field, Table, TableInfo},
 };
 use crate::error::Result;
 use async_trait::async_trait;
@@ -27,13 +27,13 @@ pub struct MpConfig {
 #[async_trait]
 pub trait DbQuery: Sync + Send + Debug {
     /// 查询表元信息
-    async fn table_infos(&self, config: &ConfigBuilder) -> Result<Vec<TableInfo>>;
+    async fn query_tables(&self, config: &ConfigBuilder) -> Result<Vec<Table>>;
     /// 查询表中列的元信息
-    async fn table_field(
+    async fn query_table_fields(
         &self,
         table_info: &TableInfo,
         config: &ConfigBuilder,
-    ) -> Result<Vec<TableField>>;
+    ) -> Result<Vec<Field>>;
 }
 
 /// mysql查询
@@ -42,7 +42,7 @@ pub struct MysqlQuery;
 
 #[async_trait]
 impl DbQuery for MysqlQuery {
-    async fn table_infos(&self, config: &ConfigBuilder) -> Result<Vec<TableInfo>> {
+    async fn query_tables(&self, config: &ConfigBuilder) -> Result<Vec<Table>> {
         let mut conn = config.datasource_config.connect_mysql().await?;
         let includes: Vec<&String> = config.strategy_config.include.iter().collect();
         let table_names: Vec<String> = includes.into_iter().map(|tb| format!("'{}'", tb)).collect();
@@ -62,26 +62,25 @@ WHERE
             datasource.database,
             table_names.join(","),
         );
-        let table_infos = conn.fetch_all(query.as_str()).await?;
+        let tables = conn.fetch_all(query.as_str()).await?;
 
-        let table_infos = table_infos
+        let tables = tables
             .into_iter()
-            .map(|row| TableInfo {
+            .map(|row| Table {
                 name: row.get(0),
                 comment: row.get(1),
-                fields: None,
                 schema: "".to_string(),
             })
             .collect();
 
-        Ok(table_infos)
+        Ok(tables)
     }
 
-    async fn table_field(
+    async fn query_table_fields(
         &self,
         table_info: &TableInfo,
         config: &ConfigBuilder,
-    ) -> Result<Vec<TableField>> {
+    ) -> Result<Vec<Field>> {
         let mut conn = config.datasource_config.connect_mysql().await?;
         let datasource = &config.datasource_config;
         let query = format!(
@@ -100,14 +99,14 @@ WHERE
             datasource.database, table_info.name
         );
 
-        let table_fields = conn.fetch_all(query.as_str()).await?;
+        let fields = conn.fetch_all(query.as_str()).await?;
 
-        let table_fields = table_fields
+        let fields = fields
             .into_iter()
             .map(|row| {
                 let nullable: String = row.get(3);
                 let primary: String = row.get(5);
-                TableField {
+                Field {
                     name: row.get(0),
                     comment: row.get(1),
                     r#type: row.get(2),
@@ -118,7 +117,7 @@ WHERE
             })
             .collect();
 
-        Ok(table_fields)
+        Ok(fields)
     }
 }
 
@@ -127,46 +126,45 @@ pub struct SqliteQuery;
 
 #[async_trait]
 impl DbQuery for SqliteQuery {
-    async fn table_infos(&self, config: &ConfigBuilder) -> Result<Vec<TableInfo>> {
+    async fn query_tables(&self, config: &ConfigBuilder) -> Result<Vec<Table>> {
         let datasource = &config.datasource_config;
         let mut conn = datasource.connect_sqlite().await?;
         let includes: Vec<&String> = config.strategy_config.include.iter().collect();
         let table_names: Vec<String> = includes.into_iter().map(|tb| format!("'{}'", tb)).collect();
 
         let query = "SELECT name FROM sqlite_master WHERE type ='table'";
-        let table_infos = conn.fetch_all(query).await?;
+        let tables = conn.fetch_all(query).await?;
 
-        let table_infos = table_infos
+        let tables = tables
             .into_iter()
-            .map(|row| TableInfo {
+            .map(|row| Table {
                 name: row.get(0),
                 comment: None,
-                fields: None,
                 schema: "".to_string(),
             })
             .filter(|tb| table_names.iter().any(|tbn| *tbn == tb.name))
             .collect();
 
-        Ok(table_infos)
+        Ok(tables)
     }
 
-    async fn table_field(
+    async fn query_table_fields(
         &self,
         table_info: &TableInfo,
         config: &ConfigBuilder,
-    ) -> Result<Vec<TableField>> {
+    ) -> Result<Vec<Field>> {
         let datasource = &config.datasource_config;
         let mut conn = datasource.connect_sqlite().await?;
 
         let query = format!("pragma table_info('{}');", table_info.name);
         let fields = conn.fetch_all(query.as_str()).await?;
 
-        let table_fields = fields
+        let fields = fields
             .into_iter()
             .map(|row| {
                 let not_null: u8 = row.get(3);
                 let primary: u8 = row.get(5);
-                TableField {
+                Field {
                     name: row.get(1),
                     comment: None,
                     r#type: row.get(2),
@@ -177,7 +175,7 @@ impl DbQuery for SqliteQuery {
             })
             .collect();
 
-        Ok(table_fields)
+        Ok(fields)
     }
 }
 
@@ -186,15 +184,15 @@ pub struct MsSqlQuery;
 
 #[async_trait]
 impl DbQuery for MsSqlQuery {
-    async fn table_infos(&self, _config: &ConfigBuilder) -> Result<Vec<TableInfo>> {
+    async fn query_tables(&self, _config: &ConfigBuilder) -> Result<Vec<Table>> {
         Ok(vec![])
     }
 
-    async fn table_field(
+    async fn query_table_fields(
         &self,
         _table_info: &TableInfo,
         _config: &ConfigBuilder,
-    ) -> Result<Vec<TableField>> {
+    ) -> Result<Vec<Field>> {
         Ok(vec![])
     }
 }
@@ -204,7 +202,7 @@ pub struct PostgresQuery;
 
 #[async_trait]
 impl DbQuery for PostgresQuery {
-    async fn table_infos(&self, config: &ConfigBuilder) -> Result<Vec<TableInfo>> {
+    async fn query_tables(&self, config: &ConfigBuilder) -> Result<Vec<Table>> {
         let mut conn = config.datasource_config.connect_mysql().await?;
         let datasource = &config.datasource_config;
         let strategy = &config.strategy_config;
@@ -221,27 +219,26 @@ WHERE A.schemaname='{}'
 AND A.tablename = B.relname"#,
             datasource.database
         );
-        let table_infos = conn.fetch_all(query.as_str()).await?;
+        let tables = conn.fetch_all(query.as_str()).await?;
 
-        let table_infos = table_infos
+        let tables = tables
             .into_iter()
-            .map(|row| TableInfo {
+            .map(|row| Table {
                 name: row.get(0),
                 comment: row.get(1),
-                fields: None,
                 schema: "".to_string(),
             })
             .filter(|tb| table_names.iter().any(|tbn| *tbn == tb.name))
             .collect();
 
-        Ok(table_infos)
+        Ok(tables)
     }
 
-    async fn table_field(
+    async fn query_table_fields(
         &self,
         table_info: &TableInfo,
         config: &ConfigBuilder,
-    ) -> Result<Vec<TableField>> {
+    ) -> Result<Vec<Field>> {
         let mut conn = config.datasource_config.connect_mysql().await?;
         let query = format!(
             r#"SELECT
@@ -273,14 +270,14 @@ ORDER BY A.attnum;"#,
             table_info.name, table_info.name, table_info.name
         );
 
-        let table_fields = conn.fetch_all(query.as_str()).await?;
+        let fields = conn.fetch_all(query.as_str()).await?;
 
-        let table_fields = table_fields
+        let fields = fields
             .into_iter()
             .map(|row| {
                 let not_null: u8 = row.get(4);
                 let primary: String = row.get(5);
-                TableField {
+                Field {
                     name: row.get(0),
                     r#type: row.get(1),
                     comment: row.get(2),
@@ -291,6 +288,6 @@ ORDER BY A.attnum;"#,
             })
             .collect();
 
-        Ok(table_fields)
+        Ok(fields)
     }
 }

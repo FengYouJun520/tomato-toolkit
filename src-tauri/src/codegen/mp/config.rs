@@ -11,6 +11,7 @@ use sqlx::{
 use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
+    rc::Rc,
     str::FromStr,
     sync::Arc,
 };
@@ -19,6 +20,7 @@ use crate::error::{Result, SerializeError};
 
 use super::{
     context_data::{self, ControllerData, EntityData, MapperData, ServiceData, TemplateRender},
+    convert::{DefaultNameConvert, NameConvert},
     db_query::{DbQuery, MsSqlQuery, MysqlQuery, PostgresQuery, SqliteQuery},
     types::DateType,
 };
@@ -422,11 +424,18 @@ pub struct Entity {
     /// 格式化文件名称
     pub format_filename: String,
 }
+
 impl TemplateRender for Entity {
     type Item = EntityData;
 
     fn render_data(&self, table_info: &super::model::TableInfo) -> Result<Self::Item> {
         todo!()
+    }
+}
+
+impl Entity {
+    pub fn name_convert(&mut self, strategy_config: StrategyConfig) -> Box<dyn NameConvert> {
+        Box::new(DefaultNameConvert::new(strategy_config))
     }
 }
 
@@ -533,7 +542,7 @@ impl FromStr for OutputFile {
     }
 }
 
-#[derive(Debug, Default, Serialize, Deserialize, Clone)]
+#[derive(Debug, Default, Serialize, Deserialize, Copy, Clone)]
 pub enum NamingStrategy {
     NoChange,
     #[default]
@@ -555,6 +564,24 @@ impl FromStr for NamingStrategy {
 impl NamingStrategy {
     pub fn convert(&self, property_name: &str) -> String {
         property_name.to_string()
+    }
+}
+
+impl NamingStrategy {
+    pub fn remove_prefix(name: &str, prefix: &HashSet<String>) -> String {
+        todo!()
+    }
+
+    pub fn remove_suffix(name: &str, suffix: &HashSet<String>) -> String {
+        todo!()
+    }
+
+    pub fn underline_to_camel(name: &str) -> String {
+        todo!()
+    }
+
+    pub fn capital(name: &str) -> String {
+        todo!()
     }
 }
 
