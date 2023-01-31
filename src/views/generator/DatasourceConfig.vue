@@ -26,13 +26,13 @@ const options: SelectOption[] = [
     value: 'sqlite',
   },
   {
-    label: 'mssql（目前不支持）',
-    value: 'mssql',
+    label: 'sqlserver（目前不支持）',
+    value: 'sqlserver',
     disabled: true,
   },
   {
-    label: 'postgres（未经过测试，有可能失败）',
-    value: 'postgres',
+    label: 'postgressql（未经过测试，有可能失败）',
+    value: 'postgressql',
   },
 ]
 
@@ -42,9 +42,9 @@ const getIcon = (value: string) => {
     return mysqlIcon
   case 'sqlite':
     return sqliteIcon
-  case 'mssql':
+  case 'sqlserver':
     return mssqlIcon
-  case 'postgres':
+  case 'postgressql':
     return postgresIcon
   default:
     return mysqlIcon

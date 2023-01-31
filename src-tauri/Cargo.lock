@@ -3951,6 +3951,7 @@ dependencies = [
  "derive_builder",
  "dyn-fmt",
  "glob",
+ "regex",
  "serde",
  "serde_json",
  "sqlx",

@@ -11,7 +11,6 @@ use sqlx::{
 use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
-    rc::Rc,
     str::FromStr,
     sync::Arc,
 };
@@ -22,7 +21,8 @@ use super::{
     context_data::{self, ControllerData, EntityData, MapperData, ServiceData, TemplateRender},
     convert::{DefaultNameConvert, NameConvert},
     db_query::{DbQuery, MsSqlQuery, MysqlQuery, PostgresQuery, SqliteQuery},
-    types::DateType,
+    model::TableInfo,
+    types::{DateType, DbType, MysqlColumnType, TypeConvert},
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -37,8 +37,8 @@ pub struct DataSourceConfig {
 }
 
 impl DataSourceConfig {
-    pub fn db_type(&self) -> AnyKind {
-        AnyKind::from_str(&self.db_url()).unwrap_or(AnyKind::MySql)
+    pub fn db_type(&self) -> DbType {
+        DbType::from(&self.r#type)
     }
 
     pub fn db_url(&self) -> String {
@@ -53,10 +53,11 @@ impl DataSourceConfig {
 
     pub fn db_query(&self) -> Arc<dyn DbQuery> {
         match self.db_type() {
-            AnyKind::Postgres => Arc::new(PostgresQuery),
-            AnyKind::MySql => Arc::new(MysqlQuery),
-            AnyKind::Sqlite => Arc::new(SqliteQuery),
-            AnyKind::Mssql => Arc::new(MsSqlQuery),
+            DbType::POSTGRE_SQL => Arc::new(PostgresQuery),
+            DbType::MYSQL => Arc::new(MysqlQuery),
+            DbType::SQLITE => Arc::new(SqliteQuery),
+            DbType::SQL_SERVER => Arc::new(MsSqlQuery),
+            _ => Arc::new(MysqlQuery),
         }
     }
 
@@ -100,22 +101,22 @@ impl DataSourceConfig {
     }
 
     pub async fn connect(&self) -> Result<AnyConnection> {
-        let options: AnyConnectOptions = match self.r#type.as_ref() {
-            "mysql" => MySqlConnectOptions::new()
+        let options: AnyConnectOptions = match self.db_type() {
+            DbType::MYSQL => MySqlConnectOptions::new()
                 .host(&self.host)
                 .port(self.port)
                 .username(&self.username)
                 .password(&self.password)
                 .into(),
-            "sqlite" => SqliteConnectOptions::new().filename(&self.database).into(),
-            "mssql" => MssqlConnectOptions::new()
+            DbType::SQLITE => SqliteConnectOptions::new().filename(&self.database).into(),
+            DbType::SQL_SERVER => MssqlConnectOptions::new()
                 .host(&self.host)
                 .port(self.port)
                 .database(&self.database)
                 .username(&self.username)
                 .password(&self.password)
                 .into(),
-            "postgres" => PgConnectOptions::new()
+            DbType::POSTGRE_SQL => PgConnectOptions::new()
                 .host(&self.host)
                 .port(self.port)
                 .database(&self.database)
@@ -127,6 +128,12 @@ impl DataSourceConfig {
 
         Ok(options.connect().await?)
     }
+
+    // pub fn type_convert(&self) -> Option<Box<dyn TypeConvert>> {
+    //     match self.r#type.as_ref() {
+    //         "mysql" => Some(Box::new(MysqlColumnType)),
+    //     }
+    // }
 
     pub fn table_info_query_sql(&self) -> Result<String> {
         match self.r#type.as_ref() {
@@ -141,8 +148,8 @@ WHERE UPPER(table_type)='BASE TABLE'
                 "select name, '' comment from sqlite_master where type='table' order by name"
                     .to_string(),
             ),
-            "mssql" => Ok("".to_string()),
-            "postgres" => Ok("".to_string()),
+            "sqlserver" => Ok("".to_string()),
+            "postgressql" => Ok("".to_string()),
             _ => Err(format!("不支持的数据库类型: {}", self.r#type).into()),
         }
     }
@@ -428,7 +435,7 @@ pub struct Entity {
 impl TemplateRender for Entity {
     type Item = EntityData;
 
-    fn render_data(&self, table_info: &super::model::TableInfo) -> Result<Self::Item> {
+    fn render_data(&self, table_info: &TableInfo) -> Result<Self::Item> {
         todo!()
     }
 }
@@ -457,7 +464,7 @@ pub struct Controller {
 impl TemplateRender for Controller {
     type Item = ControllerData;
 
-    fn render_data(&self, table_info: &super::model::TableInfo) -> Result<Self::Item> {
+    fn render_data(&self, table_info: &TableInfo) -> Result<Self::Item> {
         let data = context_data::ControllerDataBuilder::default().build()?;
 
         Ok(data)
@@ -487,7 +494,7 @@ pub struct Mapper {
 impl TemplateRender for Mapper {
     type Item = MapperData;
 
-    fn render_data(&self, table_info: &super::model::TableInfo) -> Result<Self::Item> {
+    fn render_data(&self, table_info: &TableInfo) -> Result<Self::Item> {
         todo!()
     }
 }
@@ -509,7 +516,7 @@ pub struct Service {
 impl TemplateRender for Service {
     type Item = ServiceData;
 
-    fn render_data(&self, table_info: &super::model::TableInfo) -> Result<Self::Item> {
+    fn render_data(&self, table_info: &TableInfo) -> Result<Self::Item> {
         todo!()
     }
 }

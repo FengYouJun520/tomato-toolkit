@@ -1,3 +1,4 @@
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 use crate::generateColumnType;
@@ -5,7 +6,67 @@ use crate::generateColumnType;
 use super::config::GlobalConfig;
 
 pub trait TypeConvert {
-    fn type_convert(&self, config: &GlobalConfig) -> DbColumnType;
+    fn type_convert(&self, config: &GlobalConfig, field_type: &str) -> DbColumnType;
+
+    /// 日期转换器，默认为mysql日期转换
+    fn to_date_type(&self, config: &GlobalConfig, r#type: &str) -> DbColumnType {
+        let date_type = Regex::new(r"\(\d+\)").unwrap().replace_all(r#type, "");
+        match config.date_type {
+            DateType::ONLY_DATE => DATE,
+            DateType::SQL_PACK => match date_type.as_ref() {
+                "date" | "year" => DATE_SQL,
+                "time" => TIME,
+                _ => TIMESTAMP,
+            },
+            DateType::TIME_PACK => match date_type.as_ref() {
+                "date" => LOCAL_DATE,
+                "time" => LOCAL_TIME,
+                "year" => YEAR,
+                _ => LOCAL_DATE_TIME,
+            },
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[allow(non_camel_case_types)]
+pub enum DbType {
+    MYSQL,
+    MARIADB,
+    ORACLE,
+    DB2,
+    H2,
+    SQLITE,
+    POSTGRE_SQL,
+    SQL_SERVER,
+    OTHER,
+}
+
+impl From<&str> for DbType {
+    fn from(value: &str) -> Self {
+        match value.to_lowercase().as_str() {
+            "mysql" => DbType::MYSQL,
+            "oracle" => DbType::ORACLE,
+            "db2" => DbType::DB2,
+            "h2" => DbType::H2,
+            "sqlite" => DbType::SQLITE,
+            "postgressql" => DbType::POSTGRE_SQL,
+            "sqlserver" => DbType::SQL_SERVER,
+            _ => DbType::OTHER,
+        }
+    }
+}
+
+impl From<String> for DbType {
+    fn from(value: String) -> Self {
+        Self::from(value.as_str())
+    }
+}
+
+impl From<&String> for DbType {
+    fn from(value: &String) -> Self {
+        Self::from(value.as_str())
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -47,7 +108,7 @@ generateColumnType!(DATE_SQL, "Date", Some("java.sql.Date"));
 generateColumnType!(TIME, "Time", Some("java.sql.Time"));
 generateColumnType!(TIMESTAMP, "Timestamp", Some("java.sql.Timestamp"));
 generateColumnType!(CLOB, "Clob", Some("java.sql.Clob"));
-generateColumnType!(BLOG, "Blob", Some("java.sql.Blob"));
+generateColumnType!(BLOB, "Blob", Some("java.sql.Blob"));
 
 // java8 新时间类型
 generateColumnType!(LOCAL_DATE, "LocalDate", Some("java.time.LocalDate"));
@@ -128,46 +189,6 @@ pub enum SqliteColumnType {
     Year,
 }
 
-impl SqliteColumnType {
-    fn to_date_type(&self, config: &GlobalConfig) -> DbColumnType {
-        match config.date_type {
-            DateType::ONLY_DATE => DATE,
-            DateType::SQL_PACK => match self {
-                Self::Date | Self::Year => DATE_SQL,
-                Self::Time => TIME,
-                _ => TIMESTAMP,
-            },
-            DateType::TIME_PACK => match self {
-                Self::Date => LOCAL_DATE,
-                Self::Time => LOCAL_TIME,
-                Self::Year => YEAR,
-                _ => LOCAL_DATE_TIME,
-            },
-        }
-    }
-}
-
-impl TypeConvert for SqliteColumnType {
-    fn type_convert(&self, config: &GlobalConfig) -> DbColumnType {
-        match self {
-            SqliteColumnType::Bigint => LONG,
-            SqliteColumnType::Boolean => BOOLEAN,
-            SqliteColumnType::Tinyint(Some(size)) if *size == 1 => BOOLEAN,
-            SqliteColumnType::Tinyint(_) => INTEGER,
-            SqliteColumnType::Int => INTEGER,
-            SqliteColumnType::Text | SqliteColumnType::Char | SqliteColumnType::Enum => STRING,
-            SqliteColumnType::Decimal | SqliteColumnType::Numberic => BIG_DECIMAL,
-            SqliteColumnType::Clob => CLOB,
-            SqliteColumnType::Blob => BLOG,
-            SqliteColumnType::Float => FLOAT,
-            SqliteColumnType::Double => DOUBLE,
-            SqliteColumnType::Date | SqliteColumnType::Time | SqliteColumnType::Year => {
-                self.to_date_type(config)
-            }
-        }
-    }
-}
-
 pub enum MysqlColumnType {
     Bigint,
     Bit(Option<usize>),
@@ -190,57 +211,6 @@ pub enum MysqlColumnType {
     Year,
 }
 
-impl MysqlColumnType {
-    fn to_date_type(&self, config: &GlobalConfig) -> DbColumnType {
-        match config.date_type {
-            DateType::ONLY_DATE => DATE,
-            DateType::SQL_PACK => match self {
-                Self::Date | Self::Year => DATE_SQL,
-                Self::Time => TIME,
-                _ => TIMESTAMP,
-            },
-            DateType::TIME_PACK => match self {
-                Self::Date => LOCAL_DATE,
-                Self::Time => LOCAL_TIME,
-                Self::Year => YEAR,
-                Self::Timestamp => TIMESTAMP,
-                _ => LOCAL_DATE_TIME,
-            },
-        }
-    }
-}
-
-impl TypeConvert for MysqlColumnType {
-    fn type_convert(&self, config: &GlobalConfig) -> DbColumnType {
-        match self {
-            MysqlColumnType::Bigint => LONG,
-            MysqlColumnType::Tinyint(Some(size)) | MysqlColumnType::Bit(Some(size))
-                if *size == 1 =>
-            {
-                BOOLEAN
-            }
-            MysqlColumnType::Bit(_) => BYTE,
-            MysqlColumnType::Tinyint(_) => INTEGER,
-            MysqlColumnType::Int => INTEGER,
-            MysqlColumnType::Text
-            | MysqlColumnType::Char
-            | MysqlColumnType::Json
-            | MysqlColumnType::Enum => STRING,
-            MysqlColumnType::Decimal => BIG_DECIMAL,
-            MysqlColumnType::Clob => CLOB,
-            MysqlColumnType::Blob => BLOG,
-            MysqlColumnType::Binary => BYTE_ARRAY,
-            MysqlColumnType::Float => FLOAT,
-            MysqlColumnType::Double => DOUBLE,
-            MysqlColumnType::Date
-            | MysqlColumnType::Time
-            | MysqlColumnType::Year
-            | MysqlColumnType::DateTime
-            | MysqlColumnType::Timestamp => self.to_date_type(config),
-        }
-    }
-}
-
 pub enum MsSqlColumnType {
     Char,
     Bit,
@@ -259,40 +229,6 @@ pub enum MsSqlColumnType {
     Time,
 }
 
-impl MsSqlColumnType {
-    fn to_date_type(&self, config: &GlobalConfig) -> DbColumnType {
-        match config.date_type {
-            DateType::SQL_PACK => match self {
-                Self::Date => DATE_SQL,
-                Self::Time => TIME,
-                _ => TIMESTAMP,
-            },
-            DateType::TIME_PACK => match self {
-                Self::Date => LOCAL_DATE,
-                Self::Time => LOCAL_TIME,
-                _ => LOCAL_DATE_TIME,
-            },
-            _ => DATE,
-        }
-    }
-}
-
-impl TypeConvert for MsSqlColumnType {
-    fn type_convert(&self, config: &GlobalConfig) -> DbColumnType {
-        match self {
-            MsSqlColumnType::Char | MsSqlColumnType::Xml | MsSqlColumnType::Text => STRING,
-            MsSqlColumnType::Bit => BOOLEAN,
-            MsSqlColumnType::Bigint => LONG,
-            MsSqlColumnType::Int => INTEGER,
-            MsSqlColumnType::Decimal | MsSqlColumnType::Numberic => DOUBLE,
-            MsSqlColumnType::Money => BIG_DECIMAL,
-            MsSqlColumnType::Binary | MsSqlColumnType::Image => BYTE_ARRAY,
-            MsSqlColumnType::Float | MsSqlColumnType::Real => FLOAT,
-            MsSqlColumnType::Date | MsSqlColumnType::Time => self.to_date_type(config),
-        }
-    }
-}
-
 pub enum PostgresColumnType {
     Char,
     Text,
@@ -309,41 +245,4 @@ pub enum PostgresColumnType {
     FLoat,
     Double,
     Boolean,
-}
-
-impl PostgresColumnType {
-    fn to_date_type(&self, config: &GlobalConfig) -> DbColumnType {
-        match config.date_type {
-            DateType::SQL_PACK => match self {
-                Self::Date => DATE_SQL,
-                Self::Time => TIME,
-                _ => TIMESTAMP,
-            },
-            DateType::TIME_PACK => match self {
-                Self::Date => LOCAL_DATE,
-                Self::Time => LOCAL_TIME,
-                _ => LOCAL_DATE_TIME,
-            },
-            _ => DATE,
-        }
-    }
-}
-
-impl TypeConvert for PostgresColumnType {
-    fn type_convert(&self, config: &GlobalConfig) -> DbColumnType {
-        match self {
-            PostgresColumnType::Char
-            | PostgresColumnType::Text
-            | PostgresColumnType::Json
-            | PostgresColumnType::Enum => STRING,
-            PostgresColumnType::Bigint => LONG,
-            PostgresColumnType::Int => INTEGER,
-            PostgresColumnType::Date | PostgresColumnType::Time => self.to_date_type(config),
-            PostgresColumnType::Bit | PostgresColumnType::Boolean => BOOLEAN,
-            PostgresColumnType::Decimal | PostgresColumnType::Numberic => BIG_DECIMAL,
-            PostgresColumnType::Bytea => BYTE_ARRAY,
-            PostgresColumnType::FLoat => FLOAT,
-            PostgresColumnType::Double => DOUBLE,
-        }
-    }
 }

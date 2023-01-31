@@ -6,7 +6,7 @@ use crate::error::Result;
 use super::{
     config::OutputFile,
     config_builder::ConfigBuilder,
-    context_data::{ContextData, TemplateRender},
+    context_data::{self, TemplateRender},
     db_query::MpConfig,
     model::TableInfo,
 };
@@ -102,22 +102,22 @@ impl MpGenerator {
         let service_data = strategy.service.render_data(table_info)?;
         let entity_data = strategy.entity.render_data(table_info)?;
 
-        let data = ContextData {
-            controller_data,
-            mapper_data,
-            service_data,
-            entity_data,
-            config: self.config.clone(),
-            package: self.config.package_config.get_package_infos(),
-            author: global.author.clone(),
-            kotlin: global.kotlin,
-            swagger: global.swagger,
-            springdoc: global.springdoc,
-            date: global.comment_date.clone(),
-            schema_name: "".to_string(),
-            table: table_info.clone(),
-            entity: table_info.name.clone(),
-        };
+        let data = context_data::ContextDataBuilder::default()
+            .controller_data(controller_data)
+            .mapper_data(mapper_data)
+            .service_data(service_data)
+            .entity_data(entity_data)
+            .config(self.config.clone())
+            .package(self.config.package_config.get_package_infos())
+            .author(global.author.clone())
+            .kotlin(global.kotlin)
+            .swagger(global.swagger)
+            .springdoc(global.springdoc)
+            .date(global.comment_date.clone())
+            .schema_name("".to_string())
+            .table(table_info.clone())
+            .entity(table_info.name.clone())
+            .build()?;
 
         let context = tera::Context::from_serialize(data)?;
         Ok(context)

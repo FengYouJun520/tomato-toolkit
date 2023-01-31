@@ -14,7 +14,7 @@ pub trait TemplateRender {
 }
 
 /// 模板上下文需要的数据
-#[derive(Serialize)]
+#[derive(Serialize, Builder)]
 #[serde(rename_all = "camelCase")]
 pub struct ContextData {
     #[serde(flatten)]
