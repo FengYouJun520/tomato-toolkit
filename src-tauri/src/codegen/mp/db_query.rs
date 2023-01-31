@@ -37,7 +37,7 @@ pub trait DbQuery: Sync + Send + Debug {
 }
 
 /// mysql查询
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct MysqlQuery;
 
 #[async_trait]
@@ -122,7 +122,7 @@ WHERE
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct SqliteQuery;
 
 #[async_trait]
@@ -181,7 +181,7 @@ impl DbQuery for SqliteQuery {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct MsSqlQuery;
 
 #[async_trait]
@@ -199,7 +199,7 @@ impl DbQuery for MsSqlQuery {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct PostgresQuery;
 
 #[async_trait]

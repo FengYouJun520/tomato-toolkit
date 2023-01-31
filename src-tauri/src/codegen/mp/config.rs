@@ -12,12 +12,13 @@ use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
     str::FromStr,
+    sync::Arc,
 };
 
 use crate::error::{Result, SerializeError};
 
 use super::{
-    context_data::{self, ControllerData, TemplateRender},
+    context_data::{self, ControllerData, EntityData, MapperData, ServiceData, TemplateRender},
     db_query::{DbQuery, MsSqlQuery, MysqlQuery, PostgresQuery, SqliteQuery},
     types::DateType,
 };
@@ -48,12 +49,12 @@ impl DataSourceConfig {
         }
     }
 
-    pub fn db_query(&self) -> Box<dyn DbQuery> {
+    pub fn db_query(&self) -> Arc<dyn DbQuery> {
         match self.db_type() {
-            AnyKind::Postgres => Box::new(PostgresQuery),
-            AnyKind::MySql => Box::new(MysqlQuery),
-            AnyKind::Sqlite => Box::new(SqliteQuery),
-            AnyKind::Mssql => Box::new(MsSqlQuery),
+            AnyKind::Postgres => Arc::new(PostgresQuery),
+            AnyKind::MySql => Arc::new(MysqlQuery),
+            AnyKind::Sqlite => Arc::new(SqliteQuery),
+            AnyKind::Mssql => Arc::new(MsSqlQuery),
         }
     }
 
@@ -421,6 +422,13 @@ pub struct Entity {
     /// 格式化文件名称
     pub format_filename: String,
 }
+impl TemplateRender for Entity {
+    type Item = EntityData;
+
+    fn render_data(&self, table_info: &super::model::TableInfo) -> Result<Self::Item> {
+        todo!()
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -467,6 +475,13 @@ pub struct Mapper {
     /// 格式化 xml 实现类文件名称
     pub format_xml_filename: String,
 }
+impl TemplateRender for Mapper {
+    type Item = MapperData;
+
+    fn render_data(&self, table_info: &super::model::TableInfo) -> Result<Self::Item> {
+        todo!()
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -481,6 +496,13 @@ pub struct Service {
     pub format_service_filename: String,
     /// 格式化 service 实现类文件名称
     pub format_service_impl_filename: String,
+}
+impl TemplateRender for Service {
+    type Item = ServiceData;
+
+    fn render_data(&self, table_info: &super::model::TableInfo) -> Result<Self::Item> {
+        todo!()
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash)]

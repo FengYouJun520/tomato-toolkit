@@ -10,9 +10,9 @@ use super::{
     db_query::{DbQuery, MpConfig},
     model::TableInfo,
 };
-use std::{collections::HashMap, path::PathBuf};
+use std::{collections::HashMap, path::PathBuf, sync::Arc};
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Serialize)]
 pub struct ConfigBuilder {
     pub datasource_config: DataSourceConfig,
     pub template_config: TemplateConfig,
@@ -23,7 +23,7 @@ pub struct ConfigBuilder {
     pub table_infos: Vec<TableInfo>,
     pub path_info: HashMap<OutputFile, PathBuf>,
     #[serde(skip)]
-    pub db_query: Box<dyn DbQuery>,
+    pub db_query: Arc<dyn DbQuery>,
 }
 
 impl ConfigBuilder {

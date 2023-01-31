@@ -87,11 +87,12 @@ impl FieldFill {
     }
 }
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[allow(non_camel_case_types)]
 pub enum DateType {
     ONLY_DATE,
     SQL_PACK,
+    #[default]
     TIME_PACK,
 }
 
