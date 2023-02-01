@@ -5,7 +5,6 @@ export const useGlobalConfigStore = defineStore('globalConfigState', {
     outputDir: 'D://',
     open: false,
     author: 'baomidou',
-    fileOverride: false,
     kotlin: false,
     swagger: false,
     springdoc: false,

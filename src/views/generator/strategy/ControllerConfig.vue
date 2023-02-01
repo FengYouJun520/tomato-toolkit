@@ -14,13 +14,21 @@ const handleReset = () => {
     label-placement="left"
     :label-width="210"
   >
-    <n-form-item>
-      <n-button type="warning" @click="handleReset">
-        重置
-      </n-button>
-    </n-form-item>
-
     <n-grid cols="1 m:2" responsive="screen" :x-gap="24">
+      <n-form-item-gi>
+        <n-space class="y-0">
+          <n-button type="warning" @click="handleReset">
+            重置
+          </n-button>
+        </n-space>
+      </n-form-item-gi>
+      <n-form-item-gi label="覆盖文件">
+        <n-radio-group v-model:value="strategyconfigStore.controller.fileOverride">
+          <n-radio-button label="开启" :value="true" />
+          <n-radio-button label="关闭" :value="false" />
+        </n-radio-group>
+      </n-form-item-gi>
+
       <n-form-item-gi label="开启驼峰转连字符">
         <n-radio-group v-model:value="strategyconfigStore.controller.hyphenStyle">
           <n-radio-button label="开启" :value="true" />

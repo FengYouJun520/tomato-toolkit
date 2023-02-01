@@ -32,17 +32,6 @@ const handleReset = () => {
           </n-radio-button>
         </n-radio-group>
       </n-form-item-gi>
-      <n-form-item-gi label="覆盖已生成文件">
-        <n-radio-group v-model:value="globalConfigStore.fileOverride">
-          <n-radio-button :value="true">
-            开启
-          </n-radio-button>
-          <n-radio-button :value="false">
-            关闭
-          </n-radio-button>
-        </n-radio-group>
-      </n-form-item-gi>
-
       <n-form-item-gi label="开启swagger">
         <n-radio-group v-model:value="globalConfigStore.swagger" :disabled="globalConfigStore.springdoc">
           <n-radio-button :value="true">
@@ -53,6 +42,7 @@ const handleReset = () => {
           </n-radio-button>
         </n-radio-group>
       </n-form-item-gi>
+
       <n-form-item-gi label="开启springdoc">
         <n-radio-group v-model:value="globalConfigStore.springdoc">
           <n-radio-button :value="true">
@@ -63,7 +53,6 @@ const handleReset = () => {
           </n-radio-button>
         </n-radio-group>
       </n-form-item-gi>
-
       <n-form-item-gi label="开启kotlin模式">
         <n-radio-group v-model:value="globalConfigStore.kotlin">
           <n-radio-button :value="true">
@@ -73,6 +62,13 @@ const handleReset = () => {
             关闭
           </n-radio-button>
         </n-radio-group>
+      </n-form-item-gi>
+
+      <n-form-item-gi label="注释日期格式">
+        <n-input
+          v-model:value="globalConfigStore.commentDate"
+          placeholder="示例：%Y-%m-%d %H:%M:%S"
+        />
       </n-form-item-gi>
       <n-form-item-gi label="时间策略">
         <n-select v-model:value="globalConfigStore.dateType" :options="[
@@ -91,13 +87,6 @@ const handleReset = () => {
         ]" />
       </n-form-item-gi>
     </n-grid>
-
-    <n-form-item label="注释日期格式">
-      <n-input
-        v-model:value="globalConfigStore.commentDate"
-        placeholder="示例：%Y-%m-%d %H:%M:%S"
-      />
-    </n-form-item>
     <n-form-item label="输出目录">
       <n-input v-model:value="globalConfigStore.outputDir" />
     </n-form-item>

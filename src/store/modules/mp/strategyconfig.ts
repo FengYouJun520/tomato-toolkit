@@ -4,7 +4,7 @@ const defaultEntity: Entity = {
   superClass: '',
   superEntityColumns: [],
   ignoreColumns: [],
-  serialVersionUid: true,
+  serialVersionUid: false,
   columnConstant: false,
   chainMode: false,
   lombok: false,
@@ -19,6 +19,7 @@ const defaultEntity: Entity = {
   activeRecord: false,
   idType: 'AUTO',
   formatFilename: '{}',
+  fileOverride: false,
 }
 
 const defaultController: Controller = {
@@ -26,6 +27,7 @@ const defaultController: Controller = {
   restStyle: false,
   hyphenStyle: false,
   formatFilename: '{}Controller',
+  fileOverride: false,
 }
 
 const defaultMapper: Mapper = {
@@ -36,6 +38,7 @@ const defaultMapper: Mapper = {
   baseColumnList: false,
   formatMapperFilename: '{}Mapper',
   formatXmlFilename: '{}Mapper',
+  fileOverride: false,
 }
 
 const defaultService: Service = {
@@ -43,6 +46,7 @@ const defaultService: Service = {
   superServiceImplClass: '',
   formatServiceFilename: '{}IService',
   formatServiceImplFilename: '{}ServiceImpl',
+  fileOverride: false,
 }
 
 export const useStrategyConfigStore = defineStore('strategyConfigState', {

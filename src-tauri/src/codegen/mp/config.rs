@@ -160,8 +160,6 @@ pub struct GlobalConfig {
     pub open: bool,
     /// 作者
     pub author: String,
-    /// 覆盖已生成文件
-    pub file_override: bool,
     /// 开启 Kotlin 模式（默认 false）
     pub kotlin: bool,
     /// 开启 swagger 模式（默认 false 与 springdoc 不可同时使用）
@@ -429,7 +427,7 @@ pub struct Entity {
     /// 指定生成的主键的ID类型
     pub id_type: Option<IdType>,
     /// 是否覆盖已有文件（默认 false）
-    pub file_override: Option<bool>,
+    pub file_override: bool,
     /// 格式化文件名称
     pub format_filename: String,
 }
@@ -474,7 +472,7 @@ pub struct Controller {
     ///驼峰转连字符（默认 false）,  @RequestMapping("/managerUserActionHistory") -> @RequestMapping("/manager-user-action-history")
     pub hyphen_style: bool,
     ///是否覆盖已有文件（默认 false）
-    pub file_override: Option<bool>,
+    pub file_override: bool,
     /// 格式化文件名称
     pub format_filename: String,
 }
@@ -517,7 +515,7 @@ pub struct Mapper {
     /// 是否开启baseColumnList（默认 false）
     pub base_column_list: bool,
     ///是否覆盖已有文件（默认 false）
-    pub file_override: Option<bool>,
+    pub file_override: bool,
     /// 格式化 mapper 文件名称
     pub format_mapper_filename: String,
     /// 格式化 xml 实现类文件名称
@@ -546,7 +544,7 @@ pub struct Service {
     /// 自定义继承的ServiceImpl类全称，带包名，默认："com.baomidou.mybatisplus.extension.service.impl.ServiceImpl"
     pub super_service_impl_class: String,
     ///是否覆盖已有文件（默认 false）
-    pub file_override: Option<bool>,
+    pub file_override: bool,
     /// 格式化 service 接口文件名称
     pub format_service_filename: String,
     /// 格式化 service 实现类文件名称

@@ -26,9 +26,14 @@ const handleOpenTempelate = async () => {
     label-align="right"
   >
     <n-form-item>
-      <n-button type="warning" @click="handleReset">
-        重置
-      </n-button>
+      <n-space class="y-0">
+        <n-button type="warning" @click="handleReset">
+          重置
+        </n-button>
+        <n-button type="info" @click="handleOpenTempelate">
+          打开模板文件目录
+        </n-button>
+      </n-space>
     </n-form-item>
 
     <n-grid cols="1 m:2" :x-gap="24" responsive="screen">

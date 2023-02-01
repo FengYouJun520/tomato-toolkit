@@ -33,6 +33,7 @@ const handleMpGenerate = async () => {
       strategy: strategyStore.$state,
     }
     await invoke('mp_codegen', { config })
+    message.success('代码生成成功！')
   } catch (error) {
     message.error(error as string)
   }
