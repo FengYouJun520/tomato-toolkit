@@ -69,7 +69,7 @@ impl From<&String> for DbType {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize)]
 pub struct DbColumnType(pub &'static str, pub Option<&'static str>);
 
 impl DbColumnType {

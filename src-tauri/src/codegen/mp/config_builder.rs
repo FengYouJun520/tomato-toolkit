@@ -8,7 +8,7 @@ use super::{
         TemplateConfig,
     },
     db_query::{DbQuery, MpConfig},
-    model::{TableField, TableInfo},
+    model::{self, TableField, TableInfo},
 };
 use std::{collections::HashMap, path::PathBuf, sync::Arc};
 
@@ -65,24 +65,43 @@ impl ConfigBuilder {
     }
 
     async fn convert_table_fields(&self, table_info: &mut TableInfo) -> Result<()> {
-        let table_name = &table_info.name;
         let fields = self.db_query.query_table_fields(table_info, self).await?;
+        let strategy_config = &self.strategy_config;
+        let entity = &strategy_config.entity;
 
-        let table_field = TableField {
-            name: todo!(),
-            comment: todo!(),
-            r#type: todo!(),
-            is_nullable: todo!(),
-            length: todo!(),
-            key_flag: todo!(),
-            proper_name: todo!(),
-        };
+        let fields: Result<Vec<TableField>> = fields
+            .into_iter()
+            .map(|field| {
+                let property_name = entity
+                    .name_convert(strategy_config.clone())
+                    .property_name_convert(&field)?;
+                let column_type = self
+                    .datasource_config
+                    .get_type_convert()
+                    .type_convert(&self.global_config, &field.r#type);
 
-        // 类型转换
+                let mut field = model::TableFieldBuilder::default()
+                    .name(field.name.clone())
+                    .column_type(column_type)
+                    // TODO: 是否是关键字
+                    .column_name(field.name.clone())
+                    .entity(self.strategy_config.entity.clone())
+                    .datasource_config(self.datasource_config.clone())
+                    .global_config(self.global_config.clone())
+                    .comment(field.comment.unwrap_or_default())
+                    .custom_map(Some(HashMap::new()))
+                    .property_name(property_name)
+                    .build()?;
 
-        table_info.fields.push(table_field);
+                // 类型转换
 
+                Ok(field)
+            })
+            .collect();
+
+        table_info.fields.extend(fields?);
         table_info.process_table()?;
+
         Ok(())
     }
 }

@@ -4,7 +4,7 @@ use crate::error::Result;
 
 use super::{
     config::{GlobalConfig, NamingStrategy, StrategyConfig},
-    model::{TableField, TableInfo},
+    model::{Field, TableField, TableInfo},
     types::{
         DateType, DbColumnType, DbType, TypeConvert, BIG_DECIMAL, BLOB, BOOLEAN, BYTE_ARRAY, CLOB,
         DATE, DATE_SQL, DOUBLE, FLOAT, INTEGER, LOCAL_DATE, LOCAL_DATE_TIME, LOCAL_TIME, LONG,
@@ -14,8 +14,8 @@ use super::{
 
 /// 名称转换器
 pub trait NameConvert: Debug {
-    fn entity_name_convert(&self, table_info: TableInfo) -> Result<String>;
-    fn property_name_convert(&self, field: TableField) -> Result<String>;
+    fn entity_name_convert(&self, table_info: &TableInfo) -> Result<String>;
+    fn property_name_convert(&self, field: &Field) -> Result<String>;
 }
 
 /// 默认名称转换器
@@ -61,7 +61,7 @@ impl DefaultNameConvert {
 }
 
 impl NameConvert for DefaultNameConvert {
-    fn entity_name_convert(&self, table_info: TableInfo) -> Result<String> {
+    fn entity_name_convert(&self, table_info: &TableInfo) -> Result<String> {
         let name = self.process_name(
             &table_info.name,
             self.strategy_config.entity.naming,
@@ -73,7 +73,7 @@ impl NameConvert for DefaultNameConvert {
         Ok(res)
     }
 
-    fn property_name_convert(&self, field: TableField) -> Result<String> {
+    fn property_name_convert(&self, field: &Field) -> Result<String> {
         self.process_name(
             &field.name,
             self.strategy_config

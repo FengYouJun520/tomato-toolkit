@@ -291,6 +291,8 @@ ORDER BY A.attnum;"#,
                     is_nullable: not_null == 0,
                     length: row.get(3),
                     key_flag: primary == "PRI",
+                    auto_increment: false,
+                    default_value: None,
                 }
             })
             .collect();

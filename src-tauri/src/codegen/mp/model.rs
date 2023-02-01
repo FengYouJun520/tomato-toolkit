@@ -1,13 +1,16 @@
-use std::collections::BTreeSet;
+use std::collections::{BTreeSet, HashMap};
 
+use convert_case::{Case, Casing};
+use derive_builder::Builder;
 use serde::Serialize;
 use sqlx::FromRow;
 
 use crate::error::Result;
 
 use super::{
-    config::{Entity, GlobalConfig, StrategyConfig},
+    config::{DataSourceConfig, Entity, GlobalConfig, StrategyConfig},
     config_builder::ConfigBuilder,
+    types::{DbColumnType, STRING},
 };
 
 #[derive(Debug, Clone, FromRow, Serialize)]
@@ -59,11 +62,10 @@ impl TableInfo {
 
     /// 处理文件名与导包
     pub fn process_table(&mut self) -> Result<()> {
-        let table_info = self.clone();
         self.entity_name = self
             .entity
-            .name_convert(table_info.strategy_config.clone())
-            .entity_name_convert(table_info)?;
+            .name_convert(self.strategy_config.clone())
+            .entity_name_convert(self)?;
 
         self.import_packages();
 
@@ -96,20 +98,35 @@ pub struct Field {
 }
 
 /// 列信息
-#[derive(Debug, Clone, FromRow, Serialize)]
+#[derive(Debug, Clone, FromRow, Serialize, Builder)]
 pub struct TableField {
-    /// 列名
-    pub name: String,
-    ///注释
-    #[sqlx(default)]
-    pub comment: Option<String>,
-    /// 列类型
-    pub r#type: String,
-    /// 是否可为空
-    pub is_nullable: bool,
-    /// 列长度
-    pub length: Option<i64>,
-    ///是否是主键
+    pub convert: bool,
     pub key_flag: bool,
-    pub proper_name: String,
+    pub key_identity_flag: bool,
+    pub name: String,
+    pub r#type: String,
+    pub property_name: String,
+    pub column_type: DbColumnType,
+    pub comment: String,
+    pub fill: String,
+    pub keywords: bool,
+    pub column_name: String,
+    pub custom_map: Option<HashMap<String, serde_json::Value>>,
+    pub entity: Entity,
+    pub datasource_config: DataSourceConfig,
+    pub global_config: GlobalConfig,
+}
+
+impl TableField {
+    pub fn set_property_name(&mut self, property_name: &str, column_type: DbColumnType) {
+        self.column_type = column_type;
+
+        if self.entity.boolean_column_remove_is_prefix
+            && column_type.get_type() == "boolean"
+            && self.property_name.starts_with("is")
+        {
+            self.convert = true;
+            self.property_name = (&property_name[2..]).to_case(Case::Camel);
+        }
+    }
 }

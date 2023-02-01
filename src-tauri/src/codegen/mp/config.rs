@@ -439,7 +439,7 @@ impl TemplateRender for Entity {
 }
 
 impl Entity {
-    pub fn name_convert(&mut self, strategy_config: StrategyConfig) -> Box<dyn NameConvert> {
+    pub fn name_convert(&self, strategy_config: StrategyConfig) -> Box<dyn NameConvert> {
         Box::new(DefaultNameConvert::new(strategy_config))
     }
 }
