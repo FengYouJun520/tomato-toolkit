@@ -77,8 +77,8 @@ impl DbColumnType {
         self.0
     }
 
-    pub fn get_pkg(&self) -> Option<&'static str> {
-        self.1
+    pub fn get_pkg(&self) -> Option<String> {
+        self.1.map(str::to_string)
     }
 }
 
@@ -114,11 +114,11 @@ generateColumnType!(BLOB, "Blob", Some("java.sql.Blob"));
 generateColumnType!(LOCAL_DATE, "LocalDate", Some("java.time.LocalDate"));
 generateColumnType!(LOCAL_TIME, "LocalTime", Some("java.time.LocalTime"));
 generateColumnType!(YEAR, "Year", Some("java.time.Year"));
-generateColumnType!(YEAR_MONTH, "YearMonth", Some("java.time.LocalDateTime"));
+generateColumnType!(YEAR_MONTH, "YearMonth", Some("java.time.YearMonth"));
 generateColumnType!(
     LOCAL_DATE_TIME,
     "LocalDateTime",
-    Some("java.time.YearMonth")
+    Some("java.time.LocalDateTime")
 );
 generateColumnType!(INSTANT, "Instant", Some("java.time.Instant"));
 

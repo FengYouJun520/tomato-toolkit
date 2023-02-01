@@ -68,6 +68,7 @@ impl ConfigBuilder {
         let fields = self.db_query.query_table_fields(table_info, self).await?;
         let strategy_config = &self.strategy_config;
         let entity = &strategy_config.entity;
+        let keywords = false;
 
         let fields: Result<Vec<TableField>> = fields
             .into_iter()
@@ -82,18 +83,24 @@ impl ConfigBuilder {
 
                 let mut field = model::TableFieldBuilder::default()
                     .name(field.name.clone())
+                    .r#type(field.r#type)
                     .column_type(column_type)
-                    // TODO: 是否是关键字
+                    .convert(false)
+                    .fill("".into())
+                    .property_name("".into())
                     .column_name(field.name.clone())
                     .entity(self.strategy_config.entity.clone())
                     .datasource_config(self.datasource_config.clone())
                     .global_config(self.global_config.clone())
                     .comment(field.comment.unwrap_or_default())
-                    .custom_map(Some(HashMap::new()))
-                    .property_name(property_name)
+                    .custom_map(HashMap::new())
+                    .have_primary(field.key_flag)
+                    .key_flag(field.key_flag)
+                    .keywords(keywords)
+                    .key_identity_flag(field.auto_increment)
                     .build()?;
 
-                // 类型转换
+                field.set_property_name(&property_name, column_type);
 
                 Ok(field)
             })

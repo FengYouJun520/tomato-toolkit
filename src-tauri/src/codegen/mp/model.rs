@@ -2,15 +2,16 @@ use std::collections::{BTreeSet, HashMap};
 
 use convert_case::{Case, Casing};
 use derive_builder::Builder;
+use dyn_fmt::AsStrFormatExt;
 use serde::Serialize;
 use sqlx::FromRow;
 
 use crate::error::Result;
 
 use super::{
-    config::{DataSourceConfig, Entity, GlobalConfig, StrategyConfig},
+    config::{DataSourceConfig, Entity, GlobalConfig, NamingStrategy, StrategyConfig},
     config_builder::ConfigBuilder,
-    types::{DbColumnType, STRING},
+    types::DbColumnType,
 };
 
 #[derive(Debug, Clone, FromRow, Serialize)]
@@ -31,12 +32,20 @@ pub struct TableInfo {
     strategy_config: StrategyConfig,
     global_config: GlobalConfig,
     pub import_packages: BTreeSet<String>,
+    pub convert: bool,
     /// 表名
     pub name: String,
     /// 注释
     pub comment: Option<String>,
-    pub entity: Entity,
     pub entity_name: String,
+    pub mapper_name: String,
+    pub xml_name: String,
+    pub service_name: String,
+    pub service_impl_name: String,
+    pub controller_name: String,
+    pub have_primary_key: bool,
+    pub field_names: String,
+    pub entity: Entity,
     /// 表所有列信息
     pub fields: Vec<TableField>,
 }
@@ -57,22 +66,137 @@ impl TableInfo {
             comment,
             entity_name: "".to_string(),
             fields: vec![],
+            convert: false,
+            mapper_name: "".into(),
+            xml_name: "".into(),
+            service_name: "".into(),
+            service_impl_name: "".into(),
+            controller_name: "".into(),
+            have_primary_key: false,
+            field_names: "".into(),
         }
     }
 
     /// 处理文件名与导包
     pub fn process_table(&mut self) -> Result<()> {
-        self.entity_name = self
+        let entity_name = self
             .entity
             .name_convert(self.strategy_config.clone())
             .entity_name_convert(self)?;
+
+        self.set_entity_name(self.entity.format_filename.format(&[&entity_name]));
+        self.mapper_name = self
+            .strategy_config
+            .mapper
+            .format_mapper_filename
+            .format(&[&entity_name]);
+        self.xml_name = self
+            .strategy_config
+            .mapper
+            .format_xml_filename
+            .format(&[&entity_name]);
+        self.service_name = self
+            .strategy_config
+            .service
+            .format_service_filename
+            .format(&[&entity_name]);
+        self.service_impl_name = self
+            .strategy_config
+            .service
+            .format_service_impl_filename
+            .format(&[&entity_name]);
+        self.controller_name = self
+            .strategy_config
+            .controller
+            .format_filename
+            .format(&[&entity_name]);
 
         self.import_packages();
 
         Ok(())
     }
 
-    pub fn import_packages(&mut self) {}
+    pub fn set_entity_name(&mut self, entity_name: impl Into<String>) {
+        self.entity_name = entity_name.into();
+        self.set_convert();
+    }
+
+    fn set_convert(&mut self) {
+        if self.strategy_config.start_with_table_prefix(&self.name)
+            || self.entity.enable_table_field_annotation
+        {
+            self.convert = true;
+        } else {
+            self.convert = !self.entity_name.eq_ignore_ascii_case(&self.name);
+        }
+    }
+
+    /// 导包处理
+    pub fn import_packages(&mut self) {
+        let super_entity = &self.entity.super_class;
+        if !super_entity.is_empty() {
+            self.import_packages.insert(super_entity.into());
+        } else if self.entity.active_record {
+            self.import_packages
+                .insert("com.baomidou.mybatisplus.extension.activerecord.Model".into());
+        }
+        if self.entity.serial_version_uid | self.entity.active_record {
+            self.import_packages.insert("java.io.Serializable".into());
+        }
+        if self.convert {
+            self.import_packages
+                .insert("com.baomidou.mybatisplus.annotation.TableName".into());
+        }
+
+        if self.entity.id_type.is_some() && self.have_primary_key {
+            self.import_packages
+                .insert("com.baomidou.mybatisplus.annotation.IdType".into());
+            self.import_packages
+                .insert("com.baomidou.mybatisplus.annotation.TableId".into());
+        }
+
+        for field in self.fields.iter_mut() {
+            let column_type = field.column_type;
+            if let Some(pkg) = column_type.get_pkg() {
+                self.import_packages.insert(pkg);
+            }
+
+            if field.key_flag {
+                // 主键
+                if field.convert || field.key_identity_flag {
+                    self.import_packages
+                        .insert("com.baomidou.mybatisplus.annotation.TableId".into());
+                }
+                // 自增
+                if field.key_identity_flag {
+                    self.import_packages
+                        .insert("com.baomidou.mybatisplus.annotation.IdType".into());
+                }
+            } else if field.convert {
+                self.import_packages
+                    .insert("com.baomidou.mybatisplus.annotation.TableField".into());
+            }
+
+            if field.get_fill().is_some() {
+                self.import_packages
+                    .insert("com.baomidou.mybatisplus.annotation.TableField".into());
+                self.import_packages
+                    .insert("com.baomidou.mybatisplus.annotation.FieldFill".into());
+            }
+            if field.is_version_field() {
+                self.import_packages
+                    .insert("com.baomidou.mybatisplus.annotation.Version".into());
+            }
+            if field.is_logic_delete_field() {
+                self.import_packages
+                    .insert("com.baomidou.mybatisplus.annotation.TableLogic".into());
+            }
+        }
+    }
+
+    pub fn get_entity_path(&self) -> String {
+        self.entity_name.to_case(Case::Camel)
+    }
 }
 
 /// 列信息
@@ -99,6 +223,7 @@ pub struct Field {
 
 /// 列信息
 #[derive(Debug, Clone, FromRow, Serialize, Builder)]
+#[builder(setter(strip_option))]
 pub struct TableField {
     pub convert: bool,
     pub key_flag: bool,
@@ -108,16 +233,18 @@ pub struct TableField {
     pub property_name: String,
     pub column_type: DbColumnType,
     pub comment: String,
-    pub fill: String,
-    pub keywords: bool,
     pub column_name: String,
     pub custom_map: Option<HashMap<String, serde_json::Value>>,
     pub entity: Entity,
     pub datasource_config: DataSourceConfig,
     pub global_config: GlobalConfig,
+    pub fill: String,
+    pub keywords: bool,
+    have_primary: bool,
 }
 
 impl TableField {
+    /// 设置属性名称
     pub fn set_property_name(&mut self, property_name: &str, column_type: DbColumnType) {
         self.column_type = column_type;
 
@@ -127,6 +254,48 @@ impl TableField {
         {
             self.convert = true;
             self.property_name = (&property_name[2..]).to_case(Case::Camel);
+            return;
         }
+
+        match self.entity.column_naming() {
+            //下划线转驼峰策略
+            NamingStrategy::UnderlineToCamel => {
+                self.convert = !property_name
+                    .eq_ignore_ascii_case(&NamingStrategy::underline_to_camel(&self.column_name))
+            }
+            // 原样输出策略
+            NamingStrategy::NoChange => {
+                self.convert = !property_name.eq_ignore_ascii_case(&self.column_name)
+            }
+        };
+        if self.entity.enable_table_field_annotation {
+            self.convert = true;
+        }
+        self.property_name = property_name.to_string();
+    }
+
+    fn get_fill(&mut self) -> Option<&String> {
+        self.entity
+            .table_fill_list
+            .iter()
+            .find(|tf| tf.property_name.eq_ignore_ascii_case(&self.name))
+            .map(|tf| {
+                self.fill = tf.property_name.clone();
+                &self.fill
+            })
+    }
+
+    fn is_version_field(&self) -> bool {
+        let property_name = &self.entity.version_property_name;
+        let column_name = &self.entity.version_column_name;
+        !property_name.is_empty() && property_name.eq_ignore_ascii_case(&self.property_name)
+            || !column_name.is_empty() && column_name.eq_ignore_ascii_case(&self.name)
+    }
+
+    fn is_logic_delete_field(&self) -> bool {
+        let property_name = &self.entity.logic_delete_property_name;
+        let column_name = &self.entity.logic_delete_column_name;
+        !property_name.is_empty() && property_name.eq_ignore_ascii_case(&self.property_name)
+            || !column_name.is_empty() && column_name.eq_ignore_ascii_case(&self.name)
     }
 }

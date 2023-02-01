@@ -4,7 +4,7 @@ use crate::error::Result;
 
 use super::{
     config::{GlobalConfig, NamingStrategy, StrategyConfig},
-    model::{Field, TableField, TableInfo},
+    model::{Field, TableInfo},
     types::{
         DateType, DbColumnType, DbType, TypeConvert, BIG_DECIMAL, BLOB, BOOLEAN, BYTE_ARRAY, CLOB,
         DATE, DATE_SQL, DOUBLE, FLOAT, INTEGER, LOCAL_DATE, LOCAL_DATE_TIME, LOCAL_TIME, LONG,
@@ -137,7 +137,7 @@ impl TypeConvert for MysqlTypeConvert {
             "blob" => BLOB,
             "float" => FLOAT,
             "duble" => DOUBLE,
-            "date" | "time" | "year" => self.to_date_type(config, field_type),
+            "date" | "time" | "year" | "datetime" => self.to_date_type(config, field_type),
             _ => STRING,
         }
     }

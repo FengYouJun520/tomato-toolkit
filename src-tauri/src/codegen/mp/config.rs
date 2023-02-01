@@ -1,12 +1,9 @@
+use convert_case::{Case, Casing};
 use serde::{Deserialize, Serialize};
 use sqlx::{
-    any::{AnyConnectOptions, AnyKind},
-    mssql::MssqlConnectOptions,
-    mysql::MySqlConnectOptions,
-    postgres::PgConnectOptions,
-    sqlite::SqliteConnectOptions,
-    AnyConnection, ConnectOptions, MssqlConnection, MySqlConnection, PgConnection,
-    SqliteConnection,
+    any::AnyConnectOptions, mssql::MssqlConnectOptions, mysql::MySqlConnectOptions,
+    postgres::PgConnectOptions, sqlite::SqliteConnectOptions, AnyConnection, ConnectOptions,
+    MssqlConnection, MySqlConnection, PgConnection, SqliteConnection,
 };
 use std::{
     collections::{HashMap, HashSet},
@@ -19,10 +16,11 @@ use crate::error::{Result, SerializeError};
 
 use super::{
     context_data::{self, ControllerData, EntityData, MapperData, ServiceData, TemplateRender},
-    convert::{DefaultNameConvert, MysqlTypeConvert, NameConvert, TypeConverts},
+    convert::{DefaultNameConvert, NameConvert, TypeConverts},
     db_query::{DbQuery, MsSqlQuery, MysqlQuery, PostgresQuery, SqliteQuery},
     model::TableInfo,
-    types::{DateType, DbType, MysqlColumnType, TypeConvert},
+    types::{DateType, DbType, TypeConvert},
+    utils,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -380,6 +378,12 @@ pub struct StrategyConfig {
     pub mapper: Mapper,
     pub service: Service,
 }
+impl StrategyConfig {
+    /// 表名过滤前缀
+    pub fn start_with_table_prefix(&self, name: &str) -> bool {
+        self.table_prefix.iter().any(|tp| name.starts_with(tp))
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -390,8 +394,8 @@ pub struct Entity {
     pub super_entity_columns: HashSet<String>,
     /// 自定义忽略字段 https://github.com/baomidou/generator/issues/46
     pub ignore_columns: HashSet<String>,
-    /// 禁用生成serialVersionUID
-    pub disable_serial_version_uid: bool,
+    /// 启动生成serialVersionUID
+    pub serial_version_uid: bool,
     /// 【实体】是否生成字段常量（默认 false）
     /// -----------------------------------
     /// public static final String ID = "test_id";
@@ -423,7 +427,7 @@ pub struct Entity {
     /// 开启 ActiveRecord 模式（默认 false）
     pub active_record: bool,
     /// 指定生成的主键的ID类型
-    pub id_type: IdType,
+    pub id_type: Option<IdType>,
     /// 是否覆盖已有文件（默认 false）
     pub file_override: Option<bool>,
     /// 格式化文件名称
@@ -433,14 +437,30 @@ pub struct Entity {
 impl TemplateRender for Entity {
     type Item = EntityData;
 
-    fn render_data(&self, table_info: &TableInfo) -> Result<Self::Item> {
-        todo!()
+    fn render_data(&self, _table_info: &TableInfo) -> Result<Self::Item> {
+        Ok(context_data::EntityDataBuilder::default()
+            .id_type(self.id_type)
+            .logic_delete_field_name(self.logic_delete_column_name.clone())
+            .version_field_name(self.version_column_name.clone())
+            .active_record(self.active_record)
+            .entity_serial_version_uid(self.serial_version_uid)
+            .entity_column_constant(self.column_constant)
+            .entity_builder_model(self.chain_mode)
+            .chain_model(self.chain_mode)
+            .entity_lombok_model(self.lombok)
+            .entity_boolean_column_remove_is_prefix(self.boolean_column_remove_is_prefix)
+            .super_entity_class(utils::get_simple_name(&self.super_class))
+            .build()?)
     }
 }
 
 impl Entity {
     pub fn name_convert(&self, strategy_config: StrategyConfig) -> Box<dyn NameConvert> {
         Box::new(DefaultNameConvert::new(strategy_config))
+    }
+
+    pub fn column_naming(&self) -> NamingStrategy {
+        self.column_naming.unwrap_or(self.naming)
     }
 }
 
@@ -463,7 +483,21 @@ impl TemplateRender for Controller {
     type Item = ControllerData;
 
     fn render_data(&self, table_info: &TableInfo) -> Result<Self::Item> {
-        let data = context_data::ControllerDataBuilder::default().build()?;
+        let data = context_data::ControllerDataBuilder::default()
+            .controller_mapping_hyphen(table_info.get_entity_path().to_case(Case::Kebab))
+            .controller_mapping_hyphen_style(self.hyphen_style)
+            .reset_controller_style(self.rest_style)
+            .super_controller_class_package(if self.super_class.is_empty() {
+                None
+            } else {
+                Some(self.super_class.clone())
+            })
+            .super_controller_class(if self.super_class.is_empty() {
+                None
+            } else {
+                utils::get_simple_name(&self.super_class)
+            })
+            .build()?;
 
         Ok(data)
     }
@@ -492,8 +526,15 @@ pub struct Mapper {
 impl TemplateRender for Mapper {
     type Item = MapperData;
 
-    fn render_data(&self, table_info: &TableInfo) -> Result<Self::Item> {
-        todo!()
+    fn render_data(&self, _table_info: &TableInfo) -> Result<Self::Item> {
+        Ok(context_data::MapperDataBuilder::default()
+            .mapper_annotation(self.mapper_annotation)
+            .mapper_annotation_class(self.mapper_annotation_class.clone())
+            .base_result_map(self.base_result_map)
+            .base_column_list(self.base_column_list)
+            .super_mapper_class_package(self.super_class.clone())
+            .super_mapper_class(utils::get_simple_name(&self.super_class))
+            .build()?)
     }
 }
 
@@ -514,8 +555,13 @@ pub struct Service {
 impl TemplateRender for Service {
     type Item = ServiceData;
 
-    fn render_data(&self, table_info: &TableInfo) -> Result<Self::Item> {
-        todo!()
+    fn render_data(&self, _table_info: &TableInfo) -> Result<Self::Item> {
+        Ok(context_data::ServiceDataBuilder::default()
+            .super_service_class_package(self.super_service_class.clone())
+            .super_service_class(utils::get_simple_name(&self.super_service_class))
+            .super_service_impl_class_package(self.super_service_impl_class.clone())
+            .super_service_impl_class(utils::get_simple_name(&self.super_service_impl_class))
+            .build()?)
     }
 }
 
@@ -574,30 +620,55 @@ impl NamingStrategy {
 
 impl NamingStrategy {
     pub fn remove_prefix(name: &str, prefix: &HashSet<String>) -> String {
-        todo!()
+        if name.is_empty() {
+            return "".to_string();
+        }
+
+        prefix
+            .iter()
+            .find(|p| name.to_lowercase().starts_with(&p.to_lowercase()))
+            .map(|p| name[p.len()..].to_string())
+            .unwrap_or(name.to_string())
     }
 
     pub fn remove_suffix(name: &str, suffix: &HashSet<String>) -> String {
-        todo!()
+        suffix
+            .iter()
+            .find(|p| name.to_lowercase().starts_with(&p.to_lowercase()))
+            .map(|p| name[0..(name.len() - p.len())].to_string())
+            .unwrap_or(name.to_string())
     }
 
     pub fn underline_to_camel(name: &str) -> String {
-        todo!()
+        name.to_case(Case::Camel)
     }
 
     pub fn capital(name: &str) -> String {
-        todo!()
+        name[0..1].to_uppercase() + name[1..].as_ref()
     }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TableFill {
-    pub key: String,
-    pub value: String,
+    pub property_name: String,
+    pub field_fill: FieldFill,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
+#[allow(non_camel_case_types)]
+pub enum FieldFill {
+    ///默认不处理
+    DEFAULT,
+    /// 插入时填充字段
+    INSERT,
+    ///更新时填充字段
+    UPDATE,
+    ///插入和更新时填充字段
+    INSERT_UPDATE,
+}
+
+#[derive(Debug, Serialize, Deserialize, Copy, Clone)]
 #[allow(non_camel_case_types)]
 pub enum IdType {
     /// 数据库ID自增, 该类型请确保数据库设置了 ID自增 否则无效

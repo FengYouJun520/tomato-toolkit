@@ -92,7 +92,7 @@ export interface Entity {
   superClass: string
   superEntityColumns: string[]
   ignoreColumns: string[]
-  disableSerialVersionUid: boolean
+  serialVersionUid: boolean
   columnConstant: boolean
   chainMode: boolean
   lombok: boolean
@@ -139,10 +139,11 @@ export interface Service {
 }
 
 export interface TableFill {
-  key: string
-  value: string
+  propertyName: string
+  fieldFill: FieldFill
 }
 
 export type NamingStrategy = 'NoChange' | 'UnderlineToCamel'
 
 export type IdType = 'AUTO' | 'NONE'|'INPUT'|'ASSIGN_ID'|'ASSIGN_UUID'
+export type FieldFill = 'DEFAULT'|'INSERT'|'UPDATE'|'INSERT_UPDATE'

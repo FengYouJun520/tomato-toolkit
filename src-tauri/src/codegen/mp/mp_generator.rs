@@ -72,9 +72,6 @@ impl MpGenerator {
         }
 
         self.template_path = tempate_path;
-        for entry in self.template_path.iter() {
-            println!("key: {:?}, path: {}", entry.0, entry.1.display());
-        }
 
         Ok(())
     }
@@ -89,7 +86,8 @@ impl MpGenerator {
 
         for table_info in table_infos {
             // 转化为模板数据
-            self.build_context(&table_info)?;
+            let context = self.build_context(&table_info)?;
+            println!("context: {context:#?}");
         }
         Ok(())
     }

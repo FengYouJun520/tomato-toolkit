@@ -4,7 +4,7 @@ const defaultEntity: Entity = {
   superClass: '',
   superEntityColumns: [],
   ignoreColumns: [],
-  disableSerialVersionUid: true,
+  serialVersionUid: true,
   columnConstant: false,
   chainMode: false,
   lombok: false,

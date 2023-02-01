@@ -16,8 +16,8 @@ const renderTag: SelectRenderTag = ({ option, handleClose }) => h(
 )
 
 const onCreate = () =>({
-  name: '',
-  value: 'INSERT',
+  propertyName: '',
+  fieldFill: 'INSERT',
 })
 </script>
 
@@ -34,8 +34,8 @@ const onCreate = () =>({
     </n-form-item>
 
     <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
-      <n-form-item-gi label="禁用SerialVersionUID">
-        <n-radio-group v-model:value="strategyconfigStore.entity.disableSerialVersionUid">
+      <n-form-item-gi label="启动SerialVersionUID">
+        <n-radio-group v-model:value="strategyconfigStore.entity.serialVersionUid">
           <n-radio-button :value="true" label="开启" />
           <n-radio-button :value="false" label="关闭" />
         </n-radio-group>
@@ -175,37 +175,36 @@ const onCreate = () =>({
         :on-create="onCreate"
         #="{ index, value }"
       >
-        <div class="flex w-full">
+        <n-grid :cols="2">
           <!--
           通常，path 的变化会导致 form-item 验证内容或规则的改变，所以 naive-ui 会清理掉
           表项已有的验证信息。但是这个例子是个特殊情况，我们明确的知道，path 的改变不会导致
           form-item 验证内容和规则的变化，所以就 ignore-path-change
         -->
-          <n-form-item
+          <n-form-item-gi
             ignore-path-change
             :show-label="false"
             :path="`dynamicInputValue[${index}].name`"
           >
             <n-input
-              v-model:value="strategyconfigStore.entity.tableFillList[index].key"
-              placeholder="e.g: updateTime"
+              v-model:value="strategyconfigStore.entity.tableFillList[index].propertyName"
+              placeholder="e.g: update_time"
               @keydown.enter.prevent
             />
           <!--
             由于在 input 元素里按回车会导致 form 里面的 button 被点击，所以阻止了默认行为
           -->
-          </n-form-item>
+          </n-form-item-gi>
           <div style="height: 34px; line-height: 34px; margin: 0 8px">
             -
           </div>
-          <n-form-item
+          <n-form-item-gi
             ignore-path-change
             :show-label="false"
-            class="w-full"
             :path="`dynamicInputValue[${index}].value`"
           >
             <n-select
-              v-model:value="strategyconfigStore.entity.tableFillList[index].value"
+              v-model:value="strategyconfigStore.entity.tableFillList[index].fieldFill"
               :options="[
                 {
                   label: 'DEFAULT',
@@ -226,8 +225,8 @@ const onCreate = () =>({
               ]"
               @keydown.enter.prevent
             />
-          </n-form-item>
-        </div>
+          </n-form-item-gi>
+        </n-grid>
       </n-dynamic-input>
     </n-form-item>
 

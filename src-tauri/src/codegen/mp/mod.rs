@@ -8,3 +8,4 @@ pub mod macros;
 pub mod model;
 pub mod mp_generator;
 pub mod types;
+pub mod utils;
