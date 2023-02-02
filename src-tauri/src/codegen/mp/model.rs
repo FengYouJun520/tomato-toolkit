@@ -9,7 +9,7 @@ use sqlx::FromRow;
 use crate::error::Result;
 
 use super::{
-    config::{DataSourceConfig, Entity, GlobalConfig, NamingStrategy, StrategyConfig},
+    config::{DataSourceConfig, Entity, FieldFill, GlobalConfig, NamingStrategy, StrategyConfig},
     config_builder::ConfigBuilder,
     types::DbColumnType,
 };
@@ -197,17 +197,17 @@ impl TableInfo {
                     .insert("com.baomidou.mybatisplus.annotation.TableField".into());
             }
 
-            if field.get_fill().is_some() {
+            if field.fill.is_some() {
                 self.import_packages
                     .insert("com.baomidou.mybatisplus.annotation.TableField".into());
                 self.import_packages
                     .insert("com.baomidou.mybatisplus.annotation.FieldFill".into());
             }
-            if field.is_version_field() {
+            if field.version_field {
                 self.import_packages
                     .insert("com.baomidou.mybatisplus.annotation.Version".into());
             }
-            if field.is_logic_delete_field() {
+            if field.logic_delete_field {
                 self.import_packages
                     .insert("com.baomidou.mybatisplus.annotation.TableLogic".into());
             }
@@ -252,15 +252,19 @@ pub struct TableField {
     pub name: String,
     pub r#type: String,
     pub property_name: String,
+    pub capital_name: String,
     pub column_type: DbColumnType,
     pub comment: String,
     pub column_name: String,
+    pub annotation_column_name: String,
     pub custom_map: Option<HashMap<String, serde_json::Value>>,
     pub entity: Entity,
     pub datasource_config: DataSourceConfig,
     pub global_config: GlobalConfig,
-    pub fill: String,
+    pub fill: Option<FieldFill>,
     pub keywords: bool,
+    pub version_field: bool,
+    pub logic_delete_field: bool,
     have_primary: bool,
 }
 
@@ -270,11 +274,13 @@ impl TableField {
         self.column_type = column_type;
 
         if self.entity.boolean_column_remove_is_prefix
-            && column_type.get_type() == "boolean"
-            && self.property_name.starts_with("is")
+            && (column_type.get_type() == "boolean" || column_type.get_type() == "Boolean")
+            && property_name.starts_with("is")
         {
+            println!("删除is前缀: {property_name}, {column_type:?}");
             self.convert = true;
             self.property_name = (&property_name[2..]).to_case(Case::Camel);
+            self.set_capital_name();
             return;
         }
 
@@ -293,30 +299,42 @@ impl TableField {
             self.convert = true;
         }
         self.property_name = property_name.to_string();
+        self.set_capital_name();
     }
 
-    fn get_fill(&mut self) -> Option<&String> {
-        self.entity
+    fn set_capital_name(&mut self) {
+        self.capital_name = if self.property_name.len() == 1 {
+            self.property_name.to_uppercase()
+        } else if (&self.property_name[1..2]).is_case(Case::Lower) {
+            self.property_name[0..1].to_uppercase() + &self.property_name[1..]
+        } else {
+            self.property_name.clone()
+        };
+    }
+
+    pub fn set_fill(&mut self) {
+        let fill = self
+            .entity
             .table_fill_list
             .iter()
             .find(|tf| tf.property_name.eq_ignore_ascii_case(&self.name))
-            .map(|tf| {
-                self.fill = tf.property_name.clone();
-                &self.fill
-            })
+            .map(|tf| tf.field_fill);
+        self.fill = fill;
     }
 
-    fn is_version_field(&self) -> bool {
+    pub fn set_version_field(&mut self) {
         let property_name = &self.entity.version_property_name;
         let column_name = &self.entity.version_column_name;
-        !property_name.is_empty() && property_name.eq_ignore_ascii_case(&self.property_name)
+        self.version_field = !property_name.is_empty()
+            && property_name.eq_ignore_ascii_case(&self.property_name)
             || !column_name.is_empty() && column_name.eq_ignore_ascii_case(&self.name)
     }
 
-    fn is_logic_delete_field(&self) -> bool {
+    pub fn set_logic_delete_field(&mut self) {
         let property_name = &self.entity.logic_delete_property_name;
         let column_name = &self.entity.logic_delete_column_name;
-        !property_name.is_empty() && property_name.eq_ignore_ascii_case(&self.property_name)
+        self.logic_delete_field = !property_name.is_empty()
+            && property_name.eq_ignore_ascii_case(&self.property_name)
             || !column_name.is_empty() && column_name.eq_ignore_ascii_case(&self.name)
     }
 }

@@ -103,10 +103,12 @@ impl TypeConverts {
 pub struct SqliteTypeConvert;
 
 impl TypeConvert for SqliteTypeConvert {
-    fn type_convert(&self, config: &GlobalConfig, field_type: &str) -> DbColumnType {
-        match field_type.to_lowercase().as_str() {
+    fn type_convert(&self, config: &GlobalConfig, field: &Field) -> DbColumnType {
+        let length = field.length.unwrap_or_default();
+        match field.r#type.to_lowercase().as_str() {
             "bigint" => LONG,
-            "tinyint(1)" | "boolean" => BOOLEAN,
+            "tinyint" if length == 0 || length == 1 => BOOLEAN,
+            "boolean" => BOOLEAN,
             "int" => INTEGER,
             "text" | "char" | "enum" => STRING,
             "decimal" | "numberic" => BIG_DECIMAL,
@@ -114,7 +116,7 @@ impl TypeConvert for SqliteTypeConvert {
             "blob" => BLOB,
             "float" => FLOAT,
             "duble" => DOUBLE,
-            "date" | "time" | "year" => self.to_date_type(config, field_type),
+            "date" | "time" | "year" => self.to_date_type(config, &field.r#type),
             _ => STRING,
         }
     }
@@ -124,10 +126,12 @@ impl TypeConvert for SqliteTypeConvert {
 pub struct MysqlTypeConvert;
 
 impl TypeConvert for MysqlTypeConvert {
-    fn type_convert(&self, config: &GlobalConfig, field_type: &str) -> DbColumnType {
-        match field_type.to_lowercase().as_str() {
+    fn type_convert(&self, config: &GlobalConfig, field: &Field) -> DbColumnType {
+        let length = field.length.unwrap_or_default();
+        match field.r#type.to_lowercase().as_str() {
             "bigint" => LONG,
-            "tinyint(1)" | "boolean" => BOOLEAN,
+            "tinyint" if length == 0 || length == 1 => BOOLEAN,
+            "boolean" => BOOLEAN,
             "int" => INTEGER,
             "text" | "char" | "enum" => STRING,
             "decimal" | "numberic" => BIG_DECIMAL,
@@ -135,7 +139,7 @@ impl TypeConvert for MysqlTypeConvert {
             "blob" => BLOB,
             "float" => FLOAT,
             "duble" => DOUBLE,
-            "date" | "time" | "year" | "datetime" => self.to_date_type(config, field_type),
+            "date" | "time" | "year" | "datetime" => self.to_date_type(config, &field.r#type),
             _ => STRING,
         }
     }
@@ -144,8 +148,8 @@ impl TypeConvert for MysqlTypeConvert {
 pub struct SqlServerTypeConvert;
 
 impl TypeConvert for SqlServerTypeConvert {
-    fn type_convert(&self, config: &GlobalConfig, field_type: &str) -> DbColumnType {
-        match field_type.to_lowercase().as_str() {
+    fn type_convert(&self, config: &GlobalConfig, field: &Field) -> DbColumnType {
+        match field.r#type.to_lowercase().as_str() {
             "char" | "xml" | "text" => STRING,
             "bigint" => LONG,
             "int" => INTEGER,
@@ -154,7 +158,7 @@ impl TypeConvert for SqlServerTypeConvert {
             "money" => BIG_DECIMAL,
             "binary" | "image" => BYTE_ARRAY,
             "float" | "real" => FLOAT,
-            "date" | "time" => self.to_date_type(config, field_type),
+            "date" | "time" => self.to_date_type(config, &field.r#type),
             _ => STRING,
         }
     }
@@ -180,8 +184,8 @@ impl TypeConvert for SqlServerTypeConvert {
 pub struct PostgresSqlTypeConvert;
 
 impl TypeConvert for PostgresSqlTypeConvert {
-    fn type_convert(&self, config: &GlobalConfig, field_type: &str) -> DbColumnType {
-        match field_type.to_lowercase().as_str() {
+    fn type_convert(&self, config: &GlobalConfig, field: &Field) -> DbColumnType {
+        match field.r#type.to_lowercase().as_str() {
             "char" | "text" | "json" | "enum" => STRING,
             "bigint" => LONG,
             "int" => INTEGER,
@@ -191,7 +195,7 @@ impl TypeConvert for PostgresSqlTypeConvert {
             "float" => FLOAT,
             "double" => DOUBLE,
             "boolean" => BOOLEAN,
-            "date" | "time" => self.to_date_type(config, field_type),
+            "date" | "time" => self.to_date_type(config, &field.r#type),
             _ => STRING,
         }
     }

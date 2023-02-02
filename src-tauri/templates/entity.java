@@ -1,160 +1,161 @@
-package ${package.Entity};
+package {{ package.Entity }};
 
-<#list table.importPackages as pkg>
-import ${pkg};
-</#list>
-<#if springdoc>
+{% for pkg in table.importPackages -%}
+import {{ pkg }};
+{% endfor -%}
+{% if springdoc -%}
 import io.swagger.v3.oas.annotations.media.Schema;
-<#elseif swagger>
+{% elif swagger -%}
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-</#if>
-<#if entityLombokModel>
+{% endif -%}
+{% if entityLombokModel -%}
 import lombok.Getter;
 import lombok.Setter;
-    <#if chainModel>
+    {% if chainModel -%}
 import lombok.experimental.Accessors;
-    </#if>
-</#if>
-
+    {% endif %}
+{% endif %}
 /**
  * <p>
- * ${table.comment!}
+ * {{ table.comment }}
  * </p>
  *
- * @author ${author}
- * @since ${date}
+ * @author {{ author }}
+ * @since {{ date }}
  */
-<#if entityLombokModel>
+{%- if entityLombokModel %}
 @Getter
 @Setter
-    <#if chainModel>
+    {%- if chainModel %}
 @Accessors(chain = true)
-    </#if>
-</#if>
-<#if table.convert>
-@TableName("${schemaName}${table.name}")
-</#if>
-<#if springdoc>
-@Schema(name = "${entity}", description = "$!{table.comment}")
-<#elseif swagger>
-@ApiModel(value = "${entity}对象", description = "${table.comment!}")
-</#if>
-<#if superEntityClass??>
-public class ${entity} extends ${superEntityClass}<#if activeRecord><${entity}></#if> {
-<#elseif activeRecord>
-public class ${entity} extends Model<${entity}> {
-<#elseif entitySerialVersionUID>
-public class ${entity} implements Serializable {
-<#else>
-public class ${entity} {
-</#if>
-<#if entitySerialVersionUID>
+    {%- endif -%}
+{%- endif -%}
+{% if table.convert %}
+@TableName("{{ schemaName }}{{ table.name }}")
+{%- endif -%}
+{% if springdoc -%}
+@Schema(name = "{{ entity }}", description = "{{ table.comment }}")
+{% elif swagger -%}
+@ApiModel(value = "{{ entity }}对象", description = "{{ table.comment }}")
+{%- endif -%}
+{%- if superEntityClass %}
+public class {{ entity }} extends {{ superEntityClass }}{% if activeRecord %}<{{ entity }}>{% endif %} {
+{%- elif activeRecord %}
+public class {{ entity }} extends Model<{{ entity }}> {
+{%- elif entitySerialVersionUid %}
+public class {{ entity }} implements Serializable {
+{%- else %}
+public class {{ entity }} {
+{% endif -%}
+{% if entitySerialVersionUid %}
 
     private static final long serialVersionUID = 1L;
-</#if>
-<#-- ----------  BEGIN 字段循环遍历  ---------->
-<#list table.fields as field>
-    <#if field.keyFlag>
-        <#assign keyPropertyName="${field.propertyName}"/>
-    </#if>
+{% endif -%}
 
-    <#if field.comment!?length gt 0>
-        <#if springdoc>
+{#- BEGIN 字段循环遍历 -#}
+{%- for field in table.fields -%}
+    {% if field.keyFlag -%}
+        {% set_global keyPropertyName = field.propertyName -%}
+    {% endif -%}
+
+    {%- if field.comment and field.comment | length > 0 -%}
+        {%- if springdoc %}
     @Schema(description = "${field.comment}")
-        <#elseif swagger>
-    @ApiModelProperty("${field.comment}")
-        <#else>
+        {%- elif swagger %}
+    @ApiModelProperty("{{ field.comment }}")
+        {%- else %}
     /**
-     * ${field.comment}
+     * {{ field.comment }}
      */
-        </#if>
-    </#if>
-    <#if field.keyFlag>
-        <#-- 主键 -->
-        <#if field.keyIdentityFlag>
-    @TableId(value = "${field.annotationColumnName}", type = IdType.AUTO)
-        <#elseif idType??>
-    @TableId(value = "${field.annotationColumnName}", type = IdType.${idType})
-        <#elseif field.convert>
-    @TableId("${field.annotationColumnName}")
-        </#if>
-        <#-- 普通字段 -->
-    <#elseif field.fill??>
-    <#-- -----   存在字段填充设置   ----->
-        <#if field.convert>
-    @TableField(value = "${field.annotationColumnName}", fill = FieldFill.${field.fill})
-        <#else>
-    @TableField(fill = FieldFill.${field.fill})
-        </#if>
-    <#elseif field.convert>
-    @TableField("${field.annotationColumnName}")
-    </#if>
-    <#-- 乐观锁注解 -->
-    <#if field.versionField>
+        {%- endif %}
+    {%- endif -%}
+    {%- if field.keyFlag %}
+        {#- 主键 -#}
+        {%- if field.keyIdentityFlag %}
+    @TableId(value = "{{ field.annotationColumnName }}", type = IdType.AUTO)
+        {%- elif idType %}
+    @TableId(value = "{{ field.annotationColumnName }}", type = IdType.{{ idType }})
+        {%- elif field.convert %}
+    @TableId("{{ field.annotationColumnName }}")
+        {% endif -%}
+        {#- 普通字段 -#}
+    {% elif field.fill -%}
+    {#- 存在字段填充设置 -#}
+        {%- if field.convert %}
+    @TableField(value = "{{ field.annotationColumnName }}", fill = FieldFill.{{ field.fill }})
+        {%- else %}
+    @TableField(fill = FieldFill.{{ field.fill }})
+        {% endif -%}
+    {%- elif field.convert %}
+    @TableField("{{ field.annotationColumnName }}")
+    {%- endif -%}
+    {#- 乐观锁注解 -#}
+    {%- if field.versionField %}
     @Version
-    </#if>
-    <#-- 逻辑删除注解 -->
-    <#if field.logicDeleteField>
+    {%- endif -%}
+    {#- 逻辑删除注解 -#}
+    {%- if field.logicDeleteField %}
     @TableLogic
-    </#if>
-    private ${field.propertyType} ${field.propertyName};
-</#list>
-<#------------  END 字段循环遍历  ---------->
-<#if !entityLombokModel>
-    <#list table.fields as field>
-        <#if field.propertyType == "boolean">
-            <#assign getprefix="is"/>
-        <#else>
-            <#assign getprefix="get"/>
-        </#if>
+    {%- endif %}
+    private {{ field.columnType[0] }} {{ field.propertyName }};
+{% endfor -%}
+{#- END 字段循环遍历 -#}
 
-    public ${field.propertyType} ${getprefix}${field.capitalName}() {
-        return ${field.propertyName};
+{% if not entityLombokModel -%}
+    {% for field in table.fields -%}
+        {% if field.columnType[0] == "boolean" or field.columnType[0] == "Boolean" -%}
+          {% set getprefix = "is" -%}
+        {% else -%}
+          {% set getprefix = "get" -%}
+        {%- endif %}
+    public {{ field.columnType[0] }} {{ getprefix }}{{ field.capitalName }}() {
+        return {{ field.propertyName }};
     }
-
-    <#if chainModel>
-    public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-    <#else>
-    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-    </#if>
-        this.${field.propertyName} = ${field.propertyName};
-        <#if chainModel>
+    {% if chainModel %}
+    public {{ entity }} set{{ field.capitalName }}({{ field.columnType[0] }} {{ field.propertyName }}) {
+    {%- else %}
+    public void set{{ field.capitalName }}({{ field.columnType[0] }} {{ field.propertyName }}) {
+    {%- endif %}
+        this.{{ field.propertyName }} = {{ field.propertyName }};
+        {%- if chainModel %}
         return this;
-        </#if>
+        {%- endif %}
     }
-    </#list>
-</#if>
-<#if entityColumnConstant>
-    <#list table.fields as field>
+    {% endfor -%}
+{%- endif -%}
 
-    public static final String ${field.name?upper_case} = "${field.name}";
-    </#list>
-</#if>
-<#if activeRecord>
+{% if entityColumnConstant -%}
+    {%- for field in table.fields %}
+    public static final String {{ field.name | upper }} = "{{ field.name }}";
+    {%- endfor -%}
+{% endif -%}
+{%- if activeRecord %}
 
     @Override
     public Serializable pkVal() {
-    <#if keyPropertyName??>
-        return this.${keyPropertyName};
-    <#else>
+    {%- if keyPropertyName | define %}
+        return this.{{ keyPropertyName }};
+    {%- else %}
         return null;
-    </#if>
+    {%- endif %}
     }
-</#if>
-<#if !entityLombokModel>
+{%- endif -%}
+
+{% if not entityLombokModel %}
 
     @Override
     public String toString() {
-        return "${entity}{" +
-    <#list table.fields as field>
-        <#if field_index==0>
-            "${field.propertyName} = " + ${field.propertyName} +
-        <#else>
-            ", ${field.propertyName} = " + ${field.propertyName} +
-        </#if>
-    </#list>
+        return "{{ entity }}{" +
+    {%- for field in table.fields %}
+        {%- if loop.first %}
+            "{{ field.propertyName }} = " + {{ field.propertyName }} +
+        {%- else %}
+            ", {{ field.propertyName }} = " + {{ field.propertyName }} +
+        {%- endif %}
+    {%- endfor %}
         "}";
     }
-</#if>
+{%- endif %}
 }
+{{__tera_context}}

@@ -1,12 +1,10 @@
+use super::{config::GlobalConfig, model::Field};
+use crate::generateColumnType;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::generateColumnType;
-
-use super::config::GlobalConfig;
-
 pub trait TypeConvert {
-    fn type_convert(&self, config: &GlobalConfig, field_type: &str) -> DbColumnType;
+    fn type_convert(&self, config: &GlobalConfig, field: &Field) -> DbColumnType;
 
     /// 日期转换器，默认为mysql日期转换
     fn to_date_type(&self, config: &GlobalConfig, r#type: &str) -> DbColumnType {
@@ -129,24 +127,6 @@ generateColumnType!(OBJECT, "Object", None);
 generateColumnType!(DATE, "Date", Some("java.util.Date"));
 generateColumnType!(BIG_INTEGER, "BigInteger", Some("java.math.BigInteger"));
 generateColumnType!(BIG_DECIMAL, "BigDecimal", Some("java.math.BigDecimal"));
-
-pub enum FieldFill {
-    Default,
-    Insert,
-    Update,
-    InsertUpdate,
-}
-
-impl FieldFill {
-    pub fn name(&self) -> &'static str {
-        match self {
-            FieldFill::Default => "DEFAULT",
-            FieldFill::Insert => "INSERT",
-            FieldFill::Update => "UPDATE",
-            FieldFill::InsertUpdate => "INSERT_UPDATE",
-        }
-    }
-}
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[allow(non_camel_case_types)]

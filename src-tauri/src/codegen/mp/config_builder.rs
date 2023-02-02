@@ -4,8 +4,8 @@ use crate::error::Result;
 
 use super::{
     config::{
-        DataSourceConfig, GlobalConfig, InjectConfig, OutputFile, PackageConfig, StrategyConfig,
-        TemplateConfig,
+        DataSourceConfig, FieldFill, GlobalConfig, InjectConfig, OutputFile, PackageConfig,
+        StrategyConfig, TemplateConfig,
     },
     db_query::{DbQuery, MpConfig},
     model::{self, TableField, TableInfo},
@@ -80,16 +80,24 @@ impl ConfigBuilder {
                 let column_type = self
                     .datasource_config
                     .get_type_convert()
-                    .type_convert(&self.global_config, &field.r#type);
+                    .type_convert(&self.global_config, &field);
+
+                let annotation_column_name = if field.name.starts_with('\"') {
+                    format!(r#"\"{}\""#, field.name)
+                } else {
+                    field.name.clone()
+                };
 
                 let mut field = model::TableFieldBuilder::default()
                     .name(field.name.clone())
                     .r#type(field.r#type)
                     .column_type(column_type)
                     .convert(false)
-                    .fill("".into())
-                    .property_name("".into())
+                    .fill(FieldFill::DEFAULT)
+                    .property_name(property_name.clone())
+                    .capital_name(property_name.clone())
                     .column_name(field.name.clone())
+                    .annotation_column_name(annotation_column_name)
                     .entity(self.strategy_config.entity.clone())
                     .datasource_config(self.datasource_config.clone())
                     .global_config(self.global_config.clone())
@@ -98,10 +106,15 @@ impl ConfigBuilder {
                     .have_primary(field.key_flag)
                     .key_flag(field.key_flag)
                     .keywords(keywords)
+                    .version_field(false)
+                    .logic_delete_field(false)
                     .key_identity_flag(field.auto_increment)
                     .build()?;
 
+                field.set_fill();
                 field.set_property_name(&property_name, column_type);
+                field.set_version_field();
+                field.set_logic_delete_field();
 
                 Ok(field)
             })
