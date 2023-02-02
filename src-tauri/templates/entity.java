@@ -158,4 +158,3 @@ public class {{ entity }} {
     }
 {%- endif %}
 }
-{{__tera_context}}
