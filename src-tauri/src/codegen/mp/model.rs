@@ -39,6 +39,7 @@ pub struct TableInfo {
     /// 注释
     pub comment: Option<String>,
     pub entity_name: String,
+    pub entity_path: String,
     pub mapper_name: String,
     pub xml_name: String,
     pub service_name: String,
@@ -67,6 +68,7 @@ impl TableInfo {
             import_packages: BTreeSet::new(),
             comment,
             entity_name: "".to_string(),
+            entity_path: "".to_string(),
             common_fields: vec![],
             fields: vec![],
             convert: false,
@@ -88,6 +90,7 @@ impl TableInfo {
             .entity_name_convert(self)?;
 
         self.set_entity_name(self.entity.format_filename.format(&[&entity_name]));
+        self.entity_path = self.get_entity_path();
         self.mapper_name = self
             .strategy_config
             .mapper

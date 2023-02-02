@@ -12,26 +12,26 @@ import {{ superControllerClassPackage }};
 
 /**
  * <p>
- * ${table.comment!} 前端控制器
+ * {{ table.comment }} 前端控制器
  * </p>
  *
- * @author ${author}
- * @since ${date}
+ * @author {{ author }}
+ * @since {{ date }}
  */
-<#if restControllerStyle>
+{% if restControllerStyle -%}
 @RestController
-<#else>
+{% else -%}
 @Controller
-</#if>
-@RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
-<#if kotlin>
-class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
-<#else>
-<#if superControllerClass??>
-public class ${table.controllerName} extends ${superControllerClass} {
-<#else>
-public class ${table.controllerName} {
-</#if>
+{% endif -%}
+@RequestMapping("{% if package.ModuleName and package.ModuleName != "" %}/{{ package.ModuleName }}{% endif %}/{% if controllerMappingHyphenStyle %}{{ controllerMappingHyphen }}{% else %}{{ table.entityPath }}{% endif %}")
+{% if kotlin -%}
+class {{ table.controllerName }}{% if superControllerClass %} : {{ superControllerClass }}(){% endif -%}
+{% else -%}
+{% if superControllerClass -%}
+public class {{ table.controllerName }} extends {{ superControllerClass }} {
+{% else -%}
+public class {{ table.controllerName }} {
+{%- endif %}
 
 }
-</#if>
+{% endif %}

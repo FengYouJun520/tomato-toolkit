@@ -99,6 +99,9 @@ impl MpGenerator {
             let context = self.build_context(&table_info)?;
             self.output_entity(&table_info, &context)?;
             self.output_mapper(&table_info, &context)?;
+            self.output_service(&table_info, &context)?;
+            self.output_controller(&table_info, &context)?;
+            // 输出自定义文件
         }
         Ok(())
     }
@@ -184,6 +187,75 @@ impl MpGenerator {
             if let Some(xml) = self.get_template_path(OutputFile::Xml) {
                 let xml_file = xml_path.join(format!("{}{}", xml_name, suffix));
                 self.output_file(xml_file, xml.to_path_buf(), context, file_override)?;
+            }
+        }
+
+        Ok(())
+    }
+
+    /// 生成Service文件
+    fn output_service(&self, table_info: &TableInfo, context: &tera::Context) -> Result<()> {
+        let suffix = self.file_suffix();
+
+        // 生成MpService.java
+        let service_name = &table_info.service_name;
+        let service_path = self
+            .config
+            .path_info
+            .get(&OutputFile::Service)
+            .ok_or(SerializeError::from("service模板文件路径未找到"))?;
+
+        let file_override = self.config.strategy_config.service.file_override;
+        if !service_name.is_empty() && !service_path.to_string_lossy().is_empty() {
+            if let Some(service) = self.get_template_path(OutputFile::Service) {
+                let service_file = service_path.join(format!("{}{}", service_name, suffix));
+                self.output_file(service_file, service.to_path_buf(), context, file_override)?;
+            }
+        }
+
+        // 生成MpServiceImpl.java文件
+        let service_impl_name = &table_info.service_impl_name;
+        let service_impl_path = self
+            .config
+            .path_info
+            .get(&OutputFile::ServiceImpl)
+            .ok_or(SerializeError::from("ServiceImpl模板文件路径未找到"))?;
+        if !service_impl_name.is_empty() && !service_impl_path.to_string_lossy().is_empty() {
+            if let Some(service_impl) = self.get_template_path(OutputFile::ServiceImpl) {
+                let service_impl_file =
+                    service_impl_path.join(format!("{}{}", service_impl_name, suffix));
+                self.output_file(
+                    service_impl_file,
+                    service_impl.to_path_buf(),
+                    context,
+                    file_override,
+                )?;
+            }
+        }
+
+        Ok(())
+    }
+
+    /// 生成Controller文件
+    fn output_controller(&self, table_info: &TableInfo, context: &tera::Context) -> Result<()> {
+        let controller_name = &table_info.controller_name;
+        let controller_path = self
+            .config
+            .path_info
+            .get(&OutputFile::Controller)
+            .ok_or(SerializeError::from("Controller模板文件路径未找到"))?;
+
+        let file_override = self.config.strategy_config.controller.file_override;
+        if !controller_name.is_empty() && !controller_path.to_string_lossy().is_empty() {
+            if let Some(controller) = self.get_template_path(OutputFile::Controller) {
+                let controller_file =
+                    controller_path.join(format!("{}{}", controller_name, self.file_suffix()));
+                self.output_file(
+                    controller_file,
+                    controller.to_path_buf(),
+                    context,
+                    file_override,
+                )?;
             }
         }
 

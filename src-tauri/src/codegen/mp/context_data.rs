@@ -42,7 +42,7 @@ pub struct ContextData {
 pub struct ControllerData {
     controller_mapping_hyphen: String,
     controller_mapping_hyphen_style: bool,
-    reset_controller_style: bool,
+    rest_controller_style: bool,
     super_controller_class_package: Option<String>,
     super_controller_class: Option<String>,
 }

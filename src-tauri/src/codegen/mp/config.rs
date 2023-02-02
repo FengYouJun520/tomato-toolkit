@@ -501,7 +501,7 @@ impl TemplateRender for Controller {
         let data = context_data::ControllerDataBuilder::default()
             .controller_mapping_hyphen(table_info.get_entity_path().to_case(Case::Kebab))
             .controller_mapping_hyphen_style(self.hyphen_style)
-            .reset_controller_style(self.rest_style)
+            .rest_controller_style(self.rest_style)
             .super_controller_class_package(super_class.clone())
             .super_controller_class(utils::get_simple_name(
                 &super_class.unwrap_or("".to_string()),
