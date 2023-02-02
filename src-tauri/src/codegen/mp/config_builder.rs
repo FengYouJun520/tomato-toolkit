@@ -13,6 +13,7 @@ use super::{
 use std::{collections::HashMap, path::PathBuf, sync::Arc};
 
 #[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ConfigBuilder {
     pub datasource_config: DataSourceConfig,
     pub template_config: TemplateConfig,
@@ -106,7 +107,10 @@ impl ConfigBuilder {
             })
             .collect();
 
-        table_info.fields.extend(fields?);
+        for field in fields? {
+            table_info.add_field(field);
+        }
+
         table_info.process_table()?;
 
         Ok(())

@@ -68,9 +68,7 @@ impl NameConvert for DefaultNameConvert {
             &self.strategy_config.table_prefix,
             &self.strategy_config.table_suffix,
         )?;
-        let res = NamingStrategy::capital(&name);
-
-        Ok(res)
+        Ok(NamingStrategy::capital(&name))
     }
 
     fn property_name_convert(&self, field: &Field) -> Result<String> {

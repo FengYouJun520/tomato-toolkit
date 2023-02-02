@@ -35,7 +35,7 @@ const handleReset = () => {
           <n-radio-button label="关闭" :value="false" />
         </n-radio-group>
       </n-form-item-gi>
-      <n-form-item-gi label="启用@BaseResultMap生成">
+      <n-form-item-gi label="启用BaseResultMap生成">
         <n-radio-group v-model:value="strategyconfigStore.mapper.baseResultMap">
           <n-radio-button label="开启" :value="true" />
           <n-radio-button label="关闭" :value="false" />
@@ -53,7 +53,7 @@ const handleReset = () => {
     <n-form-item label="父类包名">
       <n-input
         v-model:value="strategyconfigStore.mapper.superClass"
-        placeholder="示例: com.baomidou.global.BaseMapper"
+        placeholder="默认: com.baomidou.mybatisplus.core.mapper.BaseMapper"
       />
     </n-form-item>
     <n-form-item label="格式化mapper文件名称">

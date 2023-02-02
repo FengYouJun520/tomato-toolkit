@@ -50,8 +50,10 @@ pub struct ControllerData {
 #[derive(Clone, Serialize, Builder, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct MapperData {
-    mapper_annotation: bool,
-    mapper_annotation_class: Option<String>,
+    enable_cache: bool,
+    cache_class_name: String,
+    mapper_annotation_class: String,
+    mapper_annotation_name: String,
     base_result_map: bool,
     base_column_list: bool,
     super_mapper_class_package: String,

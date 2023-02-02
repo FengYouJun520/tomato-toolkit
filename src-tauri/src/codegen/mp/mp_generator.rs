@@ -1,3 +1,4 @@
+use sqlx::types::chrono::Local;
 use std::{
     collections::HashMap,
     fs::OpenOptions,
@@ -97,6 +98,7 @@ impl MpGenerator {
             // 转化为模板数据
             let context = self.build_context(&table_info)?;
             self.output_entity(&table_info, &context)?;
+            self.output_mapper(&table_info, &context)?;
         }
         Ok(())
     }
@@ -120,16 +122,17 @@ impl MpGenerator {
             .kotlin(global.kotlin)
             .swagger(global.swagger)
             .springdoc(global.springdoc)
-            .date(global.comment_date.clone())
+            .date(Local::now().format(&global.comment_date).to_string())
             .schema_name("".to_string())
             .table(table_info.clone())
-            .entity(table_info.name.clone())
+            .entity(table_info.entity_name.clone())
             .build()?;
 
         let context = tera::Context::from_serialize(data)?;
         Ok(context)
     }
 
+    /// 生成实体文件
     fn output_entity(&self, table_info: &TableInfo, context: &tera::Context) -> Result<()> {
         let entity_name = &table_info.entity_name;
         let entity_path = self
@@ -138,24 +141,61 @@ impl MpGenerator {
             .get(&OutputFile::Entity)
             .ok_or(SerializeError::from("实体模板文件路径未找到"))?;
 
+        let file_override = self.config.strategy_config.entity.file_override;
         if !entity_name.is_empty() && !entity_path.to_string_lossy().is_empty() {
             if let Some(entity) = self.get_template_path(OutputFile::Entity) {
-                let suffix = if self.config.global_config.kotlin {
-                    ".kt"
-                } else {
-                    ".java"
-                };
-                let entity_file = entity_path.join(format!("{}{}", entity_name, suffix));
-                self.output_file(
-                    entity_file,
-                    context,
-                    entity.to_path_buf(),
-                    self.config.strategy_config.entity.file_override,
-                )?;
+                let entity_file =
+                    entity_path.join(format!("{}{}", entity_name, self.file_suffix()));
+                self.output_file(entity_file, entity.to_path_buf(), context, file_override)?;
             }
         }
 
         Ok(())
+    }
+
+    /// 生成mapper文件
+    fn output_mapper(&self, table_info: &TableInfo, context: &tera::Context) -> Result<()> {
+        let suffix = self.file_suffix();
+
+        // 生成MpMapper.java
+        let mapper_name = &table_info.mapper_name;
+        let mapper_path = self
+            .config
+            .path_info
+            .get(&OutputFile::Mapper)
+            .ok_or(SerializeError::from("mapper模板文件路径未找到"))?;
+
+        let file_override = self.config.strategy_config.mapper.file_override;
+        if !mapper_name.is_empty() && !mapper_path.to_string_lossy().is_empty() {
+            if let Some(mapper) = self.get_template_path(OutputFile::Mapper) {
+                let mapper_file = mapper_path.join(format!("{}{}", mapper_name, suffix));
+                self.output_file(mapper_file, mapper.to_path_buf(), context, file_override)?;
+            }
+        }
+
+        // 生成MpMapper.xml文件
+        let xml_name = &table_info.xml_name;
+        let xml_path = self
+            .config
+            .path_info
+            .get(&OutputFile::Xml)
+            .ok_or(SerializeError::from("xml模板文件路径未找到"))?;
+        if !xml_name.is_empty() && !xml_path.to_string_lossy().is_empty() {
+            if let Some(xml) = self.get_template_path(OutputFile::Xml) {
+                let xml_file = xml_path.join(format!("{}{}", xml_name, suffix));
+                self.output_file(xml_file, xml.to_path_buf(), context, file_override)?;
+            }
+        }
+
+        Ok(())
+    }
+
+    fn file_suffix(&self) -> &str {
+        if self.config.global_config.kotlin {
+            ".kt"
+        } else {
+            ".java"
+        }
     }
 
     fn get_template_path(&self, output_file: OutputFile) -> Option<&PathBuf> {
@@ -165,8 +205,8 @@ impl MpGenerator {
     fn output_file<P: AsRef<Path>>(
         &self,
         file: P,
-        context: &tera::Context,
         template_path: P,
+        context: &tera::Context,
         file_override: bool,
     ) -> Result<()> {
         if self.is_create(&file, file_override) {
@@ -186,6 +226,7 @@ impl MpGenerator {
         !file.as_ref().exists() || file_override
     }
 
+    /// 渲染模板引擎数据
     fn write<P: AsRef<Path>>(
         &self,
         file: P,

@@ -33,7 +33,6 @@ const defaultController: Controller = {
 const defaultMapper: Mapper = {
   superClass: '',
   mapperAnnotation: false,
-  mapperAnnotationClass: '',
   baseResultMap: false,
   baseColumnList: false,
   formatMapperFilename: '{}Mapper',

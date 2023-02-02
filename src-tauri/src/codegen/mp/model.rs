@@ -28,6 +28,7 @@ pub struct Table {
 
 /// 表信息
 #[derive(Debug, Clone, FromRow, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TableInfo {
     strategy_config: StrategyConfig,
     global_config: GlobalConfig,
@@ -46,6 +47,7 @@ pub struct TableInfo {
     pub have_primary_key: bool,
     pub field_names: String,
     pub entity: Entity,
+    pub common_fields: Vec<TableField>,
     /// 表所有列信息
     pub fields: Vec<TableField>,
 }
@@ -65,6 +67,7 @@ impl TableInfo {
             import_packages: BTreeSet::new(),
             comment,
             entity_name: "".to_string(),
+            common_fields: vec![],
             fields: vec![],
             convert: false,
             mapper_name: "".into(),
@@ -128,6 +131,20 @@ impl TableInfo {
             self.convert = true;
         } else {
             self.convert = !self.entity_name.eq_ignore_ascii_case(&self.name);
+        }
+    }
+
+    pub fn add_field(&mut self, field: TableField) {
+        // 忽略字段
+        if self.entity.match_ingore_columns(&field.column_name) {
+            return;
+        }
+
+        // 如果是公共字段
+        if self.entity.match_super_entity_columns(&field.column_name) {
+            self.common_fields.push(field);
+        } else {
+            self.fields.push(field);
         }
     }
 
@@ -223,6 +240,7 @@ pub struct Field {
 
 /// 列信息
 #[derive(Debug, Clone, FromRow, Serialize, Builder)]
+#[serde(rename_all = "camelCase")]
 #[builder(setter(strip_option))]
 pub struct TableField {
     pub convert: bool,

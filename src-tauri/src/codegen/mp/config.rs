@@ -460,6 +460,18 @@ impl Entity {
     pub fn column_naming(&self) -> NamingStrategy {
         self.column_naming.unwrap_or(self.naming)
     }
+
+    pub fn match_ingore_columns(&self, field_name: &str) -> bool {
+        self.ignore_columns
+            .iter()
+            .any(|column| column.eq_ignore_ascii_case(field_name))
+    }
+
+    pub fn match_super_entity_columns(&self, field_name: &str) -> bool {
+        self.super_entity_columns
+            .iter()
+            .any(|column| column.eq_ignore_ascii_case(field_name))
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -481,20 +493,19 @@ impl TemplateRender for Controller {
     type Item = ControllerData;
 
     fn render_data(&self, table_info: &TableInfo) -> Result<Self::Item> {
+        let super_class = if self.super_class.is_empty() {
+            None
+        } else {
+            Some(self.super_class.to_string())
+        };
         let data = context_data::ControllerDataBuilder::default()
             .controller_mapping_hyphen(table_info.get_entity_path().to_case(Case::Kebab))
             .controller_mapping_hyphen_style(self.hyphen_style)
             .reset_controller_style(self.rest_style)
-            .super_controller_class_package(if self.super_class.is_empty() {
-                None
-            } else {
-                Some(self.super_class.clone())
-            })
-            .super_controller_class(if self.super_class.is_empty() {
-                None
-            } else {
-                utils::get_simple_name(&self.super_class)
-            })
+            .super_controller_class_package(super_class.clone())
+            .super_controller_class(utils::get_simple_name(
+                &super_class.unwrap_or("".to_string()),
+            ))
             .build()?;
 
         Ok(data)
@@ -508,8 +519,6 @@ pub struct Mapper {
     pub super_class: String,
     /// 是否添加 @Mapper 注解（默认 false）
     pub mapper_annotation: bool,
-    /// Mapper标记注解
-    pub mapper_annotation_class: Option<String>,
     /// 是否开启BaseResultMap（默认 false）
     pub base_result_map: bool,
     /// 是否开启baseColumnList（默认 false）
@@ -525,13 +534,29 @@ impl TemplateRender for Mapper {
     type Item = MapperData;
 
     fn render_data(&self, _table_info: &TableInfo) -> Result<Self::Item> {
+        let super_class = if self.super_class.is_empty() {
+            "com.baomidou.mybatisplus.core.mapper.BaseMapper"
+        } else {
+            &self.super_class
+        };
+
+        let mapper_annotation_class = if self.mapper_annotation {
+            "org.apache.ibatis.annotations.Mapper"
+        } else {
+            ""
+        };
+
         Ok(context_data::MapperDataBuilder::default()
-            .mapper_annotation(self.mapper_annotation)
-            .mapper_annotation_class(self.mapper_annotation_class.clone())
+            .enable_cache(false)
+            .cache_class_name("".to_string())
+            .mapper_annotation_name(
+                utils::get_simple_name(mapper_annotation_class).unwrap_or("".to_string()),
+            )
+            .mapper_annotation_class(mapper_annotation_class.to_string())
             .base_result_map(self.base_result_map)
             .base_column_list(self.base_column_list)
-            .super_mapper_class_package(self.super_class.clone())
-            .super_mapper_class(utils::get_simple_name(&self.super_class))
+            .super_mapper_class_package(super_class.to_string())
+            .super_mapper_class(utils::get_simple_name(super_class))
             .build()?)
     }
 }
@@ -554,11 +579,21 @@ impl TemplateRender for Service {
     type Item = ServiceData;
 
     fn render_data(&self, _table_info: &TableInfo) -> Result<Self::Item> {
+        let super_class = if self.super_service_class.is_empty() {
+            "com.baomidou.mybatisplus.extension.service.IService"
+        } else {
+            &self.super_service_class
+        };
+        let super_class_impl = if self.super_service_class.is_empty() {
+            "com.baomidou.mybatisplus.extension.service.impl.ServiceImpl"
+        } else {
+            &self.super_service_class
+        };
         Ok(context_data::ServiceDataBuilder::default()
-            .super_service_class_package(self.super_service_class.clone())
-            .super_service_class(utils::get_simple_name(&self.super_service_class))
-            .super_service_impl_class_package(self.super_service_impl_class.clone())
-            .super_service_impl_class(utils::get_simple_name(&self.super_service_impl_class))
+            .super_service_class_package(super_class.to_string())
+            .super_service_class(utils::get_simple_name(super_class))
+            .super_service_impl_class_package(super_class_impl.to_string())
+            .super_service_impl_class(utils::get_simple_name(super_class_impl))
             .build()?)
     }
 }

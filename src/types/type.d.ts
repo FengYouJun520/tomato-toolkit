@@ -121,7 +121,6 @@ export interface Controller {
 export interface Mapper {
   superClass: string
   mapperAnnotation: boolean
-  mapperAnnotationClass?: String
   baseResultMap: boolean
   baseColumnList: boolean
   fileOverride: boolean

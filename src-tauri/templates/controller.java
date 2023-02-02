@@ -1,14 +1,14 @@
-package ${package.Controller};
+package {{ package.Controller }};
 
 import org.springframework.web.bind.annotation.RequestMapping;
-<#if restControllerStyle>
+{% if restControllerStyle -%}
 import org.springframework.web.bind.annotation.RestController;
-<#else>
+{% else -%}
 import org.springframework.stereotype.Controller;
-</#if>
-<#if superControllerClassPackage??>
-import ${superControllerClassPackage};
-</#if>
+{%- endif %}
+{% if superControllerClassPackage -%}
+import {{ superControllerClassPackage }};
+{% endif -%}
 
 /**
  * <p>
