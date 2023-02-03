@@ -262,7 +262,6 @@ pub struct TableField {
     pub datasource_config: DataSourceConfig,
     pub global_config: GlobalConfig,
     pub fill: Option<FieldFill>,
-    pub keywords: bool,
     pub version_field: bool,
     pub logic_delete_field: bool,
     have_primary: bool,

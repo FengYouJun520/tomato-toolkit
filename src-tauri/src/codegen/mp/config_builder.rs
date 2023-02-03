@@ -8,6 +8,7 @@ use super::{
         StrategyConfig, TemplateConfig,
     },
     db_query::{DbQuery, MpConfig},
+    keywords::DefaultKeywordHandler,
     model::{self, TableField, TableInfo},
 };
 use std::{collections::HashMap, path::PathBuf, sync::Arc};
@@ -82,12 +83,30 @@ impl ConfigBuilder {
                     .get_type_convert()
                     .type_convert(&self.global_config, &field);
 
+                // 设置列名
+                let keyword_handler =
+                    DefaultKeywordHandler::get_keyword_handler(self.datasource_config.db_type());
+
                 // TODO: 是否是关键字
-                let keywords = false;
-                let annotation_column_name = if field.name.starts_with('\"') {
+                let is_keywords = keyword_handler
+                    .as_ref()
+                    .map(|handler| handler.is_keyword(&field.name))
+                    .unwrap_or_default();
+
+                // 关键字处理
+                let column_name = if is_keywords {
+                    keyword_handler
+                        .map(|handler| handler.format_column(&field.name))
+                        .unwrap_or(field.name.to_string())
+                } else {
+                    field.name.to_string()
+                };
+
+                // 注解注释处理
+                let annotation_column_name = if is_keywords && column_name.starts_with('\"') {
                     format!(r#"\"{}\""#, field.name)
                 } else {
-                    field.name.clone()
+                    column_name.to_string()
                 };
 
                 let mut field = model::TableFieldBuilder::default()
@@ -98,7 +117,7 @@ impl ConfigBuilder {
                     .fill(FieldFill::DEFAULT)
                     .property_name(property_name.clone())
                     .capital_name(property_name.clone())
-                    .column_name(field.name.clone())
+                    .column_name(column_name)
                     .annotation_column_name(annotation_column_name)
                     .entity(self.strategy_config.entity.clone())
                     .datasource_config(self.datasource_config.clone())
@@ -107,7 +126,6 @@ impl ConfigBuilder {
                     .custom_map(HashMap::new())
                     .have_primary(field.key_flag)
                     .key_flag(field.key_flag)
-                    .keywords(keywords)
                     .version_field(false)
                     .logic_delete_field(false)
                     .key_identity_flag(field.auto_increment)
