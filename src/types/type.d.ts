@@ -34,7 +34,16 @@ export interface GlobalConfig {
 }
 
 export interface InjectConfig {
-  custom_map?: Record<string, string>
+  customMap: Record<string, any>
+  customFiles: CustomFile[]
+}
+
+export interface CustomFile {
+  fileName: string,
+  templatePath: string,
+  packageName: string,
+  filePath: string,
+  fileOverride: bool,
 }
 
 export type DataType = 'ONLY_DATE' | 'SQL_PACK' | 'TIME_PACK'
@@ -48,7 +57,7 @@ export interface PackageConfig {
   mapper: string
   xml: string
   controller: string
-  pathinfo?: Map<OutputFile, string>
+  pathInfo?: Map<OutputFile, string>
   packageInfos?: Map<string, string>
 }
 

@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::Local;
 use std::{
     collections::HashMap,
@@ -11,7 +12,7 @@ use crate::error::{Result, SerializeError};
 use super::{
     config::OutputFile,
     config_builder::ConfigBuilder,
-    context_data::{self, TemplateRender},
+    context_data::{self, ContextData, TemplateRender},
     db_query::MpConfig,
     model::TableInfo,
 };
@@ -91,22 +92,37 @@ impl MpGenerator {
         Ok(())
     }
 
+    /// 生成预览数据
+    pub async fn preview(&mut self) -> Result<HashMap<String, ContextData>> {
+        let table_infos = self.config.query_tables().await?;
+        let mut contexts = HashMap::new();
+        for table_info in table_infos {
+            // 转化为模板数据
+            let context_data = self.build_context(&table_info)?;
+            contexts.insert(table_info.name, context_data);
+        }
+
+        Ok(contexts)
+    }
+
     pub async fn batch_output(&mut self) -> Result<()> {
         let table_infos = self.config.query_tables().await?;
 
         for table_info in table_infos {
             // 转化为模板数据
-            let context = self.build_context(&table_info)?;
+            let data = self.build_context(&table_info)?;
+            let mut context = tera::Context::from_serialize(data)?;
+
+            self.output_custom_file(&table_info, &mut context)?;
             self.output_entity(&table_info, &context)?;
             self.output_mapper(&table_info, &context)?;
             self.output_service(&table_info, &context)?;
             self.output_controller(&table_info, &context)?;
-            // 输出自定义文件
         }
         Ok(())
     }
 
-    pub fn build_context(&mut self, table_info: &TableInfo) -> Result<tera::Context> {
+    pub fn build_context(&mut self, table_info: &TableInfo) -> Result<ContextData> {
         let strategy = &self.config.strategy_config;
         let global = &self.config.global_config;
         let controller_data = strategy.controller.render_data(table_info)?;
@@ -131,8 +147,7 @@ impl MpGenerator {
             .entity(table_info.entity_name.clone())
             .build()?;
 
-        let context = tera::Context::from_serialize(data)?;
-        Ok(context)
+        Ok(data)
     }
 
     /// 生成实体文件
@@ -262,6 +277,36 @@ impl MpGenerator {
         Ok(())
     }
 
+    /// 添加自定义属性
+    fn before_output_file(
+        &self,
+        custom_map: &HashMap<String, serde_json::Value>,
+        _table_info: &TableInfo,
+        context: &mut tera::Context,
+    ) -> Result<()> {
+        if !custom_map.is_empty() {
+            context.extend(tera::Context::from_serialize(custom_map)?);
+        }
+
+        Ok(())
+    }
+
+    /// 输出自定义文件
+    fn output_custom_file(
+        &mut self,
+        table_info: &TableInfo,
+        context: &mut tera::Context,
+    ) -> Result<()> {
+        let Some(ref injection) =  self.config.injection_config else {
+            return Ok(());
+        };
+
+        self.before_output_file(&injection.custom_map, table_info, context)?;
+
+        // TODO: 输出文件
+        Ok(())
+    }
+
     fn file_suffix(&self) -> &str {
         if self.config.global_config.kotlin {
             ".kt"
@@ -294,7 +339,6 @@ impl MpGenerator {
     }
 
     fn is_create<P: AsRef<Path>>(&self, file: P, file_override: bool) -> bool {
-        // if file.as_ref().exists() && !file_override.unwrap_or_default() {}
         !file.as_ref().exists() || file_override
     }
 

@@ -181,6 +181,9 @@ impl<'a> PathInfoHandler<'a> {
             return path_info_handler;
         };
 
+        // TODO: 存储自定义路径信息
+        // e.g. "Controller": "D://com/blog/model/controller",
+
         if !path_info.is_empty() {
             path_info_handler.path_info.extend(path_info);
         }

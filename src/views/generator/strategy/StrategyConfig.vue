@@ -6,11 +6,24 @@ import EntityConfig from './EntityConfig.vue'
 import ControllerConfig from './ControllerConfig.vue'
 import ServiceConfig from './ServiceConfig.vue'
 import MapperConfig from './MapperConfig.vue'
+import { MpConfig } from '@/types/type'
+import { useGlobalConfigStore } from '@/store/modules/mp/globalconfig'
+import { usePackageConfigStore } from '@/store/modules/mp/packageconfig'
+import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
+import { useDatasourceStore } from '@/store/modules/mp/datasource'
+import { invoke } from '@tauri-apps/api'
+import VueJsonPretty from 'vue-json-pretty'
 
-
+const message = useMessage()
+const datasourceConfigStore = useDatasourceStore()
+const globalConfigStore = useGlobalConfigStore()
+const packageConfigStore = usePackageConfigStore()
+const templateConfigStore = useTemplateConfigStore()
 const strategyConfigStore = useStrategyConfigStore()
 const tablesContext = useTables()
 
+const showPreview = ref(false)
+const contextData = ref<Record<string, any>>({})
 const includes = ref<string[]>([])
 const excludes = ref<string[]>([])
 
@@ -79,6 +92,25 @@ const renderTag: SelectRenderTag = ({ option, handleClose }) => h(
   { type: 'info', bordered: false, closable: true, onClose: handleClose },
   { default: () => option.label }
 )
+
+const handlePreview = async () => {
+  try {
+    const config: MpConfig = {
+      datasource: datasourceConfigStore.$state,
+      global: globalConfigStore.$state,
+      package: packageConfigStore.$state,
+      template: templateConfigStore.$state,
+      strategy: strategyConfigStore.$state,
+    }
+    const data = await invoke<Record<string, any>>('generate_preview', { config })
+    contextData.value = data
+    showPreview.value = true
+    console.log(contextData.value)
+  } catch (error) {
+    message.error(error as string)
+    showPreview.value = false
+  }
+}
 </script>
 
 <template>
@@ -89,9 +121,19 @@ const renderTag: SelectRenderTag = ({ option, handleClose }) => h(
       :label-width="120"
     >
       <n-form-item>
-        <n-button type="warning" @click="handleReset">
-          重置
-        </n-button>
+        <n-space>
+          <n-button type="warning" @click="handleReset">
+            重置
+          </n-button>
+
+          <n-button
+            type="success"
+            :disabled="!includes || !includes.length"
+            @click="handlePreview"
+          >
+            预览生成的数据
+          </n-button>
+        </n-space>
       </n-form-item>
 
       <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
@@ -177,6 +219,23 @@ const renderTag: SelectRenderTag = ({ option, handleClose }) => h(
         <MapperConfig />
       </n-tab-pane>
     </n-tabs>
+
+    <n-modal
+      v-model:show="showPreview"
+      title="查看生成预览的数据"
+      style="width: 70%;"
+    >
+      <n-card>
+        <VueJsonPretty
+          :data="contextData"
+          :height="700"
+          virtual
+          show-icon
+          show-line
+          show-line-number
+        />
+      </n-card>
+    </n-modal>
   </div>
 </template>
 

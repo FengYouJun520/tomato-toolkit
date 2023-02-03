@@ -12,12 +12,12 @@ import { usePackageConfigStore } from '@/store/modules/mp/packageconfig'
 import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
 
 const message = useMessage()
-const datasourceStore = useDatasourceStore()
-const globalStore = useGlobalConfigStore()
-const packageStore = usePackageConfigStore()
-const templateStore = useTemplateConfigStore()
-const strategyStore = useStrategyConfigStore()
-const disabled = computed(() => strategyStore.include.length <= 0)
+const datasourceConfigStore = useDatasourceStore()
+const globalConfigStore = useGlobalConfigStore()
+const packageConfigStore = usePackageConfigStore()
+const templateConfigStore = useTemplateConfigStore()
+const strategyConfigStore = useStrategyConfigStore()
+const disabled = computed(() => strategyConfigStore.include.length <= 0)
 
 const tables = ref<BasicTableInfo[]>([])
 
@@ -26,11 +26,11 @@ createTableContext(tables)
 const handleMpGenerate = async () => {
   try {
     const config: MpConfig = {
-      datasource: datasourceStore.$state,
-      global: globalStore.$state,
-      package: packageStore.$state,
-      template: templateStore.$state,
-      strategy: strategyStore.$state,
+      datasource: datasourceConfigStore.$state,
+      global: globalConfigStore.$state,
+      package: packageConfigStore.$state,
+      template: templateConfigStore.$state,
+      strategy: strategyConfigStore.$state,
     }
     await invoke('mp_codegen', { config })
     message.success('代码生成成功！')

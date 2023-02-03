@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import GlobalConfig from './GlobalConfig.vue'
+import InjectConfig from './InjectConfig.vue'
 import PackageConfig from './PackageConfig.vue'
 import StrategyConfig from './strategy/StrategyConfig.vue'
 import TemplateConfig from './TemplateConfig.vue'
@@ -21,6 +22,9 @@ import TemplateConfig from './TemplateConfig.vue'
     </n-tab-pane>
     <n-tab-pane tab="策略配置" name="strategy-config">
       <StrategyConfig />
+    </n-tab-pane>
+    <n-tab-pane disabled tab="注入配置（未完成）" name="inject-config">
+      <InjectConfig />
     </n-tab-pane>
   </n-tabs>
 </template>
