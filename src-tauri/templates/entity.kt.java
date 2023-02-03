@@ -112,7 +112,6 @@ class {{ entity}} {
         return null
 {%- endif %}
     }
-
 {%- endif %}
     override fun toString(): String {
         return "{{ entity }}{" +

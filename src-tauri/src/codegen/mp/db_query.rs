@@ -136,8 +136,6 @@ impl DbQuery for SqliteQuery {
         let datasource = &config.datasource_config;
         let mut conn = datasource.connect_sqlite().await?;
         let includes: Vec<&String> = config.strategy_config.include.iter().collect();
-        let table_names: Vec<String> = includes.into_iter().map(|tb| format!("'{}'", tb)).collect();
-
         let query = "SELECT name FROM sqlite_master WHERE type ='table'";
         let tables = conn.fetch_all(query).await?;
 
@@ -148,7 +146,7 @@ impl DbQuery for SqliteQuery {
                 comment: None,
                 schema: "".to_string(),
             })
-            .filter(|tb| table_names.iter().any(|tbn| *tbn == tb.name))
+            .filter(|tb| includes.iter().any(|tbn| tb.name.eq(tbn.as_str())))
             .collect();
 
         Ok(tables)
@@ -184,7 +182,6 @@ impl DbQuery for SqliteQuery {
                 }
             })
             .collect();
-
         Ok(fields)
     }
 }
@@ -217,7 +214,6 @@ impl DbQuery for PostgresQuery {
         let datasource = &config.datasource_config;
         let strategy = &config.strategy_config;
         let includes: Vec<&String> = strategy.include.iter().collect();
-        let table_names: Vec<String> = includes.into_iter().map(|tb| format!("'{}'", tb)).collect();
 
         let query = format!(
             r#"SELECT 
@@ -238,7 +234,7 @@ AND A.tablename = B.relname"#,
                 comment: row.get(1),
                 schema: "".to_string(),
             })
-            .filter(|tb| table_names.iter().any(|tbn| *tbn == tb.name))
+            .filter(|tb| includes.iter().any(|tbn| tb.name.eq(tbn.as_str())))
             .collect();
 
         Ok(tables)

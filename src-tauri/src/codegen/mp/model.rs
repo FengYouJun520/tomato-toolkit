@@ -277,7 +277,6 @@ impl TableField {
             && (column_type.get_type() == "boolean" || column_type.get_type() == "Boolean")
             && property_name.starts_with("is")
         {
-            println!("删除is前缀: {property_name}, {column_type:?}");
             self.convert = true;
             self.property_name = (&property_name[2..]).to_case(Case::Camel);
             self.set_capital_name();

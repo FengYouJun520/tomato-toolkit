@@ -584,10 +584,10 @@ impl TemplateRender for Service {
         } else {
             &self.super_service_class
         };
-        let super_class_impl = if self.super_service_class.is_empty() {
+        let super_class_impl = if self.super_service_impl_class.is_empty() {
             "com.baomidou.mybatisplus.extension.service.impl.ServiceImpl"
         } else {
-            &self.super_service_class
+            &self.super_service_impl_class
         };
         Ok(context_data::ServiceDataBuilder::default()
             .super_service_class_package(super_class.to_string())

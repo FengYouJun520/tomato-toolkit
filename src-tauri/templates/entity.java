@@ -123,9 +123,8 @@ public class {{ entity }} {
         {%- endif %}
     }
     {% endfor -%}
-{%- endif -%}
-
-{% if entityColumnConstant -%}
+{% endif -%}
+{%- if entityColumnConstant %}
     {%- for field in table.fields %}
     public static final String {{ field.name | upper }} = "{{ field.name }}";
     {%- endfor -%}
@@ -140,9 +139,8 @@ public class {{ entity }} {
         return null;
     {%- endif %}
     }
-{%- endif -%}
-
-{% if not entityLombokModel %}
+{% endif -%}
+{%- if not entityLombokModel %}
 
     @Override
     public String toString() {
@@ -156,5 +154,5 @@ public class {{ entity }} {
     {%- endfor %}
         "}";
     }
-{%- endif %}
+{% endif -%}
 }
