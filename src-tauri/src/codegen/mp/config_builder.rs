@@ -54,7 +54,6 @@ impl ConfigBuilder {
     pub async fn query_tables(&mut self) -> Result<Vec<TableInfo>> {
         let tables = self.db_query.query_tables(self).await?;
         let mut table_infos = vec![];
-        println!("tables: {tables:#?}");
 
         for table in tables {
             let mut table_info = TableInfo::new(self, table.comment, table.name);

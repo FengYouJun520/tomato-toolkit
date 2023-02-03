@@ -185,7 +185,7 @@ impl MpGenerator {
             .ok_or(SerializeError::from("xml模板文件路径未找到"))?;
         if !xml_name.is_empty() && !xml_path.to_string_lossy().is_empty() {
             if let Some(xml) = self.get_template_path(OutputFile::Xml) {
-                let xml_file = xml_path.join(format!("{}{}", xml_name, suffix));
+                let xml_file = xml_path.join(format!("{xml_name}.xml"));
                 self.output_file(xml_file, xml.to_path_buf(), context, file_override)?;
             }
         }

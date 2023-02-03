@@ -114,27 +114,41 @@ const onCreate = () =>({
           ]"
         />
       </n-form-item-gi>
+
+      <n-form-item-gi :span="2" label="父类包名">
+        <n-input
+          v-model:value="strategyconfigStore.entity.superClass"
+          placeholder="示例: com.baomidou.global.BaseEntity"
+        />
+      </n-form-item-gi>
+
+
+      <n-form-item-gi label="乐观锁字段名">
+        <n-input
+          v-model:value="strategyconfigStore.entity.versionColumnName"
+          placeholder="例如：version"
+        />
+      </n-form-item-gi>
+      <n-form-item-gi label="乐观锁属性名">
+        <n-input
+          v-model:value="strategyconfigStore.entity.versionPropertyName"
+          placeholder="例如：version"
+        />
+      </n-form-item-gi>
+
+      <n-form-item-gi label="逻辑删除字段名">
+        <n-input
+          v-model:value="strategyconfigStore.entity.logicDeleteColumnName"
+          placeholder="例如：is_deleted"
+        />
+      </n-form-item-gi>
+      <n-form-item-gi label="逻辑删除属性名	">
+        <n-input
+          v-model:value="strategyconfigStore.entity.logicDeletePropertyName"
+          placeholder="例如：isDeleted"
+        />
+      </n-form-item-gi>
     </n-grid>
-
-    <n-form-item label="父类包名">
-      <n-input
-        v-model:value="strategyconfigStore.entity.superClass"
-        placeholder="示例: com.baomidou.global.BaseEntity"
-      />
-    </n-form-item>
-    <n-form-item label="乐观锁字段名(数据库)">
-      <n-input v-model:value="strategyconfigStore.entity.versionColumnName" />
-    </n-form-item>
-    <n-form-item label="乐观锁属性名(实体)">
-      <n-input v-model:value="strategyconfigStore.entity.versionPropertyName" />
-    </n-form-item>
-
-    <n-form-item label="逻辑删除字段名(数据库)">
-      <n-input v-model:value="strategyconfigStore.entity.logicDeleteColumnName" />
-    </n-form-item>
-    <n-form-item label="逻辑删除属性名(实体)	">
-      <n-input v-model:value="strategyconfigStore.entity.logicDeletePropertyName" />
-    </n-form-item>
 
     <n-form-item label="数据库表映射到实体的命名策略">
       <n-select v-model:value="strategyconfigStore.entity.naming" :options="[

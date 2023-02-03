@@ -86,7 +86,7 @@ public class {{ entity }} {
     @TableField(value = "{{ field.annotationColumnName }}", fill = FieldFill.{{ field.fill }})
         {%- else %}
     @TableField(fill = FieldFill.{{ field.fill }})
-        {% endif -%}
+        {%- endif -%}
     {%- elif field.convert %}
     @TableField("{{ field.annotationColumnName }}")
     {%- endif -%}

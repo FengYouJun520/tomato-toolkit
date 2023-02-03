@@ -33,7 +33,7 @@
     <sql id="Base_Column_List">
 {%- for field in table.commonFields %}
         {{ field.columnName }},
-{% endfor -%}
+{%- endfor -%}
         {{ table.fieldNames }}
     </sql>
 {% endif %}
