@@ -157,7 +157,7 @@ const onCreate = () =>({
         multiple
         clearable
         tag
-        placeholder="输入，按回车确认"
+        placeholder="例如: id, is_deleted, create_time，按回车确定"
         :show-arrow="false"
         :show="false"
       />
@@ -170,7 +170,7 @@ const onCreate = () =>({
         multiple
         clearable
         tag
-        placeholder="输入，按回车确认"
+        placeholder="例如：create_time, update_time，按回车确定"
         :show-arrow="false"
         :show="false"
       />

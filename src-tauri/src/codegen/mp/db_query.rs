@@ -97,7 +97,8 @@ FROM
 	information_schema.COLUMNS 
 WHERE
 	table_schema = '{}'
-	AND table_name = '{}';"#,
+	AND table_name = '{}'
+ORDER BY ORDINAL_POSITION ASC;"#,
             datasource.database, table_info.name
         );
 
@@ -169,15 +170,17 @@ impl DbQuery for SqliteQuery {
             .map(|row| {
                 let not_null: u8 = row.get(3);
                 let primary: u8 = row.get(5);
+                let r#type: String = row.get(2);
+                let auto_increment = r#type.to_lowercase() == "integer" && primary == 1;
                 Field {
                     name: row.get(1),
                     comment: None,
-                    r#type: row.get(2),
+                    r#type,
                     length: None,
                     is_nullable: not_null == 0,
                     key_flag: primary == 1,
                     default_value: None,
-                    auto_increment: false,
+                    auto_increment,
                 }
             })
             .collect();

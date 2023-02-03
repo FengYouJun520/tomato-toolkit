@@ -30,13 +30,13 @@ import lombok.experimental.Accessors;
     {%- if chainModel %}
 @Accessors(chain = true)
     {%- endif -%}
-{%- endif -%}
-{% if table.convert %}
+{%- endif %}
+{%- if table.convert %}
 @TableName("{{ schemaName }}{{ table.name }}")
-{%- endif -%}
-{% if springdoc -%}
+{%- endif %}
+{%- if springdoc %}
 @Schema(name = "{{ entity }}", description = "{{ table.comment }}")
-{% elif swagger -%}
+{%- elif swagger %}
 @ApiModel(value = "{{ entity }}对象", description = "{{ table.comment }}")
 {%- endif -%}
 {%- if superEntityClass %}
@@ -61,7 +61,7 @@ public class {{ entity }} {
 
     {%- if field.comment and field.comment | length > 0 -%}
         {%- if springdoc %}
-    @Schema(description = "${field.comment}")
+    @Schema(description = "{{ field.comment }}")
         {%- elif swagger %}
     @ApiModelProperty("{{ field.comment }}")
         {%- else %}

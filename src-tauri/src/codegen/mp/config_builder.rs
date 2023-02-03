@@ -69,7 +69,6 @@ impl ConfigBuilder {
         let fields = self.db_query.query_table_fields(table_info, self).await?;
         let strategy_config = &self.strategy_config;
         let entity = &strategy_config.entity;
-        let keywords = false;
 
         let fields: Result<Vec<TableField>> = fields
             .into_iter()
@@ -81,6 +80,10 @@ impl ConfigBuilder {
                     .datasource_config
                     .get_type_convert()
                     .type_convert(&self.global_config, &field);
+
+                // TODO: 是否是关键字
+                let keywords = false;
+                println!("{property_name}");
 
                 let annotation_column_name = if field.name.starts_with('\"') {
                     format!(r#"\"{}\""#, field.name)

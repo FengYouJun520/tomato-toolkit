@@ -1,122 +1,128 @@
-package ${package.Entity}
+package {{ package.Entity }}
 
-<#list table.importPackages as pkg>
-import ${pkg}
-</#list>
-<#if springdoc>
+{% for pkg in table.importPackages -%}
+import {{ pkg }}
+{% endfor -%}
+{% if springdoc -%}
 import io.swagger.v3.oas.annotations.media.Schema;
-<#elseif swagger>
+{% elif swagger -%}
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-</#if>
+{%- endif %}
 
 /**
  * <p>
- * ${table.comment}
+ * {{ table.comment }}
  * </p>
  *
- * @author ${author}
- * @since ${date}
+ * @author {{ author }}
+ * @since {{ date }}
  */
-<#if table.convert>
-@TableName("${schemaName}${table.name}")
-</#if>
-<#if springdoc>
-@Schema(name = "${entity}", description = "$!{table.comment}")
-<#elseif swagger>
-@ApiModel(value = "${entity}对象", description = "${table.comment!}")
-</#if>
-<#if superEntityClass??>
-class ${entity} : ${superEntityClass}<#if activeRecord><${entity}></#if> {
-<#elseif activeRecord>
-class ${entity} : Model<${entity}>() {
-<#elseif entitySerialVersionUID>
-class ${entity} : Serializable {
-<#else>
-class ${entity} {
-</#if>
+{% if table.convert -%}
+@TableName("{{ schemaName }}{{ table.name }}")
+{% endif -%}
+{% if springdoc -%}
+@Schema(name = "{{ entity }}", description = "{{ table.comment }}")
+{% elif swagger -%}
+@ApiModel(value = "{{ entity }}对象", description = "{{ table.comment }}")
+{% endif -%}
+{% if superEntityClass -%}
+class {{ entity }} : {{ superEntityClass }}{% if activeRecord %}<{{ entity }}>{% endif %} {
+{% elif activeRecord -%}
+class {{ entity }} : Model{{ entity }}() {
+{% elif entitySerialVersionUid -%}
+class {{ entity }} : Serializable {
+{% else -%}
+class {{ entity}} {
+{% endif -%}
 
-<#-- ----------  BEGIN 字段循环遍历  ---------->
-<#list table.fields as field>
-<#if field.keyFlag>
-    <#assign keyPropertyName="${field.propertyName}"/>
-</#if>
-<#if field.comment!?length gt 0>
-    <#if springdoc>
-    @Schema(description = "${field.comment}")
-    <#elseif swagger>
-    @ApiModelProperty("${field.comment}")
-    <#else>
+{#- BEGIN 字段循环遍历 -#}
+{%- for field in table.fields -%}
+    {% if field.keyFlag -%}
+        {% set_global keyPropertyName = field.propertyName -%}
+    {% endif -%}
+
+    {%- if field.comment and field.comment | length > 0 -%}
+        {%- if springdoc %}
+    @Schema(description = "{{ field.comment }}")
+        {%- elif swagger %}
+    @ApiModelProperty("{{ field.comment }}")
+        {%- else %}
     /**
-     * ${field.comment}
+     * {{ field.comment }}
      */
-    </#if>
-</#if>
-<#if field.keyFlag>
-<#-- 主键 -->
-<#if field.keyIdentityFlag>
-    @TableId(value = "${field.annotationColumnName}", type = IdType.AUTO)
-<#elseif idType ??>
-    @TableId(value = "${field.annotationColumnName}", type = IdType.${idType})
-<#elseif field.convert>
-    @TableId("${field.annotationColumnName}")
-</#if>
-<#-- 普通字段 -->
-<#elseif field.fill??>
-<#-- -----   存在字段填充设置   ----->
-<#if field.convert>
-    @TableField(value = "${field.annotationColumnName}", fill = FieldFill.${field.fill})
-<#else>
-    @TableField(fill = FieldFill.${field.fill})
-</#if>
-<#elseif field.convert>
-    @TableField("${field.annotationColumnName}")
-</#if>
-<#-- 乐观锁注解 -->
-<#if field.versionField>
+        {%- endif %}
+    {%- endif -%}
+
+{%- if field.keyFlag -%}
+    {#- 主键 -#}
+    {%- if field.keyIdentityFlag %}
+    @TableId(value = "{{ field.annotationColumnName }}", type = IdType.AUTO)
+    {%- elif idType %}
+    @TableId(value = "{{ field.annotationColumnName }}", type = IdType.{{ idType }})
+    {%- elif field.convert %}
+    @TableId("{{ field.annotationColumnName }}")
+    {%- endif -%}
+
+{#- 普通字段 -#}
+{% elif field.fill -%}
+    {#- 存在字段填充设置 -#}
+    {%- if field.convert %}
+    @TableField(value = "{{ field.annotationColumnName }}", fill = FieldFill.{{ field.fill }})
+    {%- else %}
+    @TableField(fill = FieldFill.{{ field.fill }})
+    {% endif -%}
+{%- elif field.convert %}
+    @TableField("{{ field.annotationColumnName }}")
+{%- endif -%}
+
+{#- 乐观锁注解 -#}
+{%- if field.versionField %}
     @Version
-</#if>
-<#-- 逻辑删除注解 -->
-<#if field.logicDeleteField>
+{%- endif -%}
+
+{#- 逻辑删除注解 -#}
+{%- if field.logicDeleteField %}
     @TableLogic
-</#if>
-    <#if field.propertyType == "Integer">
-    var ${field.propertyName}: Int? = null
-    <#else>
-    var ${field.propertyName}: ${field.propertyType}? = null
-    </#if>
+{%- endif -%}
 
-</#list>
-<#-- ----------  END 字段循环遍历  ---------->
-<#if entityColumnConstant>
+{%- if field.columnType[0] == "Integer" %}
+    var {{ field.propertyName }}: Int? = null
+{%- else %}
+    var {{ field.propertyName }}: {{ field.columnType[0] }}? = null
+{%- endif %}
+{% endfor -%}
+{#- END 字段循环遍历 -#}
+
+{%- if entityColumnConstant %}
     companion object {
-<#list table.fields as field>
+{%- for field in table.fields %}
 
-        const val ${field.name?upper_case} : String = "${field.name}"
+        const val {{ field.name | upper }} : String = "{{ field.name }}"
 
-</#list>
+{%- endfor %}
     }
 
-</#if>
-<#if activeRecord>
+{%- endif -%}
+{%- if activeRecord %}
     override fun pkVal(): Serializable? {
-<#if keyPropertyName??>
-        return ${keyPropertyName}
-<#else>
+{%- if keyPropertyName | define %}
+        return {{ keyPropertyName }}
+{%- else %}
         return null
-</#if>
+{%- endif %}
     }
 
-</#if>
+{%- endif %}
     override fun toString(): String {
-        return "${entity}{" +
-<#list table.fields as field>
-<#if field_index==0>
-        "${field.propertyName}=" + ${field.propertyName} +
-<#else>
-        ", ${field.propertyName}=" + ${field.propertyName} +
-</#if>
-</#list>
+        return "{{ entity }}{" +
+{%- for field in table.fields -%}
+{%- if loop.first %}
+        "{{ field.propertyName }}=" + {{ field.propertyName }} +
+{%- else %}
+        ", {{ field.propertyName }}=" + {{ field.propertyName }} +
+{%- endif -%}
+{%- endfor %}
         "}"
     }
 }
