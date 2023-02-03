@@ -75,25 +75,27 @@ impl ConfigBuilder {
         let fields: Result<Vec<TableField>> = fields
             .into_iter()
             .map(|field| {
+                // 属性名
                 let property_name = entity
                     .name_convert(strategy_config.clone())
                     .property_name_convert(&field)?;
+
+                // 字段类型
                 let column_type = self
                     .datasource_config
                     .get_type_convert()
                     .type_convert(&self.global_config, &field);
 
-                // 设置列名
                 let keyword_handler =
                     DefaultKeywordHandler::get_keyword_handler(self.datasource_config.db_type());
 
-                // TODO: 是否是关键字
+                // 是否是关键字
                 let is_keywords = keyword_handler
                     .as_ref()
                     .map(|handler| handler.is_keyword(&field.name))
                     .unwrap_or_default();
 
-                // 关键字处理
+                // 关键字处理，设置列名
                 let column_name = if is_keywords {
                     keyword_handler
                         .map(|handler| handler.format_column(&field.name))
