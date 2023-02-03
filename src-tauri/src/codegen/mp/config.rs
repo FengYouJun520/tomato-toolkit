@@ -7,6 +7,7 @@ use sqlx::{
 };
 use std::{
     collections::{HashMap, HashSet},
+    fmt::Display,
     path::PathBuf,
     str::FromStr,
     sync::Arc,
@@ -203,7 +204,7 @@ pub struct PackageConfig {
     /// Controller包名
     pub controller: String,
     /// 自定义路径配置信息
-    pub path_info: Option<HashMap<OutputFile, PathBuf>>,
+    pub path_info: Option<HashMap<String, PathBuf>>,
     /// 包配置信息
     pub package_infos: Option<HashMap<String, String>>,
 }
@@ -251,7 +252,7 @@ impl PackageConfig {
         }
     }
 
-    pub fn get_path_info(&self) -> Option<HashMap<OutputFile, PathBuf>> {
+    pub fn get_path_info(&self) -> Option<HashMap<String, PathBuf>> {
         self.path_info.clone()
     }
 }
@@ -622,19 +623,32 @@ pub enum OutputFile {
     Parent,
 }
 
-impl FromStr for OutputFile {
-    type Err = SerializeError;
+impl Display for OutputFile {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let res = match self {
+            OutputFile::Entity => "Entity",
+            OutputFile::Service => "Service",
+            OutputFile::ServiceImpl => "ServiceImpl",
+            OutputFile::Mapper => "Mapper",
+            OutputFile::Xml => "Xml",
+            OutputFile::Controller => "Controller",
+            OutputFile::Parent => "Parent",
+        };
 
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        match s {
-            "entity" => Ok(Self::Entity),
-            "service" => Ok(Self::Service),
-            "serviceImpl" => Ok(Self::ServiceImpl),
-            "mapper" => Ok(Self::Mapper),
-            "xml" => Ok(Self::Xml),
-            "controller" => Ok(Self::Controller),
-            "parent" => Ok(Self::Parent),
-            _ => Err(format!("不支持的输出文件类型: {}", s).into()),
+        write!(f, "{}", res)
+    }
+}
+
+impl OutputFile {
+    pub fn as_str(&self) -> &str {
+        match self {
+            OutputFile::Entity => "Entity",
+            OutputFile::Service => "Service",
+            OutputFile::ServiceImpl => "ServiceImpl",
+            OutputFile::Mapper => "Mapper",
+            OutputFile::Xml => "Xml",
+            OutputFile::Controller => "Controller",
+            OutputFile::Parent => "Parent",
         }
     }
 }

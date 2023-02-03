@@ -127,7 +127,7 @@ const handlePreview = async () => {
           </n-button>
 
           <n-button
-            type="success"
+            type="info"
             :disabled="!includes || !includes.length"
             @click="handlePreview"
           >
