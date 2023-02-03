@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Layout from '@/layout/index.vue'
-import { HomeOutline, TerminalOutline } from '@vicons/ionicons5'
+import { HomeOutline, TerminalOutline, CodeDownload, Apps } from '@vicons/ionicons5'
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -19,7 +19,7 @@ export const routes: RouteRecordRaw[] = [
         component: () => import('@/views/dashboard/index.vue'),
         meta: {
           title: '首页',
-          icon: HomeOutline,
+          icon: Apps,
         },
       },
     ],
@@ -31,7 +31,7 @@ export const routes: RouteRecordRaw[] = [
     component: Layout,
     meta: {
       title: '代码生成器',
-      icon: HomeOutline,
+      icon: CodeDownload,
     },
     children: [
       {

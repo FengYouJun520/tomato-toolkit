@@ -169,6 +169,7 @@ impl DbQuery for SqliteQuery {
                 let not_null: u8 = row.get(3);
                 let primary: u8 = row.get(5);
                 let r#type: String = row.get(2);
+                // TODO: 是否自增
                 let auto_increment = r#type.to_lowercase() == "integer" && primary == 1;
                 Field {
                     name: row.get(1),
@@ -290,6 +291,7 @@ ORDER BY A.attnum;"#,
                     is_nullable: not_null == 0,
                     length: row.get(3),
                     key_flag: primary == "PRI",
+                    // TODO: 是否自增
                     auto_increment: false,
                     default_value: None,
                 }

@@ -133,9 +133,13 @@ impl ConfigBuilder {
                     .key_identity_flag(field.auto_increment)
                     .build()?;
 
+                // 设置字段填充
                 field.set_fill();
+                // 设置属性名称
                 field.set_property_name(&property_name, column_type);
+                // 设置乐观锁字段
                 field.set_version_field();
+                // 设置逻辑删除字段
                 field.set_logic_delete_field();
 
                 Ok(field)
