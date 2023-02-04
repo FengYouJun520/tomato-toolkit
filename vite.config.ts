@@ -19,6 +19,7 @@ export default defineConfig({
       imports: [
         'vue',
         'pinia',
+        '@vueuse/core',
         {
           'naive-ui': [
             'useDialog',

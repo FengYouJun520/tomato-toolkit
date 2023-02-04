@@ -2,7 +2,7 @@ import { DataType, GlobalConfig } from '@/types/type'
 
 export const useGlobalConfigStore = defineStore('globalConfigState', {
   state: (): GlobalConfig => ({
-    outputDir: 'D://',
+    outputDir: 'D:\\',
     open: false,
     author: 'baomidou',
     kotlin: false,

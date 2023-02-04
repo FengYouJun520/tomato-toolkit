@@ -22,6 +22,17 @@
       "fs": {
         "all": true,
         "scope": ["$RESOURCE/*"]
+      },
+      "dialog": {
+        "all": false,
+        "ask": false,
+        "confirm": false,
+        "message": false,
+        "open": true,
+        "save": false
+      },
+      "clipboard": {
+        "all": true
       }
     },
     "bundle": {

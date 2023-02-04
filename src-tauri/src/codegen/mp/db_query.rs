@@ -170,7 +170,7 @@ impl DbQuery for SqliteQuery {
                 let primary: u8 = row.get(5);
                 let r#type: String = row.get(2);
                 // TODO: 是否自增
-                let auto_increment = r#type.to_lowercase() == "integer" && primary == 1;
+                // let auto_increment = r#type.to_lowercase() == "integer" && primary == 1;
                 Field {
                     name: row.get(1),
                     comment: None,
@@ -178,8 +178,8 @@ impl DbQuery for SqliteQuery {
                     length: None,
                     is_nullable: not_null == 0,
                     key_flag: primary == 1,
-                    default_value: None,
-                    auto_increment,
+                    default_value: row.get(4),
+                    auto_increment: false,
                 }
             })
             .collect();

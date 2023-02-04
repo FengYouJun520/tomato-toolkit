@@ -204,7 +204,7 @@ pub struct PackageConfig {
     /// Controller包名
     pub controller: String,
     /// 自定义路径配置信息
-    pub path_info: Option<HashMap<String, PathBuf>>,
+    pub path_info: Option<HashMap<OutputFile, PathBuf>>,
     /// 包配置信息
     pub package_infos: Option<HashMap<String, String>>,
 }
@@ -252,7 +252,7 @@ impl PackageConfig {
         }
     }
 
-    pub fn get_path_info(&self) -> Option<HashMap<String, PathBuf>> {
+    pub fn get_path_info(&self) -> Option<HashMap<OutputFile, PathBuf>> {
         self.path_info.clone()
     }
 }
@@ -349,7 +349,7 @@ impl TemplateConfig {
 #[serde(rename_all = "camelCase")]
 pub struct CustomFile {
     pub file_name: String,
-    pub template_path: String,
+    pub template_path: PathBuf,
     pub package_name: String,
     pub file_path: PathBuf,
     pub file_override: bool,

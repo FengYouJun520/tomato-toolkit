@@ -22,17 +22,18 @@ const options: SelectOption[] = [
     value: 'mysql',
   },
   {
-    label: 'sqlite',
+    label: 'sqlite（大致做完了，但不一定正确）',
     value: 'sqlite',
   },
   {
-    label: 'sqlserver（目前不支持）',
+    label: 'sqlserver',
     value: 'sqlserver',
     disabled: true,
   },
   {
-    label: 'postgressql（未经过测试，有可能失败）',
+    label: 'postgressql',
     value: 'postgressql',
+    disabled: true,
   },
 ]
 

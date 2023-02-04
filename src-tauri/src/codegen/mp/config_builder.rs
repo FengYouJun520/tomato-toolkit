@@ -23,7 +23,7 @@ pub struct ConfigBuilder {
     pub global_config: GlobalConfig,
     pub injection_config: Option<InjectConfig>,
     pub table_infos: Vec<TableInfo>,
-    pub path_info: HashMap<String, PathBuf>,
+    pub path_info: HashMap<OutputFile, PathBuf>,
     #[serde(skip)]
     pub db_query: Arc<dyn DbQuery>,
 }
@@ -158,7 +158,7 @@ impl ConfigBuilder {
 struct PathInfoHandler<'a> {
     out_dir: PathBuf,
     package: &'a PackageConfig,
-    path_info: HashMap<String, PathBuf>,
+    path_info: HashMap<OutputFile, PathBuf>,
 }
 
 impl<'a> PathInfoHandler<'a> {
@@ -176,14 +176,12 @@ impl<'a> PathInfoHandler<'a> {
 
         path_info_handler.set_default_path_info(global, template, resource_path);
 
-        // 覆盖自定义路径
         let Some(path_info) = package.get_path_info() else  {
             return path_info_handler;
         };
 
-        // TODO: 存储自定义路径信息
+        // 覆盖自定义路径，存储自定义路径信息
         // e.g. "Controller": "D://com/blog/model/controller",
-
         if !path_info.is_empty() {
             path_info_handler.path_info.extend(path_info);
         }
@@ -191,7 +189,7 @@ impl<'a> PathInfoHandler<'a> {
         path_info_handler
     }
 
-    pub fn get_path_info(&self) -> &HashMap<String, PathBuf> {
+    pub fn get_path_info(&self) -> &HashMap<OutputFile, PathBuf> {
         &self.path_info
     }
 
@@ -207,38 +205,38 @@ impl<'a> PathInfoHandler<'a> {
                 resource_path.join("entity.java"),
                 resource_path.join("entity.kt.java"),
             ),
-            OutputFile::Entity.as_str(),
+            OutputFile::Entity,
             "Entity",
         );
         self.put_path_info(
             template.get_controller(resource_path.join("controller.java")),
-            OutputFile::Controller.as_str(),
+            OutputFile::Controller,
             "Controller",
         );
         self.put_path_info(
             template.get_mapper(resource_path.join("mapper.java")),
-            OutputFile::Mapper.as_str(),
+            OutputFile::Mapper,
             "Mapper",
         );
         self.put_path_info(
             template.get_controller(resource_path.join("mapper.xml")),
-            OutputFile::Xml.as_str(),
+            OutputFile::Xml,
             "Xml",
         );
         self.put_path_info(
             template.get_service(resource_path.join("service.java")),
-            OutputFile::Service.as_str(),
+            OutputFile::Service,
             "Service",
         );
         self.put_path_info(
             template.get_service_impl(resource_path.join("service.impl.java")),
-            OutputFile::ServiceImpl.as_str(),
+            OutputFile::ServiceImpl,
             "ServiceImpl",
         );
-        self.add_path_info(OutputFile::Parent.as_str(), "Parent");
+        self.add_path_info(OutputFile::Parent, "Parent");
     }
 
-    fn put_path_info(&mut self, template: Option<PathBuf>, output_file: &str, module: &str) {
+    fn put_path_info(&mut self, template: Option<PathBuf>, output_file: OutputFile, module: &str) {
         let Some(template) = template else {
             return
         };
@@ -249,9 +247,9 @@ impl<'a> PathInfoHandler<'a> {
         self.add_path_info(output_file, module);
     }
 
-    pub fn add_path_info(&mut self, output_file: &str, module: &str) {
+    pub fn add_path_info(&mut self, output_file: OutputFile, module: &str) {
         let module = self.package.get_package_info(module).unwrap_or("".into());
-        let entry = self.path_info.entry(output_file.to_string());
+        let entry = self.path_info.entry(output_file);
         let out = PathInfoHandler::join_path(self.out_dir.clone(), &module);
         entry.or_insert(out);
     }

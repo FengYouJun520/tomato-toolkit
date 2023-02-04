@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStrategyConfigStore } from '@/store/modules/mp/strategyconfig'
-import { NTag, SelectOption, SelectRenderLabel, SelectRenderTag } from 'naive-ui'
+import { NTag, SelectOption, SelectRenderLabel, SelectRenderTag, NModal } from 'naive-ui'
 import { useTables } from '../useTables'
 import EntityConfig from './EntityConfig.vue'
 import ControllerConfig from './ControllerConfig.vue'
@@ -11,7 +11,7 @@ import { useGlobalConfigStore } from '@/store/modules/mp/globalconfig'
 import { usePackageConfigStore } from '@/store/modules/mp/packageconfig'
 import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
 import { useDatasourceStore } from '@/store/modules/mp/datasource'
-import { invoke } from '@tauri-apps/api'
+import { clipboard, invoke } from '@tauri-apps/api'
 import VueJsonPretty from 'vue-json-pretty'
 
 const message = useMessage()
@@ -22,8 +22,6 @@ const templateConfigStore = useTemplateConfigStore()
 const strategyConfigStore = useStrategyConfigStore()
 const tablesContext = useTables()
 
-const showPreview = ref(false)
-const contextData = ref<Record<string, any>>({})
 const includes = ref<string[]>([])
 const excludes = ref<string[]>([])
 
@@ -93,6 +91,15 @@ const renderTag: SelectRenderTag = ({ option, handleClose }) => h(
   { default: () => option.label }
 )
 
+const showPreview = ref(false)
+const modelRef = ref<InstanceType<typeof NModal>|null>(null)
+const contextData = ref<Record<string, any>>({})
+const previewHeight = ref(650)
+const { height } = useElementSize(modelRef)
+watch(height, newHeight => {
+  previewHeight.value = newHeight
+})
+
 const handlePreview = async () => {
   try {
     const config: MpConfig = {
@@ -105,10 +112,17 @@ const handlePreview = async () => {
     const data = await invoke<Record<string, any>>('generate_preview', { config })
     contextData.value = data
     showPreview.value = true
-    console.log(contextData.value)
   } catch (error) {
     message.error(error as string)
     showPreview.value = false
+  }
+}
+
+const copyContextData = async () => {
+  try {
+    clipboard.writeText(JSON.stringify(contextData.value, null, 2))
+  } catch (error) {
+    message.error(error as string)
   }
 }
 </script>
@@ -220,22 +234,27 @@ const handlePreview = async () => {
       </n-tab-pane>
     </n-tabs>
 
-    <n-modal
+    <NModal
       v-model:show="showPreview"
       title="查看生成预览的数据"
-      style="width: 70%;"
+      style="width: 70%;height: 90vh;"
     >
-      <n-card>
+      <n-card ref="modelRef">
         <VueJsonPretty
           :data="contextData"
-          :height="700"
+          :height="previewHeight - 100"
           virtual
           show-icon
           show-line
           show-line-number
         />
+        <template #footer>
+          <n-button type="info" @click="copyContextData">
+            复制
+          </n-button>
+        </template>
       </n-card>
-    </n-modal>
+    </NModal>
   </div>
 </template>
 

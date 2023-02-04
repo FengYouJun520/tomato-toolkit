@@ -1,11 +1,23 @@
 <script setup lang="ts">
 import { useGlobalConfigStore } from '@/store/modules/mp/globalconfig'
+import { dialog } from '@tauri-apps/api'
 
 
 const globalConfigStore = useGlobalConfigStore()
 
 const handleReset = () => {
   globalConfigStore.$reset()
+}
+
+const selectDirectory = async () => {
+  const outputDir = await dialog.open({
+    directory: true,
+    title: '选择输出目录',
+  })
+
+  if (outputDir) {
+    globalConfigStore.outputDir = outputDir as string
+  }
 }
 </script>
 
@@ -89,6 +101,9 @@ const handleReset = () => {
     </n-grid>
     <n-form-item label="输出目录">
       <n-input v-model:value="globalConfigStore.outputDir" />
+      <n-button type="info" @click="selectDirectory">
+        选择目录
+      </n-button>
     </n-form-item>
   </n-form>
 </template>

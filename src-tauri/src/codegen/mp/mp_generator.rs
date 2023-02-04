@@ -17,9 +17,12 @@ use super::{
 };
 
 pub struct MpGenerator {
+    /// 配置信息
     config: ConfigBuilder,
+    /// 模板渲染引擎实例
     tera_template: Tera,
-    template_path: HashMap<String, PathBuf>,
+    /// 存储模板名称列表
+    template_names: HashMap<String, PathBuf>,
 }
 
 impl MpGenerator {
@@ -29,7 +32,7 @@ impl MpGenerator {
         let mut generate = Self {
             config,
             tera_template: Tera::default(),
-            template_path: HashMap::new(),
+            template_names: HashMap::new(),
         };
 
         generate.init_template(resource_path)?;
@@ -40,7 +43,8 @@ impl MpGenerator {
     pub fn init_template(&mut self, resource_path: PathBuf) -> Result<()> {
         let config = &self.config;
         let tc = &config.template_config;
-        let mut tempate_path = HashMap::new();
+        // 模板名称列表
+        let mut tempate_names = HashMap::new();
         let is_kotlin = self.config.global_config.kotlin;
 
         if let Some(entity) = tc.get_entity(
@@ -50,45 +54,44 @@ impl MpGenerator {
         ) {
             self.tera_template
                 .add_template_file(&entity, entity.to_str())?;
-            tempate_path.insert(OutputFile::Entity.to_string(), entity);
+            tempate_names.insert(OutputFile::Entity.to_string(), entity);
         }
         if let Some(controller) = tc.get_controller(resource_path.join("controller.java")) {
             self.tera_template
                 .add_template_file(&controller, controller.to_str())?;
-            tempate_path.insert(OutputFile::Controller.to_string(), controller);
+            tempate_names.insert(OutputFile::Controller.to_string(), controller);
         }
         if let Some(mapper) = tc.get_mapper(resource_path.join("mapper.java")) {
             self.tera_template
                 .add_template_file(&mapper, mapper.to_str())?;
-            tempate_path.insert(OutputFile::Mapper.to_string(), mapper);
+            tempate_names.insert(OutputFile::Mapper.to_string(), mapper);
         }
         if let Some(xml) = tc.get_xml(resource_path.join("mapper.xml")) {
             self.tera_template.add_template_file(&xml, xml.to_str())?;
-            tempate_path.insert(OutputFile::Xml.to_string(), xml);
+            tempate_names.insert(OutputFile::Xml.to_string(), xml);
         }
         if let Some(service) = tc.get_service(resource_path.join("service.java")) {
             self.tera_template
                 .add_template_file(&service, service.to_str())?;
-            tempate_path.insert(OutputFile::Service.to_string(), service);
+            tempate_names.insert(OutputFile::Service.to_string(), service);
         }
         if let Some(service_impl) = tc.get_service_impl(resource_path.join("serviceImpl.java")) {
             self.tera_template
                 .add_template_file(&service_impl, service_impl.to_str())?;
-            tempate_path.insert(OutputFile::ServiceImpl.to_string(), service_impl);
+            tempate_names.insert(OutputFile::ServiceImpl.to_string(), service_impl);
         }
+
+        self.template_names = tempate_names;
 
         // 添加自定义模板路径
         if let Some(ref injection) = config.injection_config {
             for custom_file in injection.custom_files.iter() {
                 self.tera_template.add_template_file(
-                    custom_file.file_path.clone(),
-                    Some(&custom_file.file_name),
+                    custom_file.template_path.clone(),
+                    Some(&custom_file.template_path.to_string_lossy()),
                 )?;
-                tempate_path.insert(custom_file.file_name.clone(), custom_file.file_path.clone());
             }
         }
-
-        self.template_path = tempate_path;
 
         Ok(())
     }
@@ -167,15 +170,20 @@ impl MpGenerator {
         let entity_path = self
             .config
             .path_info
-            .get(OutputFile::Entity.as_str())
+            .get(&OutputFile::Entity)
             .ok_or(SerializeError::from("实体模板文件路径未找到"))?;
 
         let file_override = self.config.strategy_config.entity.file_override;
         if !entity_name.is_empty() && !entity_path.to_string_lossy().is_empty() {
-            if let Some(entity) = self.get_template_path(OutputFile::Entity.as_str()) {
+            if let Some(entity) = self.get_template_name(OutputFile::Entity.as_str()) {
                 let entity_file =
                     entity_path.join(format!("{}{}", entity_name, self.file_suffix()));
-                self.output_file(entity_file, entity.to_path_buf(), context, file_override)?;
+                self.output_file(
+                    entity_file,
+                    &entity.to_string_lossy(),
+                    context,
+                    file_override,
+                )?;
             }
         }
 
@@ -191,14 +199,19 @@ impl MpGenerator {
         let mapper_path = self
             .config
             .path_info
-            .get(OutputFile::Mapper.as_str())
+            .get(&OutputFile::Mapper)
             .ok_or(SerializeError::from("mapper模板文件路径未找到"))?;
 
         let file_override = self.config.strategy_config.mapper.file_override;
         if !mapper_name.is_empty() && !mapper_path.to_string_lossy().is_empty() {
-            if let Some(mapper) = self.get_template_path(OutputFile::Mapper.as_str()) {
+            if let Some(mapper) = self.get_template_name(OutputFile::Mapper.as_str()) {
                 let mapper_file = mapper_path.join(format!("{}{}", mapper_name, suffix));
-                self.output_file(mapper_file, mapper.to_path_buf(), context, file_override)?;
+                self.output_file(
+                    mapper_file,
+                    &mapper.to_string_lossy(),
+                    context,
+                    file_override,
+                )?;
             }
         }
 
@@ -207,12 +220,12 @@ impl MpGenerator {
         let xml_path = self
             .config
             .path_info
-            .get(OutputFile::Xml.as_str())
+            .get(&OutputFile::Xml)
             .ok_or(SerializeError::from("xml模板文件路径未找到"))?;
         if !xml_name.is_empty() && !xml_path.to_string_lossy().is_empty() {
-            if let Some(xml) = self.get_template_path(OutputFile::Xml.as_str()) {
+            if let Some(xml) = self.get_template_name(OutputFile::Xml.as_str()) {
                 let xml_file = xml_path.join(format!("{xml_name}.xml"));
-                self.output_file(xml_file, xml.to_path_buf(), context, file_override)?;
+                self.output_file(xml_file, &xml.to_string_lossy(), context, file_override)?;
             }
         }
 
@@ -228,14 +241,19 @@ impl MpGenerator {
         let service_path = self
             .config
             .path_info
-            .get(OutputFile::Service.as_str())
+            .get(&OutputFile::Service)
             .ok_or(SerializeError::from("service模板文件路径未找到"))?;
 
         let file_override = self.config.strategy_config.service.file_override;
         if !service_name.is_empty() && !service_path.to_string_lossy().is_empty() {
-            if let Some(service) = self.get_template_path(OutputFile::Service.as_str()) {
+            if let Some(service) = self.get_template_name(OutputFile::Service.as_str()) {
                 let service_file = service_path.join(format!("{}{}", service_name, suffix));
-                self.output_file(service_file, service.to_path_buf(), context, file_override)?;
+                self.output_file(
+                    service_file,
+                    &service.to_string_lossy(),
+                    context,
+                    file_override,
+                )?;
             }
         }
 
@@ -244,15 +262,15 @@ impl MpGenerator {
         let service_impl_path = self
             .config
             .path_info
-            .get(OutputFile::ServiceImpl.as_str())
+            .get(&OutputFile::ServiceImpl)
             .ok_or(SerializeError::from("ServiceImpl模板文件路径未找到"))?;
         if !service_impl_name.is_empty() && !service_impl_path.to_string_lossy().is_empty() {
-            if let Some(service_impl) = self.get_template_path(OutputFile::ServiceImpl.as_str()) {
+            if let Some(service_impl) = self.get_template_name(OutputFile::ServiceImpl.as_str()) {
                 let service_impl_file =
                     service_impl_path.join(format!("{}{}", service_impl_name, suffix));
                 self.output_file(
                     service_impl_file,
-                    service_impl.to_path_buf(),
+                    &service_impl.to_string_lossy(),
                     context,
                     file_override,
                 )?;
@@ -268,17 +286,17 @@ impl MpGenerator {
         let controller_path = self
             .config
             .path_info
-            .get(OutputFile::Controller.as_str())
+            .get(&OutputFile::Controller)
             .ok_or(SerializeError::from("Controller模板文件路径未找到"))?;
 
         let file_override = self.config.strategy_config.controller.file_override;
         if !controller_name.is_empty() && !controller_path.to_string_lossy().is_empty() {
-            if let Some(controller) = self.get_template_path(OutputFile::Controller.as_str()) {
+            if let Some(controller) = self.get_template_name(OutputFile::Controller.as_str()) {
                 let controller_file =
                     controller_path.join(format!("{}{}", controller_name, self.file_suffix()));
                 self.output_file(
                     controller_file,
-                    controller.to_path_buf(),
+                    &controller.to_string_lossy(),
                     context,
                     file_override,
                 )?;
@@ -314,8 +332,27 @@ impl MpGenerator {
 
         self.before_output_file(&injection.custom_map, table_info, context)?;
 
-        // TODO: 输出文件
-        for _custom_file in injection.custom_files.iter() {}
+        let entity_name = &table_info.entity_name;
+        let parent_path = self.config.path_info.get(&OutputFile::Parent);
+
+        for file in injection.custom_files.iter() {
+            let mut file_path = if file.file_path.to_string_lossy().is_empty() {
+                file.file_path.clone()
+            } else {
+                parent_path.cloned().unwrap_or(PathBuf::from(""))
+            };
+            if !file.package_name.is_empty() {
+                file_path.push(&file.package_name);
+            }
+
+            let file_name = file_path.join(format!("{}{}", entity_name, file.file_name));
+            self.output_file(
+                file_name,
+                &file.template_path.to_string_lossy(),
+                context,
+                file.file_override,
+            )?;
+        }
         Ok(())
     }
 
@@ -327,14 +364,21 @@ impl MpGenerator {
         }
     }
 
-    fn get_template_path(&self, output_file: &str) -> Option<&PathBuf> {
-        self.template_path.get(output_file)
+    /// 获取模板路径名称
+    fn get_template_name(&self, output_file: &str) -> Option<&PathBuf> {
+        self.template_names.get(output_file)
     }
 
+    /// 输出渲染后的文件
+    ///
+    /// - file: 文件路径
+    /// - template_path: 模板名称
+    /// - context: 模板上下文数据
+    /// - file_override: 是否覆盖已有文件
     fn output_file<P: AsRef<Path>>(
         &self,
         file: P,
-        template_path: P,
+        template_name: &str,
         context: &tera::Context,
         file_override: bool,
     ) -> Result<()> {
@@ -345,20 +389,25 @@ impl MpGenerator {
                 std::fs::create_dir_all(parent_file)?;
             }
 
-            self.write(file, template_path, context)?;
+            self.write(file, template_name, context)?;
         }
         Ok(())
     }
 
+    /// 是否需要覆盖文件
     fn is_create<P: AsRef<Path>>(&self, file: P, file_override: bool) -> bool {
         !file.as_ref().exists() || file_override
     }
 
     /// 渲染模板引擎数据
+    ///
+    /// - file: 文件路径
+    /// - template_path: 模板名称
+    /// - context: 模板上下文数据
     fn write<P: AsRef<Path>>(
         &self,
         file: P,
-        template_path: P,
+        template_name: &str,
         context: &tera::Context,
     ) -> Result<()> {
         let file = OpenOptions::new()
@@ -367,15 +416,7 @@ impl MpGenerator {
             .create(true)
             .open(file)?;
 
-        let template_path =
-            template_path
-                .as_ref()
-                .to_str()
-                .ok_or(SerializeError::from(format!(
-                    "模板文件路径不存在: {:?}",
-                    template_path.as_ref()
-                )))?;
-        self.tera_template.render_to(template_path, context, file)?;
+        self.tera_template.render_to(template_name, context, file)?;
         Ok(())
     }
 }
