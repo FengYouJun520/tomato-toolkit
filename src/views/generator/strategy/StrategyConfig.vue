@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStrategyConfigStore } from '@/store/modules/mp/strategyconfig'
-import { NTag, SelectOption, SelectRenderLabel, SelectRenderTag, NModal } from 'naive-ui'
+import { NTag, SelectOption, SelectRenderLabel, SelectRenderTag, NModal, NCard } from 'naive-ui'
 import { useTables } from '../useTables'
 import EntityConfig from './EntityConfig.vue'
 import ControllerConfig from './ControllerConfig.vue'
@@ -94,13 +94,9 @@ const renderTag: SelectRenderTag = ({ option, handleClose }) => h(
 )
 
 const showPreview = ref(false)
-const modelRef = ref<InstanceType<typeof NModal>|null>(null)
+const modelRef = ref<InstanceType<typeof NCard>|null>(null)
 const contextData = ref<Record<string, any>>({})
-const previewHeight = ref(650)
 const { height } = useElementSize(modelRef)
-watch(height, newHeight => {
-  previewHeight.value = newHeight
-})
 
 const handlePreview = async () => {
   try {
@@ -242,10 +238,10 @@ const copyContextData = async () => {
       title="查看生成预览的数据"
       style="width: 70%;height: 90vh;"
     >
-      <n-card ref="modelRef">
+      <NCard ref="modelRef">
         <VueJsonPretty
           :data="contextData"
-          :height="previewHeight - 100"
+          :height="height - 100"
           virtual
           show-icon
           show-line
@@ -256,7 +252,7 @@ const copyContextData = async () => {
             复制
           </n-button>
         </template>
-      </n-card>
+      </NCard>
     </NModal>
   </div>
 </template>

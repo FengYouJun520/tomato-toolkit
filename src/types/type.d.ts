@@ -45,6 +45,7 @@ export interface CustomFile {
   packageName: string,
   filePath: string,
   fileOverride: bool,
+  addEntityPrefix: boolean
 }
 
 export type DataType = 'ONLY_DATE' | 'SQL_PACK' | 'TIME_PACK'

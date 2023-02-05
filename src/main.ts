@@ -3,6 +3,7 @@ import './index.css'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import './userWorker'
 import 'vfonts/FiraCode.css'
 import 'vue-json-pretty/lib/styles.css'
 

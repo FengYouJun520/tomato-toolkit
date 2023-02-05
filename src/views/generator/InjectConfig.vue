@@ -7,14 +7,16 @@ import {
   DataTableColumns,
   FormRules,
   NButton,
+  NCard,
   NForm,
   NIcon,
+  NModal,
   NPopconfirm,
   NSpace,
   NTag,
 } from 'naive-ui'
 import { EditOutlined, DeleteOutlined } from '@vicons/antd'
-
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 import { v4 } from 'uuid'
 
 const initialModel: CustomFile = {
@@ -24,6 +26,7 @@ const initialModel: CustomFile = {
   templatePath: '',
   filePath: '',
   packageName: '',
+  addEntityPrefix: true,
 }
 
 const message = useMessage()
@@ -35,10 +38,16 @@ const columns: DataTableColumns<CustomFile> = [
   {
     title: '模板路径',
     key: 'templatePath',
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
     title: '输出路径',
     key: 'filePath',
+    ellipsis: {
+      tooltip: true,
+    },
     render: row => h(
       NTag,
       {
@@ -60,14 +69,25 @@ const columns: DataTableColumns<CustomFile> = [
   {
     title: '是否覆盖',
     key: 'fileOverride',
+    width: 80,
     render: row => h(
-      NTag, { type: row.fileOverride ? 'success' : 'error' },
+      NTag, { type: row.fileOverride ? 'success' : 'warning' },
       { default: () => row.fileOverride ? '是' : '否' }
+    ),
+  },
+  {
+    title: 'entity前缀',
+    key: 'addEntityPrefix',
+    width: 100,
+    render: row => h(
+      NTag, { type: row.addEntityPrefix ? 'success' : 'warning' },
+      { default: () => row.addEntityPrefix ? '添加' : '去除' }
     ),
   },
   {
     key: 'actions',
     title: '操作',
+    fixed: 'right',
     render: row => h(
       NSpace,
       () => [
@@ -143,6 +163,7 @@ const handleEditClick = () => {
   title.value = '编辑自定义文件'
 }
 
+
 const resetModel = () => {
   Object.assign(model, { ...initialModel })
 }
@@ -154,7 +175,7 @@ const handleCloseModal = () => {
 const selectTemplatePath = async () => {
   const templatePath = await dialog.open({
     title: '选择模板路径',
-    defaultPath: unref(outputDir),
+    defaultPath: model.templatePath || unref(outputDir),
   })
 
   model.templatePath = templatePath as string
@@ -189,6 +210,69 @@ const handleConfirm = () => {
     showModal.value = false
   })
 }
+
+// 自定义数据
+let monacoEditor: monaco.editor.IStandaloneCodeEditor
+const monacoRef = ref<HTMLDivElement | null>(null)
+const customMap = ref('')
+const showCustomMap = ref(false)
+
+const handleAddCustomDataClick = () => {
+  showCustomMap.value = true
+}
+
+const handleSaveCustomMap = () => {
+  injectConfigStore.addCustomData(JSON.parse(monacoEditor.getValue()))
+}
+
+const handleCloseCustomMap = () => {
+  if (monacoEditor) {
+    monacoEditor.dispose()
+  }
+}
+
+const handleAfterEnter = () => {
+  customMap.value = JSON.stringify(injectConfigStore.customMap, null, 2)
+
+  monacoEditor = monaco.editor.create(monacoRef.value!, {
+    value: unref(customMap),
+    theme: 'vs-dark',
+    language: 'json',
+    links: false,
+    cursorStyle: 'line',
+    lineNumbers: 'on',
+    contextmenu: false,
+    tabSize: 2,
+    fontSize: 18,
+    showFoldingControls: 'always',
+    wordWrap: 'on',
+    wrappingIndent: 'indent',
+    renderLineHighlight: 'none',
+    occurrencesHighlight: false,
+    scrollBeyondLastLine: false,
+    hideCursorInOverviewRuler: true,
+    folding: true,
+    colorDecorators: false,
+    minimap: {
+      enabled: true,
+    },
+    guides: {
+      indentation: true,
+      highlightActiveIndentation: true,
+      bracketPairs: true,
+    },
+    scrollbar: {
+      useShadows: false,
+      verticalScrollbarSize: 10,
+      horizontalScrollbarSize: 10,
+    },
+    wordWrapOverride2: 'off',
+  })
+}
+
+useResizeObserver(document.body, () => {
+  monacoEditor && monacoEditor.layout()
+})
 </script>
 
 <template>
@@ -197,16 +281,20 @@ const handleConfirm = () => {
       <NButton type="primary" @click="handleNewClick">
         新建
       </NButton>
+      <NButton type="primary" @click="handleAddCustomDataClick">
+        添加数据
+      </NButton>
     </NSpace>
 
     <n-data-table
+      striped
       :columns="columns"
       :data="data"
-      :bordered="false"
+      :max-height="250"
     />
   </div>
 
-  <n-modal
+  <NModal
     :show="showModal"
     :title="title"
     style="width: 70%;"
@@ -265,10 +353,36 @@ const handleConfirm = () => {
             <n-radio-button label="关闭" :value="false" />
           </n-radio-group>
         </n-form-item-gi>
+        <n-form-item-gi label="是否添加entity前缀" path="addEntityPrefix">
+          <n-radio-group v-model:value="model.addEntityPrefix">
+            <n-radio-button label="开启" :value="true" />
+            <n-radio-button label="关闭" :value="false" />
+          </n-radio-group>
+        </n-form-item-gi>
       </n-grid>
     </NForm>
-  </n-modal>
+  </NModal>
+
+  <NModal
+    v-model:show="showCustomMap"
+    title="添加自定义数据"
+    preset="dialog"
+    style="width: 70%;height: 90vh;"
+    positive-text="确定"
+    :positive-button-props="{
+      size: 'medium',
+    }"
+    @positive-click="handleSaveCustomMap"
+    @after-leave="handleCloseCustomMap"
+    @after-enter="handleAfterEnter"
+  >
+    <div ref="monacoRef" class="monaco-editor" />
+  </NModal>
 </template>
 
 <style lang="css" scoped>
+.monaco-editor {
+  height: calc(90vh - 120px);
+  width: 100%
+}
 </style>

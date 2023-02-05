@@ -116,6 +116,10 @@ impl MpGenerator {
             contexts.extend(tera::Context::from_serialize(context_data)?);
         }
 
+        if let Some(ref injection) = self.config.injection_config {
+            contexts.extend(tera::Context::from_serialize(&injection.custom_map)?);
+        }
+
         Ok(contexts.into_json())
     }
 
@@ -342,12 +346,17 @@ impl MpGenerator {
                 file.file_path.clone()
             };
             if !file.package_name.is_empty() {
-                file_path.push(&file.package_name);
+                file_path.push(file.package_name.replace('.', "/"));
             }
 
-            let file_name = file_path.join(format!("{}{}", entity_name, file.file_name));
+            if file.add_entity_prefix {
+                file_path.push(format!("{}{}", entity_name, &file.file_name));
+            } else {
+                file_path.push(&file.file_name);
+            }
+
             self.output_file(
-                file_name,
+                file_path,
                 &file.template_path.to_string_lossy(),
                 context,
                 file.file_override,

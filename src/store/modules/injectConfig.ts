@@ -1,4 +1,5 @@
 import { CustomFile, InjectConfig } from '@/types/type'
+import { logDark } from 'naive-ui'
 
 export const useInjectConfigStore = defineStore('injectConfigState', {
   state: (): InjectConfig => ({
@@ -6,8 +7,14 @@ export const useInjectConfigStore = defineStore('injectConfigState', {
     customFiles: [],
   }),
   actions: {
-    addCustomData(key: string, value: any) {
-      this.customMap[key] = value
+    addCustomData(custom: Record<string, unknown>) {
+      console.log(custom)
+
+      this.customMap = {
+        ...this.customMap,
+        ...custom,
+      }
+      console.log(this.customMap)
     },
     addCustomFile(custom: CustomFile) {
       this.customFiles.push({ ...custom })
@@ -18,9 +25,6 @@ export const useInjectConfigStore = defineStore('injectConfigState', {
         return
       }
       this.customFiles.splice(index, 1, { ...custom })
-    },
-    removeCustomData(key: string) {
-      this.customMap[key] = undefined
     },
     removeCustomFile(id: string){
       const index = this.customFiles.findIndex(c => c.id === id)
