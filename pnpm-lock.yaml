@@ -6,6 +6,7 @@ specifiers:
   '@tauri-apps/api': ^1.2.0
   '@tauri-apps/cli': ^1.2.3
   '@types/node': ^18.11.18
+  '@types/uuid': ^9.0.0
   '@typescript-eslint/eslint-plugin': ^5.48.2
   '@typescript-eslint/parser': ^5.48.2
   '@vicons/antd': ^0.12.0
@@ -20,12 +21,13 @@ specifiers:
   monaco-editor: ^0.34.1
   naive-ui: ^2.34.3
   pinia: ^2.0.29
-  pinia-plugin-persistedstate-2: ^2.0.10
+  pinia-plugin-persistedstate: ^3.0.2
   postcss: ^8.4.21
   tailwindcss: ^3.2.4
   typescript: ^4.9.4
   unplugin-auto-import: ^0.12.1
   unplugin-vue-components: ^0.22.12
+  uuid: ^9.0.0
   vfonts: ^0.0.3
   vite: ^4.0.4
   vue: ^3.2.45
@@ -38,7 +40,8 @@ dependencies:
   '@vueuse/core': 9.12.0_vue@3.2.45
   monaco-editor: 0.34.1
   pinia: 2.0.29_prq2uz4lho2pwp6irk4cfkrxwu
-  pinia-plugin-persistedstate-2: 2.0.10_pinia@2.0.29
+  pinia-plugin-persistedstate: 3.0.2_pinia@2.0.29
+  uuid: 9.0.0
   vue: 3.2.45
   vue-json-pretty: 2.2.3_vue@3.2.45
   vue-router: 4.1.6_vue@3.2.45
@@ -48,6 +51,7 @@ devDependencies:
   '@commitlint/config-conventional': 17.4.2
   '@tauri-apps/cli': 1.2.3
   '@types/node': 18.11.18
+  '@types/uuid': 9.0.0
   '@typescript-eslint/eslint-plugin': 5.48.2_caon6io6stgpr7lz2rtbhekxqy
   '@typescript-eslint/parser': 5.48.2_7uibuqfxkfaozanbtbziikiqje
   '@vicons/antd': 0.12.0
@@ -756,6 +760,10 @@ packages:
 
   /@types/semver/7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
+    dev: true
+
+  /@types/uuid/9.0.0:
+    resolution: {integrity: sha512-kr90f+ERiQtKWMz5rP32ltJ/BtULDI5RVO0uavn1HQUOwjx0R1h0rnDYNL0CepF1zL5bSY6FISAfd9tOdDhU5Q==}
     dev: true
 
   /@types/web-bluetooth/0.0.16:
@@ -2750,13 +2758,12 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /pinia-plugin-persistedstate-2/2.0.10_pinia@2.0.29:
-    resolution: {integrity: sha512-6Gg6geRbgAQDkgwI7PiFbwZNO7Ch9PySjHkweY2ppSdb4Yoyu3iepsDD5YABgSAxjY2AQb7fMLqZpL/LX2i7lQ==}
+  /pinia-plugin-persistedstate/3.0.2_pinia@2.0.29:
+    resolution: {integrity: sha512-84vPyUhPA/8Pr+1mT1ioNb2d8z4tvdgYRqMQf8xyauOVBKjo0ZcRBwPQBV7ZAJG43Kwar43nXG2jU+ZMvAFFRQ==}
     peerDependencies:
-      pinia: ^2
+      pinia: ^2.0.0
     dependencies:
       pinia: 2.0.29_prq2uz4lho2pwp6irk4cfkrxwu
-      shvl: 3.0.0
     dev: false
 
   /pinia/2.0.29_prq2uz4lho2pwp6irk4cfkrxwu:
@@ -3053,10 +3060,6 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
     dev: true
-
-  /shvl/3.0.0:
-    resolution: {integrity: sha512-5IomAM3ykE/g9K9L6lhODc+TpCuN03rrhlboegeKyyfh66DDdpRD5JN37DYhNHH+RaYjiIDx64K/Ms/xQYOR5w==}
-    dev: false
 
   /signal-exit/3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
@@ -3484,6 +3487,11 @@ packages:
   /util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
 
   /v8-compile-cache-lib/3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}

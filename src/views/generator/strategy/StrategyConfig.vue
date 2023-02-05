@@ -13,6 +13,7 @@ import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
 import { useDatasourceStore } from '@/store/modules/mp/datasource'
 import { clipboard, invoke } from '@tauri-apps/api'
 import VueJsonPretty from 'vue-json-pretty'
+import { useInjectConfigStore } from '@/store/modules/injectConfig'
 
 const message = useMessage()
 const datasourceConfigStore = useDatasourceStore()
@@ -20,6 +21,7 @@ const globalConfigStore = useGlobalConfigStore()
 const packageConfigStore = usePackageConfigStore()
 const templateConfigStore = useTemplateConfigStore()
 const strategyConfigStore = useStrategyConfigStore()
+const injectConfigStore = useInjectConfigStore()
 const tablesContext = useTables()
 
 const includes = ref<string[]>([])
@@ -108,6 +110,7 @@ const handlePreview = async () => {
       package: packageConfigStore.$state,
       template: templateConfigStore.$state,
       strategy: strategyConfigStore.$state,
+      injection: injectConfigStore.$state,
     }
     const data = await invoke<Record<string, any>>('generate_preview', { config })
     contextData.value = data

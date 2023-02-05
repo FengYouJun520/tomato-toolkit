@@ -85,7 +85,19 @@ export const useStrategyConfigStore = defineStore('strategyConfigState', {
     getService: state => state.service,
     getMapper: state => state.mapper,
   },
-  persistedState: {
-    excludePaths: ['include', 'exclude'],
+  persist: {
+    paths: ['isCapitalMode',
+      'skipView',
+      'tablePrefix',
+      'tableSuffix',
+      'fieldPrefix',
+      'fieldSuffix',
+      'enableSqlFilter',
+      'enableSchema',
+      'entity',
+      'controller',
+      'mapper',
+      'service',
+    ],
   },
 })

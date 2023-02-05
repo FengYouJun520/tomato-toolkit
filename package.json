@@ -16,7 +16,8 @@
     "@vueuse/core": "^9.12.0",
     "monaco-editor": "^0.34.1",
     "pinia": "^2.0.29",
-    "pinia-plugin-persistedstate-2": "^2.0.10",
+    "pinia-plugin-persistedstate": "^3.0.2",
+    "uuid": "^9.0.0",
     "vue": "^3.2.45",
     "vue-json-pretty": "^2.2.3",
     "vue-router": "^4.1.6"
@@ -26,6 +27,7 @@
     "@commitlint/config-conventional": "^17.4.2",
     "@tauri-apps/cli": "^1.2.3",
     "@types/node": "^18.11.18",
+    "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
     "@vicons/antd": "^0.12.0",

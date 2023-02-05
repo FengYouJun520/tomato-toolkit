@@ -16,6 +16,5 @@ export const useTemplateConfigStore = defineStore('templateConfigState', {
     disableService: false,
     disableServiceImpl: false,
   }),
-  persistedState: {
-  },
+  persist: true,
 })

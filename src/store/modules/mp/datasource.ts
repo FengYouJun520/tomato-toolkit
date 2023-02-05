@@ -9,6 +9,5 @@ export const useDatasourceStore = defineStore('datasourceConfigState', {
     username: '',
     password: '',
   }),
-  persistedState: {
-  },
+  persist: true,
 })

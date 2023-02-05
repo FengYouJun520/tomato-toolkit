@@ -11,6 +11,5 @@ export const usePackageConfigStore = defineStore('packageConfigState', {
     xml: 'mapper.xml',
     controller: 'controller',
   }),
-  persistedState: {
-  },
+  persist: true,
 })

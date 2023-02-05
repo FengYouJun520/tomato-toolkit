@@ -337,15 +337,17 @@ impl MpGenerator {
 
         for file in injection.custom_files.iter() {
             let mut file_path = if file.file_path.to_string_lossy().is_empty() {
-                file.file_path.clone()
-            } else {
                 parent_path.cloned().unwrap_or(PathBuf::from(""))
+            } else {
+                file.file_path.clone()
             };
             if !file.package_name.is_empty() {
                 file_path.push(&file.package_name);
             }
 
-            let file_name = file_path.join(format!("{}{}", entity_name, file.file_name));
+            let file_name = file_path
+                .join(format!("{}{}", entity_name, file.file_name))
+                .canonicalize()?;
             self.output_file(
                 file_name,
                 &file.template_path.to_string_lossy(),

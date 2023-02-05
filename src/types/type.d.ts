@@ -39,6 +39,7 @@ export interface InjectConfig {
 }
 
 export interface CustomFile {
+  id: string
   fileName: string,
   templatePath: string,
   packageName: string,

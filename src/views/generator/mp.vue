@@ -10,6 +10,7 @@ import { useDatasourceStore } from '@/store/modules/mp/datasource'
 import { useGlobalConfigStore } from '@/store/modules/mp/globalconfig'
 import { usePackageConfigStore } from '@/store/modules/mp/packageconfig'
 import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
+import { useInjectConfigStore } from '@/store/modules/injectConfig'
 
 const message = useMessage()
 const datasourceConfigStore = useDatasourceStore()
@@ -17,6 +18,7 @@ const globalConfigStore = useGlobalConfigStore()
 const packageConfigStore = usePackageConfigStore()
 const templateConfigStore = useTemplateConfigStore()
 const strategyConfigStore = useStrategyConfigStore()
+const injectConfigStore = useInjectConfigStore()
 const disabled = computed(() => strategyConfigStore.include.length <= 0)
 
 const tables = ref<BasicTableInfo[]>([])
@@ -31,6 +33,7 @@ const handleMpGenerate = async () => {
       package: packageConfigStore.$state,
       template: templateConfigStore.$state,
       strategy: strategyConfigStore.$state,
+      injection: injectConfigStore.$state,
     }
     await invoke('mp_codegen', { config })
     message.success('代码生成成功！')

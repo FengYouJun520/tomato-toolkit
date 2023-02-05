@@ -11,6 +11,5 @@ export const useGlobalConfigStore = defineStore('globalConfigState', {
     dateType: 'TIME_PACK',
     commentDate: '%Y-%m-%d',
   }),
-  persistedState: {
-  },
+  persist: true,
 })
