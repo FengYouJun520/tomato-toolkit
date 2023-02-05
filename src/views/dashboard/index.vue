@@ -2,7 +2,7 @@
 import tomatoIcon from '@/assets/tomato.svg'
 import { app } from '@tauri-apps/api'
 
-const version = ref('0.1.0')
+const version = ref('0.0.0')
 const name = ref('tomato')
 
 onMounted(async () => {
