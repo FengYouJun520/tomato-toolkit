@@ -107,16 +107,16 @@ impl MpGenerator {
     }
 
     /// 生成预览数据
-    pub async fn preview(&mut self) -> Result<HashMap<String, ContextData>> {
+    pub async fn preview(&mut self) -> Result<serde_json::Value> {
         let table_infos = self.config.query_tables().await?;
-        let mut contexts = HashMap::new();
+        let mut contexts = tera::Context::new();
         for table_info in table_infos {
             // 转化为模板数据
             let context_data = self.build_context(&table_info)?;
-            contexts.insert(table_info.name, context_data);
+            contexts.extend(tera::Context::from_serialize(context_data)?);
         }
 
-        Ok(contexts)
+        Ok(contexts.into_json())
     }
 
     pub async fn batch_output(&mut self) -> Result<()> {
@@ -345,9 +345,7 @@ impl MpGenerator {
                 file_path.push(&file.package_name);
             }
 
-            let file_name = file_path
-                .join(format!("{}{}", entity_name, file.file_name))
-                .canonicalize()?;
+            let file_name = file_path.join(format!("{}{}", entity_name, file.file_name));
             self.output_file(
                 file_name,
                 &file.template_path.to_string_lossy(),

@@ -86,7 +86,8 @@ export const useStrategyConfigStore = defineStore('strategyConfigState', {
     getMapper: state => state.mapper,
   },
   persist: {
-    paths: ['isCapitalMode',
+    paths: [
+      'isCapitalMode',
       'skipView',
       'tablePrefix',
       'tableSuffix',
