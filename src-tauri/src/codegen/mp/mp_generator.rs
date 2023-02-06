@@ -112,7 +112,7 @@ impl MpGenerator {
         let mut contexts = tera::Context::new();
         for table_info in table_infos {
             // 转化为模板数据
-            let context_data = self.build_context(&table_info)?;
+            let context_data = self.build_context_data(&table_info)?;
             contexts.extend(tera::Context::from_serialize(context_data)?);
         }
 
@@ -128,7 +128,7 @@ impl MpGenerator {
 
         for table_info in table_infos {
             // 转化为模板数据
-            let data = self.build_context(&table_info)?;
+            let data = self.build_context_data(&table_info)?;
             let mut context = tera::Context::from_serialize(data)?;
 
             self.output_custom_file(&table_info, &mut context)?;
@@ -140,7 +140,7 @@ impl MpGenerator {
         Ok(())
     }
 
-    pub fn build_context(&mut self, table_info: &TableInfo) -> Result<ContextData> {
+    pub fn build_context_data(&mut self, table_info: &TableInfo) -> Result<ContextData> {
         let strategy = &self.config.strategy_config;
         let global = &self.config.global_config;
         let controller_data = strategy.controller.render_data(table_info)?;
@@ -373,7 +373,7 @@ impl MpGenerator {
         }
     }
 
-    /// 获取模板路径名称
+    /// 获取模板名称
     fn get_template_name(&self, output_file: &str) -> Option<&PathBuf> {
         self.template_names.get(output_file)
     }

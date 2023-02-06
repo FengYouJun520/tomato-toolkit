@@ -122,7 +122,6 @@ const onCreate = () =>({
         />
       </n-form-item-gi>
 
-
       <n-form-item-gi label="乐观锁字段名">
         <n-input
           v-model:value="strategyconfigStore.entity.versionColumnName"
