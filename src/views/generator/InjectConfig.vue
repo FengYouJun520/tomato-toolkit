@@ -2,7 +2,7 @@
 import { useInjectConfigStore } from '@/store/modules/injectConfig'
 import { useGlobalConfigStore } from '@/store/modules/mp/globalconfig'
 import { CustomFile } from '@/types/type'
-import { dialog } from '@tauri-apps/api'
+import { dialog, shell } from '@tauri-apps/api'
 import {
   DataTableColumns,
   FormRules,
@@ -53,9 +53,7 @@ const columns: DataTableColumns<CustomFile> = [
       {
         type: row.filePath ? 'success' : 'warning',
       },
-      {
-        default: () => row.filePath || `${globalConfigStore.outputDir}（未填，默认outputDir）`,
-      }
+      () => row.filePath || `${globalConfigStore.outputDir}（未填，默为输出目录）`
     ),
   },
   {
@@ -72,7 +70,7 @@ const columns: DataTableColumns<CustomFile> = [
     width: 80,
     render: row => h(
       NTag, { type: row.fileOverride ? 'success' : 'warning' },
-      { default: () => row.fileOverride ? '是' : '否' }
+      () => row.fileOverride ? '是' : '否'
     ),
   },
   {
@@ -81,7 +79,7 @@ const columns: DataTableColumns<CustomFile> = [
     width: 100,
     render: row => h(
       NTag, { type: row.addEntityPrefix ? 'success' : 'warning' },
-      { default: () => row.addEntityPrefix ? '添加' : '去除' }
+      () => row.addEntityPrefix ? '添加' : '去除'
     ),
   },
   {
@@ -150,6 +148,10 @@ const isEdit = ref(false)
 const formRef = ref<InstanceType<typeof NForm>|null>(null)
 let model: CustomFile = reactive({ ...initialModel })
 const outputDir = computed(() => globalConfigStore.outputDir)
+
+const handleViewTemplateSyntax = async () => {
+  shell.open('https://tera.netlify.app/docs/')
+}
 
 const handleNewClick = () => {
   showModal.value = true
@@ -277,17 +279,26 @@ useResizeObserver(document.body, () => {
 
 <template>
   <div class="space-y-5">
-    <NSpace>
-      <NButton type="primary" @click="handleNewClick">
-        新建
-      </NButton>
-      <NButton type="primary" @click="handleAddCustomDataClick">
-        添加数据
-      </NButton>
-    </NSpace>
+    <div class="flex justify-between items-center">
+      <NSpace>
+        <NButton type="primary" @click="handleNewClick">
+          新建
+        </NButton>
+        <NButton type="primary" @click="handleAddCustomDataClick">
+          添加数据
+        </NButton>
+      </NSpace>
+
+      <div>
+        <NButton type="success" ghost @click="handleViewTemplateSyntax">
+          查看模板语法
+        </NButton>
+      </div>
+    </div>
 
     <n-data-table
       striped
+      :single-line="false"
       :columns="columns"
       :data="data"
       :max-height="250"

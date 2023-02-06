@@ -353,7 +353,6 @@ pub struct CustomFile {
     pub package_name: String,
     pub file_path: PathBuf,
     pub file_override: bool,
-    /// 添加entity_name前缀
     pub add_entity_prefix: bool,
 }
 

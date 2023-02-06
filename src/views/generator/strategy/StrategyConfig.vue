@@ -160,16 +160,6 @@ const copyContextData = async () => {
             </n-radio-button>
           </n-radio-group>
         </n-form-item-gi>
-        <n-form-item-gi label="跳过视图">
-          <n-radio-group v-model:value="strategyConfigStore.skipView">
-            <n-radio-button :value="true">
-              开启
-            </n-radio-button>
-            <n-radio-button :value="false">
-              关闭
-            </n-radio-button>
-          </n-radio-group>
-        </n-form-item-gi>
 
         <n-form-item-gi label="开启sql过滤">
           <n-radio-group v-model:value="strategyConfigStore.enableSqlFilter">
