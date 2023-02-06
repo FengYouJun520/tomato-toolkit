@@ -1,0 +1,26 @@
+package {{ .Package.ServiceImpl }};
+
+import {{ .Package.Entity }}.{{ .Entity }};
+import {{ .Package.Mapper }}.{{ .Table.MapperName }};
+import {{ .Package.Service }}.{{ .Table.ServiceName }};
+import {{ .SuperServiceImplClassPackage }};
+import org.springframework.stereotype.Service;
+
+/**
+ * <p>
+ * {{ .Table.Comment }} 服务实现类
+ * </p>
+ *
+ * @author {{ .Author }}
+ * @since {{ .Date }}
+ */
+@Service
+{{- if .Kotlin }}
+open class {{ .Table.ServiceImplName }} : {{ .SuperServiceImplClass }}<{{ .Table.MapperName }}, {{ .Entity }}>(), {{ .Table.ServiceName }} {
+
+}
+{{- else }}
+public class {{ .Table.ServiceImplName }} extends {{ .SuperServiceImplClass }}<{{ .Table.MapperName }}, {{ .Entity }}> implements {{ .Table.ServiceName }} {
+
+}
+{{- end }}

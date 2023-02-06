@@ -1,0 +1,26 @@
+package {{ .Package.Mapper }};
+
+import {{ .Package.Entity }}.{{ .Entity }};
+import {{ .SuperMapperClassPackage }};
+{{- if .MapperAnnotation }}
+import org.apache.ibatis.annotations.Mapper;
+{{- end }}
+
+/**
+ * <p>
+ * {{ .Table.Comment }} Mapper 接口
+ * </p>
+ *
+ * @author {{ .Author }}
+ * @since {{ .Date }}
+ */
+{{- if .MapperAnnotation }}
+@Mapper
+{{- end }}
+{{- if .Kotlin }}
+interface {{ .Table.MapperName }} : {{ .SuperMapperClass }}<{{ .Entity }}>
+{{- else }}
+public interface {{ .Table.MapperName }} extends {{ .SuperMapperClass }}<{{ .Entity }}> {
+
+}
+{{ end }}

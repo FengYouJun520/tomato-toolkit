@@ -1,0 +1,148 @@
+package {{ .Package.Entity }};
+{{ range $pkg := .Table.ImportPackages }}
+import {{ $pkg }};
+{{- end }}
+{{- if .Swagger }}
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+{{- end }}
+{{- if .EntityLombokModel }}
+import lombok.Getter;
+import lombok.Setter;
+    {{- if .ChainModel }}
+import lombok.experimental.Accessors;
+    {{- end }}
+{{- end }}
+
+/**
+ * <p>
+ * {{ .Table.Comment }}
+ * </p>
+ *
+ * @author {{ .Author }}
+ * @since {{ .Date }}
+ */
+{{- if .EntityLombokModel }}
+@Getter
+@Setter
+    {{- if .ChainModel }}
+@Accessors(chain = true)
+    {{- end }}
+{{- end }}
+{{- if .Table.Convert }}
+@TableName("{{ .SchemaName }}{{ .Table.Name }}")
+{{- end }}
+{{- if .Swagger }}
+@ApiModel(value = "{{ .Entity }}对象", description = "{{ .Table.Comment }}")
+{{- end }}
+{{- if (ne .SuperEntityClass "") }}
+public class {{ .Entity }} extends {{ .SuperEntityClass }}{{- if .ActiveRecord }} <{{ .Entity }}>{{ end }} {
+{{- else if .ActiveRecord }}
+public class {{ .Entity }} extends Model<{{ .Entity }}> {
+{{- else if .EntitySerialVersionUID }}
+public class {{ .Entity }} implements Serializable {
+{{- else }}
+public class {{ .Entity }} {
+{{- end }}
+{{- if .EntitySerialVersionUID }}
+
+    private static final long serialVersionUID = 1L;
+{{- end }}
+{{- /*----------  BEGIN 字段循环遍历  ----------*/}}
+{{- $keyPropertyName := "" }}
+{{- $root := . }}
+{{ range $field := .Table.Fields }}
+    {{- if $field.KeyFlag }}
+        {{- $keyPropertyName = $field.PropertyName }}
+    {{- end }}
+
+    {{- if (ne $field.Comment "") }}
+        {{- if $root.Swagger }}
+    @ApiModelProperty("{{ $field.Comment }}")
+        {{- else }}
+    /**
+     * {{ $field.Comment }}
+     */
+        {{- end }}
+    {{- end }}
+    {{- if $field.KeyFlag }}
+        {{- if $field.KeyIdentityFlag }}
+    @TableId(value = "{{ $field.AnnotationColumnName }}", type = IdType.AUTO)
+        {{- else if (ne $root.IdType "") }}
+    @TableId(value = "{{ $field.AnnotationColumnName }}", type = IdType.{{ $root.IdType }})
+        {{- else if $field.Convert }}
+    @TableId("{{ $field.AnnotationColumnName }}")
+        {{- end }}
+    {{- else if (ne $field.Fill "") }}
+        {{- if $field.Convert }}
+    @TableField(value = "{{ $field.AnnotationColumnName }}", fill = FieldFill.{{ $field.Fill }})
+        {{- else }}
+    @TableField(fill = FieldFill.{{ $field.Convert }})
+        {{- end }}
+    {{- else if $field.Convert }}
+    @TableField("{{ $field.AnnotationColumnName }}")
+    {{- end }}
+    {{- if $field.VersionField }}
+    @Version
+    {{- end }}
+    {{- if $field.LogicDeleteField }}
+    @TableLogic
+    {{- end }}
+    private {{ $field.PropertyType }} {{ $field.PropertyName }};
+{{ end }}
+{{- /*----------  END 字段循环遍历  ----------*/ -}}
+{{- if (not .EntityLombokModel) }}
+    {{- range $field := .Table.Fields }}
+        {{- $getprefix := "get" -}}
+        {{- if (eq $field.PropertyType "Boolean") }}
+            {{ $getprefix = "is" }}
+        {{- else }}
+            {{ $getprefix = "get" }}
+        {{- end }}
+    public {{ $field.PropertyType }} {{ $getprefix }}{{ $field.CapitalName }}() {
+        return {{ $field.PropertyName }};
+    }
+    {{/*循环里不能用.，这里的.不是根数据了*/}}
+    {{- if $root.ChainModel }}
+    public {{ $root.Entity }} set{{ $field.CapitalName }}({{ $field.PropertyType }} {{ $field.PropertyName }}) {
+    {{- else }}
+    
+    public void set{{ $field.CapitalName }}({{ $field.PropertyType }} {{ $field.PropertyName }}) {
+    {{- end }}
+        this.{{ $field.PropertyName }} = {{ $field.PropertyName }};
+        {{- if $root.ChainModel }}
+        return this;
+        {{- end }}
+    }
+    {{- end }}
+{{- end }}
+{{- if .EntityColumnConstant }}
+    {{- range $field := .Table.Fields }}
+    public static final String {{ $field.ColumnName | ToUpper }} = "{{ $field.ColumnName }}";
+    {{ end }}
+{{- end }}
+{{- if .ActiveRecord }}
+    @Override
+    public Serializable pkVal() {
+    {{- if (ne $keyPropertyName "") }}
+        return this.{{ $keyPropertyName }};
+    {{- else }}
+        return null;
+    {{- end }}
+    }
+{{- end }}
+{{- if (not .EntityLombokModel) }}
+    @Override
+    public String toString() {
+        return "{{ .Entity }}{" +
+    {{- range $index, $field := .Table.Fields }}
+        {{- if (eq $index 0) }}
+            "{{ $field.PropertyName }}=" + {{ $field.PropertyName }} +
+        {{- else }}
+            ", {{ $field.PropertyName }}=" + {{ $field.PropertyName }} +
+        {{- end }}
+    {{- end }}
+        "}";
+    }
+{{- end }}
+}
