@@ -7,7 +7,6 @@ import router, { routes } from '@/router'
 import { MenuMixedOption, MenuOption } from 'naive-ui/es/menu/src/interface'
 import { useUiState } from '@/store/ui'
 
-const message = useMessage()
 const uiState = useUiState()
 
 function renderIcon(icon: Component) {

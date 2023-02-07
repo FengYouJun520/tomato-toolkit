@@ -97,7 +97,11 @@ const handleReset = () => {
 </script>
 
 <template>
-  <n-form label-placement="left" :label-width="100" label-align="left">
+  <n-form
+    label-placement="left"
+    :label-width="100"
+    label-align="left"
+  >
     <n-form-item label="数据库类型">
       <n-select
         v-model:value="datasourceConfigStore.type"
