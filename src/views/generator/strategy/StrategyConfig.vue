@@ -13,7 +13,7 @@ import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
 import { useDatasourceStore } from '@/store/modules/mp/datasource'
 import { clipboard, invoke } from '@tauri-apps/api'
 import VueJsonPretty from 'vue-json-pretty'
-import { useInjectConfigStore } from '@/store/modules/injectConfig'
+import { useInjectConfigStore } from '@/store/modules/mp/injectConfig'
 
 const message = useMessage()
 const datasourceConfigStore = useDatasourceStore()

@@ -10,7 +10,7 @@ import { useDatasourceStore } from '@/store/modules/mp/datasource'
 import { useGlobalConfigStore } from '@/store/modules/mp/globalconfig'
 import { usePackageConfigStore } from '@/store/modules/mp/packageconfig'
 import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
-import { useInjectConfigStore } from '@/store/modules/injectConfig'
+import { useInjectConfigStore } from '@/store/modules/mp/injectConfig'
 
 const message = useMessage()
 const datasourceConfigStore = useDatasourceStore()
