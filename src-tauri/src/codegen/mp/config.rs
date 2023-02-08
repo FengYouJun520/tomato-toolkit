@@ -10,7 +10,6 @@ use std::{
     fmt::Display,
     path::PathBuf,
     str::FromStr,
-    sync::Arc,
 };
 
 use crate::error::{Result, SerializeError};
@@ -18,7 +17,7 @@ use crate::error::{Result, SerializeError};
 use super::{
     context_data::{self, ControllerData, EntityData, MapperData, ServiceData, TemplateRender},
     convert::{DefaultNameConvert, NameConvert, TypeConvertHandler, TypeConverts},
-    db_query::{DbQuery, MsSqlQuery, MysqlQuery, PostgresQuery, SqliteQuery},
+    db_query::{DbQueryHandler, MsSqlQuery, MysqlQuery, PostgresQuery, SqliteQuery},
     model::TableInfo,
     types::{DateType, DbType},
     utils,
@@ -50,13 +49,13 @@ impl DataSourceConfig {
         }
     }
 
-    pub fn db_query(&self) -> Arc<dyn DbQuery> {
+    pub fn db_query(&self) -> DbQueryHandler {
         match self.db_type() {
-            DbType::POSTGRES_SQL => Arc::new(PostgresQuery),
-            DbType::MYSQL => Arc::new(MysqlQuery),
-            DbType::SQLITE => Arc::new(SqliteQuery),
-            DbType::SQL_SERVER => Arc::new(MsSqlQuery),
-            _ => Arc::new(MysqlQuery),
+            DbType::POSTGRES_SQL => DbQueryHandler::from(PostgresQuery),
+            DbType::MYSQL => DbQueryHandler::from(MysqlQuery),
+            DbType::SQLITE => DbQueryHandler::from(SqliteQuery),
+            DbType::SQL_SERVER => DbQueryHandler::from(MsSqlQuery),
+            _ => DbQueryHandler::from(MysqlQuery),
         }
     }
 
@@ -468,8 +467,8 @@ impl TemplateRender for Entity {
 }
 
 impl Entity {
-    pub fn name_convert(&self, strategy_config: StrategyConfig) -> Box<dyn NameConvert> {
-        Box::new(DefaultNameConvert::new(strategy_config))
+    pub fn name_convert(&self, strategy_config: StrategyConfig) -> impl NameConvert {
+        DefaultNameConvert::new(strategy_config)
     }
 
     pub fn column_naming(&self) -> NamingStrategy {

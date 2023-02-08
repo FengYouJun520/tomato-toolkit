@@ -1,4 +1,4 @@
-use std::{collections::HashSet, fmt::Debug};
+use std::collections::HashSet;
 
 use enum_dispatch::enum_dispatch;
 use regex::Regex;
@@ -16,13 +16,12 @@ use super::{
 };
 
 /// 名称转换器
-pub trait NameConvert: Debug {
+pub trait NameConvert {
     fn entity_name_convert(&self, table_info: &TableInfo) -> Result<String>;
     fn property_name_convert(&self, field: &Field) -> Result<String>;
 }
 
 /// 默认名称转换器
-#[derive(Debug)]
 pub struct DefaultNameConvert {
     strategy_config: StrategyConfig,
 }

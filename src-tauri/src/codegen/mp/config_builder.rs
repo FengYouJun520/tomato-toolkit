@@ -7,12 +7,12 @@ use super::{
         DataSourceConfig, FieldFill, GlobalConfig, InjectConfig, OutputFile, PackageConfig,
         StrategyConfig, TemplateConfig,
     },
-    convert::TypeConvert,
-    db_query::{DbQuery, MpConfig},
-    keywords::DefaultKeywordHandler,
+    convert::{NameConvert, TypeConvert},
+    db_query::{DbQuery, DbQueryHandler, MpConfig},
+    keywords::{DefaultKeywordHandler, KeywordHandler},
     model::{self, TableField, TableInfo},
 };
-use std::{collections::HashMap, path::PathBuf, sync::Arc};
+use std::{collections::HashMap, path::PathBuf};
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -26,7 +26,7 @@ pub struct ConfigBuilder {
     pub table_infos: Vec<TableInfo>,
     pub path_info: HashMap<OutputFile, PathBuf>,
     #[serde(skip)]
-    pub db_query: Arc<dyn DbQuery>,
+    pub db_query: DbQueryHandler,
 }
 
 impl ConfigBuilder {

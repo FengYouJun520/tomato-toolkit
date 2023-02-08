@@ -11,6 +11,7 @@ use crate::error::Result;
 use super::{
     config::{DataSourceConfig, Entity, FieldFill, GlobalConfig, NamingStrategy, StrategyConfig},
     config_builder::ConfigBuilder,
+    convert::NameConvert,
     types::DbColumnType,
 };
 

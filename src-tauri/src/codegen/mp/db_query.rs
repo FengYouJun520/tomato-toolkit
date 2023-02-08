@@ -10,6 +10,7 @@ use super::{
 use crate::error::Result;
 use async_trait::async_trait;
 use derive_builder::Builder;
+use enum_dispatch::enum_dispatch;
 use serde::Deserialize;
 use sqlx::{Executor, Row};
 
@@ -25,6 +26,7 @@ pub struct MpConfig {
 }
 
 #[async_trait]
+#[enum_dispatch]
 pub trait DbQuery: Sync + Send + Debug {
     /// 查询表元信息
     async fn query_tables(&self, config: &ConfigBuilder) -> Result<Vec<Table>>;
@@ -36,8 +38,17 @@ pub trait DbQuery: Sync + Send + Debug {
     ) -> Result<Vec<Field>>;
 }
 
+#[enum_dispatch(DbQuery)]
+#[derive(Debug, Clone)]
+pub enum DbQueryHandler {
+    MysqlQuery,
+    SqliteQuery,
+    MsSqlQuery,
+    PostgresQuery,
+}
+
 /// mysql查询
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct MysqlQuery;
 
 #[async_trait]
@@ -127,7 +138,7 @@ ORDER BY ORDINAL_POSITION ASC;"#,
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct SqliteQuery;
 
 #[async_trait]
@@ -187,7 +198,7 @@ impl DbQuery for SqliteQuery {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct MsSqlQuery;
 
 #[async_trait]
@@ -205,7 +216,7 @@ impl DbQuery for MsSqlQuery {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct PostgresQuery;
 
 #[async_trait]
