@@ -17,10 +17,10 @@ use crate::error::{Result, SerializeError};
 
 use super::{
     context_data::{self, ControllerData, EntityData, MapperData, ServiceData, TemplateRender},
-    convert::{DefaultNameConvert, NameConvert, TypeConverts},
+    convert::{DefaultNameConvert, NameConvert, TypeConvertHandler, TypeConverts},
     db_query::{DbQuery, MsSqlQuery, MysqlQuery, PostgresQuery, SqliteQuery},
     model::TableInfo,
-    types::{DateType, DbType, TypeConvert},
+    types::{DateType, DbType},
     utils,
 };
 
@@ -128,7 +128,7 @@ impl DataSourceConfig {
         Ok(options.connect().await?)
     }
 
-    pub fn get_type_convert(&self) -> Box<dyn TypeConvert> {
+    pub fn get_type_convert(&self) -> TypeConvertHandler {
         TypeConverts::get_type_convert(self.db_type())
     }
 

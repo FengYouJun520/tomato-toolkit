@@ -1,30 +1,5 @@
-use super::{config::GlobalConfig, model::Field};
 use crate::generateColumnType;
-use regex::Regex;
 use serde::{Deserialize, Serialize};
-
-pub trait TypeConvert {
-    fn type_convert(&self, config: &GlobalConfig, field: &Field) -> DbColumnType;
-
-    /// 日期转换器，默认为mysql日期转换
-    fn to_date_type(&self, config: &GlobalConfig, r#type: &str) -> DbColumnType {
-        let date_type = Regex::new(r"\(\d+\)").unwrap().replace_all(r#type, "");
-        match config.date_type {
-            DateType::ONLY_DATE => DATE,
-            DateType::SQL_PACK => match date_type.as_ref() {
-                "date" | "year" => DATE_SQL,
-                "time" => TIME,
-                _ => TIMESTAMP,
-            },
-            DateType::TIME_PACK => match date_type.as_ref() {
-                "date" => LOCAL_DATE,
-                "time" => LOCAL_TIME,
-                "year" => YEAR,
-                _ => LOCAL_DATE_TIME,
-            },
-        }
-    }
-}
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 #[allow(non_camel_case_types)]

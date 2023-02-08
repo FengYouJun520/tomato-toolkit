@@ -1,14 +1,17 @@
 use std::{collections::HashSet, fmt::Debug};
 
+use enum_dispatch::enum_dispatch;
+use regex::Regex;
+
 use crate::error::Result;
 
 use super::{
     config::{GlobalConfig, NamingStrategy, StrategyConfig},
     model::{Field, TableInfo},
     types::{
-        DateType, DbColumnType, DbType, TypeConvert, BIG_DECIMAL, BLOB, BOOLEAN, BYTE_ARRAY, CLOB,
-        DATE, DATE_SQL, DOUBLE, FLOAT, INTEGER, LOCAL_DATE, LOCAL_DATE_TIME, LOCAL_TIME, LONG,
-        STRING, TIME, TIMESTAMP,
+        DateType, DbColumnType, DbType, BIG_DECIMAL, BLOB, BOOLEAN, BYTE_ARRAY, CLOB, DATE,
+        DATE_SQL, DOUBLE, FLOAT, INTEGER, LOCAL_DATE, LOCAL_DATE_TIME, LOCAL_TIME, LONG, STRING,
+        TIME, TIMESTAMP, YEAR,
     },
 };
 
@@ -84,19 +87,52 @@ impl NameConvert for DefaultNameConvert {
     }
 }
 
+#[enum_dispatch]
+pub trait TypeConvert {
+    fn type_convert(&self, config: &GlobalConfig, field: &Field) -> DbColumnType;
+
+    /// 日期转换器，默认为mysql日期转换
+    fn to_date_type(&self, config: &GlobalConfig, r#type: &str) -> DbColumnType {
+        let date_type = Regex::new(r"\(\d+\)").unwrap().replace_all(r#type, "");
+        match config.date_type {
+            DateType::ONLY_DATE => DATE,
+            DateType::SQL_PACK => match date_type.as_ref() {
+                "date" | "year" => DATE_SQL,
+                "time" => TIME,
+                _ => TIMESTAMP,
+            },
+            DateType::TIME_PACK => match date_type.as_ref() {
+                "date" => LOCAL_DATE,
+                "time" => LOCAL_TIME,
+                "year" => YEAR,
+                _ => LOCAL_DATE_TIME,
+            },
+        }
+    }
+}
+
 /// 类型转换器集合
 pub struct TypeConverts;
 
 impl TypeConverts {
-    pub fn get_type_convert(db_type: DbType) -> Box<dyn TypeConvert> {
+    pub fn get_type_convert(db_type: DbType) -> TypeConvertHandler {
         match db_type {
-            DbType::MYSQL => Box::new(MysqlTypeConvert),
-            DbType::SQLITE => Box::new(SqliteTypeConvert),
-            DbType::POSTGRES_SQL => Box::new(PostgresSqlTypeConvert),
-            DbType::SQL_SERVER => Box::new(SqliteTypeConvert),
-            _ => Box::new(MysqlTypeConvert),
+            DbType::MYSQL => TypeConvertHandler::from(MysqlTypeConvert),
+            DbType::SQLITE => TypeConvertHandler::from(SqliteTypeConvert),
+            DbType::POSTGRES_SQL => TypeConvertHandler::from(PostgresSqlTypeConvert),
+            DbType::SQL_SERVER => TypeConvertHandler::from(SqlServerTypeConvert),
+            _ => TypeConvertHandler::from(MysqlTypeConvert),
         }
     }
+}
+
+#[enum_dispatch(TypeConvert)]
+#[allow(non_camel_case_types)]
+pub enum TypeConvertHandler {
+    MysqlTypeConvert,
+    SqliteTypeConvert,
+    PostgresSqlTypeConvert,
+    SqlServerTypeConvert,
 }
 
 /// sqlite类型转换器

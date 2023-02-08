@@ -7,6 +7,7 @@ use super::{
         DataSourceConfig, FieldFill, GlobalConfig, InjectConfig, OutputFile, PackageConfig,
         StrategyConfig, TemplateConfig,
     },
+    convert::TypeConvert,
     db_query::{DbQuery, MpConfig},
     keywords::DefaultKeywordHandler,
     model::{self, TableField, TableInfo},
