@@ -8,12 +8,21 @@ import TSider from './TSider.vue'
     <TSider />
     <el-container direction="vertical">
       <THeader />
-      <el-main :style="{ backgroundColor: 'var(--el-bg-color-page)' }">
-        <router-view />
+      <el-main class="relative">
+        <el-scrollbar>
+          <router-view />
+        </el-scrollbar>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <style lang="css" scoped>
+.el-main {
+  background-color: var(--el-bg-color-page);
+}
+
+.el-scrollbar {
+  height: 100%;
+}
 </style>
