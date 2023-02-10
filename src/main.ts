@@ -5,7 +5,6 @@ import router from './router'
 import store from './store'
 import './userWorker'
 import 'vfonts/FiraCode.css'
-import 'vue-json-pretty/lib/styles.css'
 
 const meta = document.createElement('meta')
 meta.name = 'naive-ui-style'

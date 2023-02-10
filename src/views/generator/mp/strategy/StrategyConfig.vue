@@ -12,7 +12,8 @@ import { usePackageConfigStore } from '@/store/modules/mp/packageconfig'
 import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
 import { useDatasourceStore } from '@/store/modules/mp/datasource'
 import { clipboard, invoke } from '@tauri-apps/api'
-import VueJsonPretty from 'vue-json-pretty'
+import MonacoEditor from 'monaco-editor-vue3'
+import editor from 'monaco-editor/esm/vs/editor/editor.api'
 import { useInjectConfigStore } from '@/store/modules/mp/injectConfig'
 
 const message = useMessage()
@@ -23,6 +24,11 @@ const templateConfigStore = useTemplateConfigStore()
 const strategyConfigStore = useStrategyConfigStore()
 const injectConfigStore = useInjectConfigStore()
 const tablesContext = useTables()
+
+const editorOptions: editor.editor.IStandaloneEditorConstructionOptions = {
+  fontSize: 18,
+  folding: true,
+}
 
 const includes = ref<string[]>([])
 const excludes = ref<string[]>([])
@@ -94,9 +100,7 @@ const renderTag: SelectRenderTag = ({ option, handleClose }) => h(
 )
 
 const showPreview = ref(false)
-const modelRef = ref<InstanceType<typeof NCard>|null>(null)
-const contextData = ref<Record<string, any>>({})
-const { height } = useElementSize(modelRef)
+const contextData = ref('')
 
 const handlePreview = async () => {
   try {
@@ -109,7 +113,7 @@ const handlePreview = async () => {
       injection: injectConfigStore.$state,
     }
     const data = await invoke<Record<string, any>>('generate_preview', { config })
-    contextData.value = data
+    contextData.value = JSON.stringify(data, null, 2)
     showPreview.value = true
   } catch (error) {
     message.error(error as string)
@@ -226,16 +230,15 @@ const copyContextData = async () => {
     <NModal
       v-model:show="showPreview"
       title="查看生成预览的数据"
-      style="width: 70%;height: 90vh;"
+      style="width: 80%;height: 90vh;"
     >
-      <NCard ref="modelRef">
-        <VueJsonPretty
-          :data="contextData"
-          :height="height - 100"
-          virtual
-          show-icon
-          show-line
-          show-line-number
+      <NCard title="查看生成预览的数据">
+        <MonacoEditor
+          v-model:value="contextData"
+          height="100%"
+          theme="vs-dark"
+          language="json"
+          :options="editorOptions"
         />
         <template #footer>
           <n-button type="info" @click="copyContextData">

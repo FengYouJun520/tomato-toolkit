@@ -7,7 +7,6 @@ import {
   DataTableColumns,
   FormRules,
   NButton,
-  NCard,
   NForm,
   NIcon,
   NModal,
@@ -16,8 +15,8 @@ import {
   NTag,
 } from 'naive-ui'
 import { EditOutlined, DeleteOutlined } from '@vicons/antd'
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 import { v4 } from 'uuid'
+import MonacoEditor from 'monaco-editor-vue3'
 
 const initialModel: CustomFile = {
   id: '',
@@ -213,68 +212,18 @@ const handleConfirm = () => {
   })
 }
 
-// 自定义数据
-let monacoEditor: monaco.editor.IStandaloneCodeEditor
-const monacoRef = ref<HTMLDivElement | null>(null)
 const customMap = ref('')
 const showCustomMap = ref(false)
 
 const handleAddCustomDataClick = () => {
   showCustomMap.value = true
+  customMap.value = JSON.stringify(injectConfigStore.customMap, null, 2)
 }
 
 const handleSaveCustomMap = () => {
-  injectConfigStore.addCustomData(JSON.parse(monacoEditor.getValue()))
+  injectConfigStore.addCustomData(JSON.parse(unref(customMap)))
+  showCustomMap.value = false
 }
-
-const handleCloseCustomMap = () => {
-  if (monacoEditor) {
-    monacoEditor.dispose()
-  }
-}
-
-const handleAfterEnter = () => {
-  customMap.value = JSON.stringify(injectConfigStore.customMap, null, 2)
-
-  monacoEditor = monaco.editor.create(monacoRef.value!, {
-    value: unref(customMap),
-    theme: 'vs-dark',
-    language: 'json',
-    links: false,
-    cursorStyle: 'line',
-    lineNumbers: 'on',
-    contextmenu: false,
-    tabSize: 2,
-    fontSize: 18,
-    showFoldingControls: 'always',
-    wordWrap: 'on',
-    wrappingIndent: 'indent',
-    renderLineHighlight: 'none',
-    occurrencesHighlight: false,
-    scrollBeyondLastLine: false,
-    hideCursorInOverviewRuler: true,
-    folding: true,
-    colorDecorators: false,
-    minimap: {
-      enabled: true,
-    },
-    guides: {
-      indentation: true,
-      highlightActiveIndentation: true,
-      bracketPairs: true,
-    },
-    scrollbar: {
-      useShadows: false,
-      verticalScrollbarSize: 10,
-      horizontalScrollbarSize: 10,
-    },
-    wordWrapOverride2: 'off',
-  })
-}
-
-useResizeObserver(document.body, () => {
-  monacoEditor && monacoEditor.layout()
-})
 </script>
 
 <template>
@@ -376,18 +325,24 @@ useResizeObserver(document.body, () => {
 
   <NModal
     v-model:show="showCustomMap"
-    title="添加自定义数据"
-    preset="dialog"
-    style="width: 70%;height: 90vh;"
-    positive-text="确定"
-    :positive-button-props="{
-      size: 'medium',
-    }"
-    @positive-click="handleSaveCustomMap"
-    @after-leave="handleCloseCustomMap"
-    @after-enter="handleAfterEnter"
+    style="width: 80%;height: 90vh;"
   >
-    <div ref="monacoRef" class="monaco-editor" />
+    <NCard title="添加自定义数据">
+      <MonacoEditor
+        v-model:value="customMap"
+        height="100%"
+        theme="vs-dark"
+        language="json"
+        :options="{
+          fontSize: 18,
+        }"
+      />
+      <template #footer>
+        <NButton type="info" class="flex content-end" @click="handleSaveCustomMap">
+          确定
+        </NButton>
+      </template>
+    </NCard>
   </NModal>
 </template>
 

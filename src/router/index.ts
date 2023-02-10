@@ -37,7 +37,7 @@ export const routes: RouteRecordRaw[] = [
       {
         name: 'MyBatisPlusGenerator',
         path: 'mp',
-        component: () => import('@/views/generator/mp.vue'),
+        component: () => import('@/views/generator/mp/index.vue'),
         meta: {
           title: 'MyBatisPlus生成器',
           icon: TerminalOutline,
