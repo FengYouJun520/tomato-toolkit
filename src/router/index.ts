@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Layout from '@/layout/index.vue'
-import { HomeOutline, TerminalOutline, CodeDownload, Apps } from '@vicons/ionicons5'
-
+import { HomeFilled, Monitor, Odometer, Promotion } from '@element-plus/icons-vue'
 export const routes: RouteRecordRaw[] = [
   {
     name: 'Root',
@@ -10,7 +9,7 @@ export const routes: RouteRecordRaw[] = [
     component: Layout,
     meta: {
       title: '首页',
-      icon: HomeOutline,
+      icon: HomeFilled,
     },
     children: [
       {
@@ -19,7 +18,7 @@ export const routes: RouteRecordRaw[] = [
         component: () => import('@/views/dashboard/index.vue'),
         meta: {
           title: '首页',
-          icon: Apps,
+          icon: Monitor,
         },
       },
     ],
@@ -31,7 +30,7 @@ export const routes: RouteRecordRaw[] = [
     component: Layout,
     meta: {
       title: '代码生成器',
-      icon: CodeDownload,
+      icon: Odometer,
     },
     children: [
       {
@@ -40,7 +39,7 @@ export const routes: RouteRecordRaw[] = [
         component: () => import('@/views/generator/mp/index.vue'),
         meta: {
           title: 'MyBatisPlus生成器',
-          icon: TerminalOutline,
+          icon: Promotion,
         },
       },
     ],

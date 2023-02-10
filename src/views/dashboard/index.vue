@@ -12,24 +12,21 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-    <n-image
-      class="select-none"
-      :width="300"
-      :height="300"
-      object-fit="cover"
+  <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+    <el-image
       :src="tomatoIcon"
-      preview-disabled
+      fit="cover"
+      style="height: 300px;width: 300px;"
     />
 
-    <n-space justify="center">
-      <n-tag type="primary">
+    <el-space>
+      <el-tag type="success">
         Project:&nbsp;{{ name }}
-      </n-tag>
-      <n-tag type="primary">
+      </el-tag>
+      <el-tag type="success">
         Version:&nbsp;{{ version }}
-      </n-tag>
-    </n-space>
+      </el-tag>
+    </el-space>
   </div>
 </template>
 

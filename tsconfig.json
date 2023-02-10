@@ -14,8 +14,8 @@
     "skipLibCheck": true,
     "typeRoots": ["node_modules/@types/", "src/types/"],
     "types": [
-      "naive-ui/volar",
-      "element-plus/global"
+      "element-plus/global",
+      "naive-ui/volar"
     ],
     "baseUrl": ".",
     "paths": {

@@ -4,19 +4,15 @@ import TSider from './TSider.vue'
 </script>
 
 <template>
-  <n-layout has-sider position="absolute">
+  <el-container class="h-full">
     <TSider />
-    <n-layout>
+    <el-container direction="vertical">
       <THeader />
-      <n-layout-content
-        class="mt-16 m-5"
-        position="absolute"
-        :native-scrollbar="false"
-      >
+      <el-main :style="{ backgroundColor: 'var(--el-bg-color-page)' }">
         <router-view />
-      </n-layout-content>
-    </n-layout>
-  </n-layout>
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 
 <style lang="css" scoped>

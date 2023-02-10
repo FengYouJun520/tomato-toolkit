@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@commitlint/cli': ^17.4.2
   '@commitlint/config-conventional': ^17.4.2
+  '@element-plus/icons-vue': ^2.0.10
   '@tauri-apps/api': ^1.2.0
   '@tauri-apps/cli': ^1.2.3
   '@types/node': ^18.11.18
@@ -37,6 +38,7 @@ specifiers:
   vue-tsc: ^1.0.24
 
 dependencies:
+  '@element-plus/icons-vue': 2.0.10_vue@3.2.45
   '@tauri-apps/api': 1.2.0
   '@vueuse/core': 9.12.0_vue@3.2.45
   element-plus: 2.2.30_vue@3.2.45

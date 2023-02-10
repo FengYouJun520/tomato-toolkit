@@ -6,6 +6,7 @@ import { zhCN, dateZhCN } from 'naive-ui'
   <n-config-provider
     :locale="zhCN"
     :date-locale="dateZhCN"
+    class="h-full"
   >
     <n-message-provider>
       <router-view />

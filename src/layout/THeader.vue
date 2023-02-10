@@ -1,24 +1,26 @@
 <script setup lang="ts">
 import { useUiState } from '@/store/ui'
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@vicons/antd'
-
+import { Expand, Fold } from '@element-plus/icons-vue'
 const uiState = useUiState()
 </script>
 
 <template>
-  <n-layout-header position="absolute" class="h-16 px-5 border-b-2 border-b-gray-100">
+  <el-header height="64px">
     <div class="h-full flex justify-between items-center">
-      <n-button quaternary @click="uiState.toggleCollapse">
+      <el-button text @click="uiState.toggleCollapse">
         <template #icon>
-          <n-icon>
-            <MenuFoldOutlined v-if="!uiState.isCollapse" />
-            <MenuUnfoldOutlined v-else />
-          </n-icon>
+          <el-icon>
+            <Expand v-if="uiState.isCollapse" />
+            <Fold v-else />
+          </el-icon>
         </template>
-      </n-button>
+      </el-button>
     </div>
-  </n-layout-header>
+  </el-header>
 </template>
 
 <style lang="css" scoped>
+.el-header {
+  border-bottom: 1px solid var(--el-border-color);
+}
 </style>

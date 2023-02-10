@@ -1,58 +1,36 @@
 <script setup lang="ts">
-import { NIcon } from 'naive-ui'
-
-import { Component } from 'vue'
-import { RouteRecordRaw, RouterLink } from 'vue-router'
-import router, { routes } from '@/router'
-import { MenuMixedOption, MenuOption } from 'naive-ui/es/menu/src/interface'
+import { routes } from '@/router'
 import { useUiState } from '@/store/ui'
+import TMenu from './TMenu.vue'
 
 const uiState = useUiState()
 
-function renderIcon(icon: Component) {
-  return () => h(NIcon, null, { default: () => h(icon) })
-}
-
-const generateMenuOptions = (routes: RouteRecordRaw[]): MenuMixedOption[] => routes.map(route => {
-  const menu: MenuMixedOption = {
-    label: () => route.children && route.children.length > 0
-      ? route.meta?.title
-      : h(
-        RouterLink,
-        {
-          to: { ...route },
-        },
-        { default: () => route.meta?.title }
-      ),
-    icon: renderIcon(route.meta?.icon),
-    key: router.resolve(route).path,
-    children: route.children && route.children.length > 0 ? generateMenuOptions(route.children) : undefined,
-  }
-
-  return menu
-})
-
-const menuOptions: MenuMixedOption[] = generateMenuOptions(routes)
-
-const handleUpdateValue = (key: string, item: MenuOption) => {
-}
+const asideWidth = computed(() => uiState.collapse ? 64 : uiState.asideWidth)
 </script>
 
 <template>
-  <n-layout-sider
-    :native-scrollbar="false"
-    collapse-mode="width"
-    :collapsed="uiState.isCollapse"
-    class="border-r-2 border-r-gray-100"
-  >
-    <n-menu
-      :collapsed="uiState.isCollapse"
-      :default-value="$route.path"
-      :options="menuOptions"
-      @update:value="handleUpdateValue"
-    />
-  </n-layout-sider>
+  <el-aside :width="`${asideWidth}px`">
+    <el-scrollbar style="height: 100%;">
+      <el-menu
+        class="h-full w-full"
+        router
+        :collapse="uiState.collapse"
+        :default-active="$route.fullPath"
+      >
+        <TMenu :routes="routes" />
+      </el-menu>
+    </el-scrollbar>
+  </el-aside>
 </template>
 
 <style lang="css" scoped>
+.el-aside {
+  transition: width 0.2s;
+  border-right: 1px solid var(--el-border-color);
+}
+
+.el-menu {
+  border-right: none;
+  transition: width 0.2s;
+}
 </style>
