@@ -10,7 +10,6 @@ import rocketIcon from '@/assets/rocket.svg'
 import { useDatasourceStore } from '@/store/mp/datasource'
 import { useBasicTableInfosStore } from '@/store/mp/basicTable'
 import { BasicTableInfo } from '@/types/type'
-import { ElMessage } from 'element-plus'
 
 const basicTableInfos = useBasicTableInfosStore()
 const datasourceConfigStore = useDatasourceStore()
@@ -75,12 +74,16 @@ const handleReset = () => {
     :model="datasourceConfigStore.$state"
   >
     <el-form-item label="数据库类型">
-      <el-select v-model="datasourceConfigStore.type" class="w-full">
+      <el-select
+        v-model="datasourceConfigStore.type"
+        class="w-full"
+      >
         <el-option
           v-for="option in options"
           :key="option.value"
-          :label="option.label"
+          :label="option.value"
           :value="option.value"
+          :disabled="option.disabled"
         >
           <div class="flex items-center space-x-5">
             <img :src="getIcon(option.value)">

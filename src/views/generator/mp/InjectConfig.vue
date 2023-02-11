@@ -5,8 +5,8 @@ import { CustomFile } from '@/types/type'
 import { dialog, shell } from '@tauri-apps/api'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import { v4 } from 'uuid'
-import MonacoEditor from 'monaco-editor-vue3'
-import { ElMessage, FormInstance } from 'element-plus'
+import { FormInstance } from 'element-plus'
+import Editor from '@guolao/vue-monaco-editor'
 
 const initialModel: CustomFile = {
   id: '',
@@ -21,6 +21,7 @@ const initialModel: CustomFile = {
 const injectConfigStore = useInjectConfigStore()
 const globalConfigStore = useGlobalConfigStore()
 
+/// 自定义文件操作
 const data = computed(() => injectConfigStore.getCustomFiles)
 
 const title = ref('')
@@ -70,15 +71,12 @@ const selectFilePath = async () => {
   model.filePath = filePath as string
 }
 
-
 const handleConfirm = async (formEl?: FormInstance) => {
   if (!formEl) {
     return
   }
 
   await formEl.validate((valid, fields) => {
-    console.log(valid, fields)
-
     if (!valid) {
       ElMessage.error('校验失败')
       return
@@ -98,6 +96,7 @@ const handleConfirm = async (formEl?: FormInstance) => {
   })
 }
 
+/// 自定义数据操作
 const customMap = ref('')
 const showCustomMap = ref(false)
 
@@ -107,7 +106,12 @@ const handleAddCustomDataClick = () => {
 }
 
 const handleSaveCustomMap = () => {
-  injectConfigStore.addCustomData(JSON.parse(unref(customMap)))
+  try {
+    injectConfigStore.addCustomData(JSON.parse(unref(customMap)))
+    ElMessage.success('添加自定义数据成功')
+  } catch (error) {
+    ElMessage.error('添加自定义数据失败，请检查格式是否正确')
+  }
   showCustomMap.value = false
 }
 </script>
@@ -339,15 +343,20 @@ const handleSaveCustomMap = () => {
 
   <el-dialog
     v-model="showCustomMap"
+    title="添加自定义数据"
     width="80%"
+    style="height: 85vh;"
+    top="20px"
+    destroy-on-close
   >
-    <MonacoEditor
+    <Editor
       v-model:value="customMap"
-      height="100%"
       theme="vs-dark"
+      height="62vh"
       language="json"
       :options="{
         fontSize: 18,
+        tabSize: 2,
       }"
     />
     <template #footer>

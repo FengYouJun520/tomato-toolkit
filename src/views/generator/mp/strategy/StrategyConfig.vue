@@ -10,11 +10,9 @@ import { usePackageConfigStore } from '@/store/mp/packageconfig'
 import { useTemplateConfigStore } from '@/store/mp/templateconfig'
 import { useDatasourceStore } from '@/store/mp/datasource'
 import { clipboard, invoke } from '@tauri-apps/api'
-import MonacoEditor from 'monaco-editor-vue3'
-import editor from 'monaco-editor/esm/vs/editor/editor.api'
 import { useInjectConfigStore } from '@/store/mp/injectConfig'
 import { useBasicTableInfosStore } from '@/store/mp/basicTable'
-import { ElMessage } from 'element-plus'
+import Editor from '@guolao/vue-monaco-editor'
 
 const active = ref('entity-config')
 const datasourceConfigStore = useDatasourceStore()
@@ -24,11 +22,6 @@ const templateConfigStore = useTemplateConfigStore()
 const strategyConfigStore = useStrategyConfigStore()
 const injectConfigStore = useInjectConfigStore()
 const basicTableInfos = useBasicTableInfosStore()
-
-const editorOptions: editor.editor.IStandaloneEditorConstructionOptions = {
-  fontSize: 18,
-  folding: true,
-}
 
 const includes = ref<string[]>([])
 const excludes = ref<string[]>([])
@@ -168,6 +161,7 @@ const copyContextData = async () => {
               clearable
               class="w-full"
               placeholder="请选择"
+              tag-type="success"
             >
               <el-option
                 v-for="opt in options"
@@ -176,6 +170,7 @@ const copyContextData = async () => {
                 :value="opt.value"
               >
                 {{ opt.label }}
+                {{ opt.comment }}
               </el-option>
             </el-select>
           </el-form-item>
@@ -229,15 +224,20 @@ const copyContextData = async () => {
     <el-dialog
       v-model="showPreview"
       title="查看生成预览的数据"
-      style="width: 80%;"
+      width="80%"
+      style="height: 85vh;"
+      top="20px"
+      destroy-on-close
     >
-      <MonacoEditor
+      <Editor
         v-model:value="contextData"
-        height="100%"
-        width="100%"
         theme="vs-dark"
+        height="62vh"
         language="json"
-        :options="editorOptions"
+        :options="{
+          fontSize: 18,
+          tabSize: 2,
+        }"
       />
       <template #footer>
         <el-button type="primary" @click="copyContextData">

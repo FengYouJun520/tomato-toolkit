@@ -1,7 +1,7 @@
 {
   "name": "tomato-toolkit",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,10 +13,11 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
+    "@guolao/vue-monaco-editor": "^0.0.5",
     "@tauri-apps/api": "^1.2.0",
     "@vueuse/core": "^9.12.0",
     "element-plus": "^2.2.30",
-    "monaco-editor": "^0.34.1",
+    "monaco-editor": "^0.35.0",
     "monaco-editor-vue3": "^0.1.6",
     "pinia": "^2.0.29",
     "pinia-plugin-persistedstate": "^3.0.2",

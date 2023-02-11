@@ -1,3 +1,5 @@
+import { loader } from '@guolao/vue-monaco-editor'
+
 import * as monaco from 'monaco-editor'
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
@@ -6,7 +8,7 @@ import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
 self.MonacoEnvironment = {
-  getWorker(_: any, label: string) {
+  getWorker(_, label) {
     if (label === 'json') {
       return new jsonWorker()
     }
@@ -23,4 +25,4 @@ self.MonacoEnvironment = {
   },
 }
 
-monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true)
+loader.config({ monaco })
