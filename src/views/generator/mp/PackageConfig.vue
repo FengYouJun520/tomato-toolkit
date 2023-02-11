@@ -10,8 +10,7 @@ const handleReset = () => {
 
 <template>
   <el-form
-    label-placement="left"
-    :label-width="120"
+    label-position="top"
     :model="packageConfigStore.$state"
   >
     <el-form-item label-width="0">

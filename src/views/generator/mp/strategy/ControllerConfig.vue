@@ -9,53 +9,76 @@ const handleReset = () => {
 </script>
 
 <template>
-  <n-form
-    label-align="right"
-    label-placement="left"
-    :label-width="210"
+  <el-form
+    label-position="top"
+    :model="strategyconfigStore.controller"
   >
-    <n-grid cols="1 m:2" responsive="screen" :x-gap="24">
-      <n-form-item-gi>
-        <n-space class="y-0">
-          <n-button type="warning" @click="handleReset">
-            重置
-          </n-button>
-        </n-space>
-      </n-form-item-gi>
-      <n-form-item-gi label="覆盖文件">
-        <n-radio-group v-model:value="strategyconfigStore.controller.fileOverride">
-          <n-radio-button label="开启" :value="true" />
-          <n-radio-button label="关闭" :value="false" />
-        </n-radio-group>
-      </n-form-item-gi>
+    <el-form-item label-width="0">
+      <n-button type="warning" @click="handleReset">
+        重置
+      </n-button>
+    </el-form-item>
 
-      <n-form-item-gi label="开启驼峰转连字符">
-        <n-radio-group v-model:value="strategyconfigStore.controller.hyphenStyle">
-          <n-radio-button label="开启" :value="true" />
-          <n-radio-button label="关闭" :value="false" />
-        </n-radio-group>
-      </n-form-item-gi>
-      <n-form-item-gi label="开启生成@RestController">
-        <n-radio-group v-model:value="strategyconfigStore.controller.restStyle">
-          <n-radio-button label="开启" :value="true" />
-          <n-radio-button label="关闭" :value="false" />
-        </n-radio-group>
-      </n-form-item-gi>
-    </n-grid>
+    <el-row :gutter="24">
+      <el-col :sm="12" :md="8">
+        <el-form-item label="覆盖文件">
+          <el-radio-group v-model="strategyconfigStore.controller.fileOverride">
+            <el-radio-button :label="true">
+              开启
+            </el-radio-button>
+            <el-radio-button :label="false">
+              关闭
+            </el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
 
-    <n-form-item label="父类包名">
-      <n-input
-        v-model:value="strategyconfigStore.controller.superClass"
-        placeholder="示例: com.baomidou.global.BaseController"
-      />
-    </n-form-item>
-    <n-form-item label="格式化文件名称">
-      <n-input
-        v-model:value="strategyconfigStore.controller.formatFilename"
-        placeholder="示例: {}Controller, {}表示占位符"
-      />
-    </n-form-item>
-  </n-form>
+      <el-col :sm="12" :md="8">
+        <el-form-item label="开启驼峰转连字符">
+          <el-radio-group v-model="strategyconfigStore.controller.hyphenStyle">
+            <el-radio-button :label="true">
+              开启
+            </el-radio-button>
+            <el-radio-button :label="false">
+              关闭
+            </el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
+      <el-col :sm="12" :md="8">
+        <el-form-item label="开启生成@RestController">
+          <el-radio-group v-model="strategyconfigStore.controller.restStyle">
+            <el-radio-button :label="true">
+              开启
+            </el-radio-button>
+            <el-radio-button :label="false">
+              关闭
+            </el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="24">
+      <el-col :md="12">
+        <el-form-item label="父类包名">
+          <el-input
+            v-model="strategyconfigStore.controller.superClass"
+            placeholder="示例: com.baomidou.global.BaseController"
+          />
+        </el-form-item>
+      </el-col>
+
+      <el-col :md="12">
+        <el-form-item label="格式化文件名称">
+          <el-input
+            v-model="strategyconfigStore.controller.formatFilename"
+            placeholder="示例: {}Controller, {}表示占位符"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+  </el-form>
 </template>
 
 <style lang="css" scoped>

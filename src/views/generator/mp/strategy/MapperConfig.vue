@@ -9,66 +9,93 @@ const handleReset = () => {
 </script>
 
 <template>
-  <n-form
-    label-align="right"
-    label-placement="left"
-    :label-width="210"
+  <el-form
+    label-position="top"
+    :model="strategyconfigStore.mapper"
   >
-    <n-grid cols="1 m:2" responsive="screen" :x-gap="24">
-      <n-form-item-gi>
-        <n-space class="y-0">
-          <n-button type="warning" @click="handleReset">
-            重置
-          </n-button>
-        </n-space>
-      </n-form-item-gi>
-      <n-form-item-gi label="覆盖文件">
-        <n-radio-group v-model:value="strategyconfigStore.mapper.fileOverride">
-          <n-radio-button label="开启" :value="true" />
-          <n-radio-button label="关闭" :value="false" />
-        </n-radio-group>
-      </n-form-item-gi>
+    <el-form-item label-width="0">
+      <el-button type="warning" @click="handleReset">
+        重置
+      </el-button>
+    </el-form-item>
 
-      <n-form-item-gi label="开启@Mapper注解">
-        <n-radio-group v-model:value="strategyconfigStore.mapper.mapperAnnotation">
-          <n-radio-button label="开启" :value="true" />
-          <n-radio-button label="关闭" :value="false" />
-        </n-radio-group>
-      </n-form-item-gi>
-      <n-form-item-gi label="启用BaseResultMap生成">
-        <n-radio-group v-model:value="strategyconfigStore.mapper.baseResultMap">
-          <n-radio-button label="开启" :value="true" />
-          <n-radio-button label="关闭" :value="false" />
-        </n-radio-group>
-      </n-form-item-gi>
+    <el-row :gutter="24">
+      <el-col :sm="12">
+        <el-form-item label="覆盖文件">
+          <el-radio-group v-model="strategyconfigStore.mapper.fileOverride">
+            <el-radio-button :label="true">
+              开启
+            </el-radio-button>
+            <el-radio-button :label="false">
+              关闭
+            </el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
+      <el-col :sm="12">
+        <el-form-item label="开启@Mapper注解">
+          <el-radio-group v-model="strategyconfigStore.mapper.mapperAnnotation">
+            <el-radio-button :label="true">
+              开启
+            </el-radio-button>
+            <el-radio-button :label="false">
+              关闭
+            </el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
 
-      <n-form-item-gi label="启用BaseColumnList">
-        <n-radio-group v-model:value="strategyconfigStore.mapper.baseColumnList">
-          <n-radio-button label="开启" :value="true" />
-          <n-radio-button label="关闭" :value="false" />
-        </n-radio-group>
-      </n-form-item-gi>
-    </n-grid>
+      <el-col :sm="12">
+        <el-form-item label="启用BaseResultMap生成">
+          <el-radio-group v-model="strategyconfigStore.mapper.baseResultMap">
+            <el-radio-button :label="true">
+              开启
+            </el-radio-button>
+            <el-radio-button :label="false">
+              关闭
+            </el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
+      <el-col :sm="12">
+        <el-form-item label="启用BaseColumnList">
+          <el-radio-group v-model="strategyconfigStore.mapper.baseColumnList">
+            <el-radio-button :label="true">
+              开启
+            </el-radio-button>
+            <el-radio-button :label="false">
+              关闭
+            </el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
 
-    <n-form-item label="父类包名">
-      <n-input
-        v-model:value="strategyconfigStore.mapper.superClass"
-        placeholder="默认: com.baomidou.mybatisplus.core.mapper.BaseMapper"
-      />
-    </n-form-item>
-    <n-form-item label="格式化mapper文件名称">
-      <n-input
-        v-model:value="strategyconfigStore.mapper.formatMapperFilename"
-        placeholder="示例: {}Mapper, {}表示占位符"
-      />
-    </n-form-item>
-    <n-form-item label="格式化xml实现类文件名称">
-      <n-input
-        v-model:value="strategyconfigStore.mapper.formatXmlFilename"
-        placeholder="示例: {}Mapper, {}表示占位符"
-      />
-    </n-form-item>
-  </n-form>
+      <el-col :md="24">
+        <el-form-item label="父类包名">
+          <el-input
+            v-model="strategyconfigStore.mapper.superClass"
+            placeholder="默认: com.baomidou.mybatisplus.core.mapper.BaseMapper"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :md="12">
+        <el-form-item label="格式化mapper文件名称">
+          <el-input
+            v-model="strategyconfigStore.mapper.formatMapperFilename"
+            placeholder="示例: {}Mapper, {}表示占位符"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :md="12">
+        <el-form-item label="格式化xml实现类文件名称">
+          <el-input
+            v-model="strategyconfigStore.mapper.formatXmlFilename"
+            placeholder="示例: {}Mapper, {}表示占位符"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+  </el-form>
 </template>
 
 <style lang="css" scoped>

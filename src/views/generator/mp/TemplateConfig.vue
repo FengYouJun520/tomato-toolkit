@@ -20,7 +20,10 @@ const handleOpenTempelate = async () => {
 </script>
 
 <template>
-  <el-form :label-width="120">
+  <el-form
+    label-position="top"
+    :model="templateConfigStore.$state"
+  >
     <el-form-item label-width="0">
       <el-space>
         <el-button type="warning" @click="handleReset">

@@ -199,6 +199,7 @@ const copyContextData = async () => {
               multiple
               clearable
               class="w-full"
+              placeholder="请选择"
             >
               <el-option
                 v-for="opt in options"
@@ -228,6 +229,7 @@ const copyContextData = async () => {
           multiple
           clearable
           class="w-full"
+          placeholder="请选择"
         >
           <el-option
             v-for="opt in excludeOptions"
