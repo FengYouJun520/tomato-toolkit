@@ -20,6 +20,7 @@ export default defineConfig({
       imports: [
         'vue',
         'pinia',
+        'vue-router',
         '@vueuse/core',
         {
           'naive-ui': [

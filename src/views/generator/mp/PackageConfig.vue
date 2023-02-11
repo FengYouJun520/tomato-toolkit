@@ -9,43 +9,63 @@ const handleReset = () => {
 </script>
 
 <template>
-  <n-form label-placement="left" :label-width="120" label-align="right">
-    <n-form-item>
-      <n-button type="warning" @click="handleReset">
+  <el-form
+    label-placement="left"
+    :label-width="120"
+    :model="packageConfigStore.$state"
+  >
+    <el-form-item label-width="0">
+      <el-button type="warning" @click="handleReset">
         重置
-      </n-button>
-    </n-form-item>
+      </el-button>
+    </el-form-item>
 
-    <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
-      <n-form-item-gi label="父包名">
-        <n-input v-model:value="packageConfigStore.parent" />
-      </n-form-item-gi>
-      <n-form-item-gi label="父模块名">
-        <n-input v-model:value="packageConfigStore.moduleName" />
-      </n-form-item-gi>
+    <el-row :gutter="24">
+      <el-col :sm="12">
+        <el-form-item label="父包名">
+          <el-input v-model="packageConfigStore.parent" />
+        </el-form-item>
+      </el-col>
+      <el-col :sm="12">
+        <el-form-item label="父模块名">
+          <el-input v-model="packageConfigStore.moduleName" />
+        </el-form-item>
+      </el-col>
 
-      <n-form-item-gi label="Entity包名">
-        <n-input v-model:value="packageConfigStore.entity" />
-      </n-form-item-gi>
-      <n-form-item-gi label="Controller名">
-        <n-input v-model:value="packageConfigStore.controller" />
-      </n-form-item-gi>
+      <el-col :sm="12">
+        <el-form-item label="Entity包名">
+          <el-input v-model="packageConfigStore.entity" />
+        </el-form-item>
+      </el-col>
+      <el-col :sm="12">
+        <el-form-item label="Controller名">
+          <el-input v-model="packageConfigStore.controller" />
+        </el-form-item>
+      </el-col>
 
-      <n-form-item-gi label="Service包名">
-        <n-input v-model:value="packageConfigStore.service" />
-      </n-form-item-gi>
-      <n-form-item-gi label="ServiceImpl名">
-        <n-input v-model:value="packageConfigStore.serviceImpl" />
-      </n-form-item-gi>
+      <el-col :sm="12">
+        <el-form-item label="Service包名">
+          <el-input v-model="packageConfigStore.service" />
+        </el-form-item>
+      </el-col>
+      <el-col :sm="12">
+        <el-form-item label="ServiceImpl名">
+          <el-input v-model="packageConfigStore.serviceImpl" />
+        </el-form-item>
+      </el-col>
 
-      <n-form-item-gi label="Mapper包名">
-        <n-input v-model:value="packageConfigStore.mapper" />
-      </n-form-item-gi>
-      <n-form-item-gi label="MapperXml包名">
-        <n-input v-model:value="packageConfigStore.xml" />
-      </n-form-item-gi>
-    </n-grid>
-  </n-form>
+      <el-col :sm="12">
+        <el-form-item label="Mapper包名">
+          <el-input v-model="packageConfigStore.mapper" />
+        </el-form-item>
+      </el-col>
+      <el-col :sm="12">
+        <el-form-item label="MapperXml包名">
+          <el-input v-model="packageConfigStore.serviceImpl" />
+        </el-form-item>
+      </el-col>
+    </el-row>
+  </el-form>
 </template>
 
 <style lang="css" scoped>

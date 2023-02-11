@@ -20,69 +20,80 @@ const handleOpenTempelate = async () => {
 </script>
 
 <template>
-  <n-form
-    label-placement="left"
-    :label-width="120"
-    label-align="right"
-  >
-    <n-form-item>
-      <n-space class="y-0">
-        <n-button type="warning" @click="handleReset">
+  <el-form :label-width="120">
+    <el-form-item label-width="0">
+      <el-space>
+        <el-button type="warning" @click="handleReset">
           重置
-        </n-button>
-        <n-button type="info" @click="handleOpenTempelate">
+        </el-button>
+        <el-button type="primary" @click="handleOpenTempelate">
           打开模板文件目录
-        </n-button>
-      </n-space>
-    </n-form-item>
+        </el-button>
+      </el-space>
+    </el-form-item>
 
-    <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
-      <n-form-item-gi label="Entity模板">
-        <n-input
-          v-model:value="templateConfigStore.entity"
-          placeholder="默认为: templates/entity.java"
-        />
-      </n-form-item-gi>
-      <n-form-item-gi label="EntityKotlin模板">
-        <n-input
-          v-model:value="templateConfigStore.entityKt"
-          placeholder="默认为: templates/entity.kt.java"
-        />
-      </n-form-item-gi>
+    <el-row :gutter="24">
+      <el-col :md="12">
+        <el-form-item label="Entity模板">
+          <el-input
+            v-model="templateConfigStore.entity"
+            placeholder="默认为: templates/entity.java"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :md="12">
+        <el-form-item label="EntityKotlin模板">
+          <el-input
+            v-model="templateConfigStore.entityKt"
+            placeholder="默认为: templates/entity.kt.java"
+          />
+        </el-form-item>
+      </el-col>
 
-      <n-form-item-gi label="Mapper模板">
-        <n-input
-          v-model:value="templateConfigStore.mapper"
-          placeholder="默认为: templates/mapper.java" />
-      </n-form-item-gi>
-      <n-form-item-gi label="Xml模板">
-        <n-input
-          v-model:value="templateConfigStore.xml"
-          placeholder="默认为: templates/mapper.xml"
-        />
-      </n-form-item-gi>
+      <el-col :md="12">
+        <el-form-item label="Mapper模板">
+          <el-input
+            v-model="templateConfigStore.mapper"
+            placeholder="默认为: templates/mapper.java"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :md="12">
+        <el-form-item label="Xml模板">
+          <el-input
+            v-model="templateConfigStore.xml"
+            placeholder="默认为: templates/mapper.xml"
+          />
+        </el-form-item>
+      </el-col>
 
-      <n-form-item-gi label="Service模板">
-        <n-input
-          v-model:value="templateConfigStore.service"
-          placeholder="默认为: templates/service.java"
-        />
-      </n-form-item-gi>
-      <n-form-item-gi label="ServiceImpl模板">
-        <n-input
-          v-model:value="templateConfigStore.serviceImpl"
-          placeholder="默认为: templates/servicerImpl.java"
-        />
-      </n-form-item-gi>
+      <el-col :md="12">
+        <el-form-item label="Service模板">
+          <el-input
+            v-model="templateConfigStore.service"
+            placeholder="默认为: templates/service.java"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :md="12">
+        <el-form-item label="ServiceImpl模板">
+          <el-input
+            v-model="templateConfigStore.serviceImpl"
+            placeholder="默认为: templates/servicerImpl.java"
+          />
+        </el-form-item>
+      </el-col>
 
-      <n-form-item-gi label="Controller模板">
-        <n-input
-          v-model:value="templateConfigStore.controller"
-          placeholder="默认为: templates/controller.java"
-        />
-      </n-form-item-gi>
-    </n-grid>
-  </n-form>
+      <el-col :md="12">
+        <el-form-item label="Controller模板">
+          <el-input
+            v-model="templateConfigStore.controller"
+            placeholder="默认为: templates/controller.java"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+  </el-form>
 </template>
 
 <style lang="css" scoped>

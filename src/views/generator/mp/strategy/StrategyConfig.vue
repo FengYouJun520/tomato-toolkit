@@ -15,8 +15,9 @@ import MonacoEditor from 'monaco-editor-vue3'
 import editor from 'monaco-editor/esm/vs/editor/editor.api'
 import { useInjectConfigStore } from '@/store/mp/injectConfig'
 import { useBasicTableInfosStore } from '@/store/mp/basicTable'
+import { ElMessage } from 'element-plus'
 
-const message = useMessage()
+const active = ref('entity-config')
 const datasourceConfigStore = useDatasourceStore()
 const globalConfigStore = useGlobalConfigStore()
 const packageConfigStore = usePackageConfigStore()
@@ -51,13 +52,13 @@ const handleReset = () => {
   strategyConfigStore.$reset()
 }
 
-const options = computed<SelectOption[]>(() => basicTableInfos.basicTables.map(table => ({
+const options = computed(() => basicTableInfos.basicTables.map(table => ({
   label: table.name,
   value: table.name,
   comment: table.comment,
 })))
 
-const excludeOptions = computed<SelectOption[]>(() => {
+const excludeOptions = computed(() => {
   const result = basicTableInfos.basicTables.filter(table => includes.value.every(value => value !== table.name))
   return result.map(table=>({
     label: table.name,
@@ -114,7 +115,7 @@ const handlePreview = async () => {
     contextData.value = JSON.stringify(data, null, 2)
     showPreview.value = true
   } catch (error) {
-    message.error(error as string)
+    ElMessage.error(error as string)
     showPreview.value = false
   }
 }
@@ -123,128 +124,157 @@ const copyContextData = async () => {
   try {
     clipboard.writeText(JSON.stringify(contextData.value, null, 2))
   } catch (error) {
-    message.error(error as string)
+    ElMessage.error(error as string)
   }
 }
 </script>
 
 <template>
   <div>
-    <n-form
-      label-align="right"
-      label-placement="left"
+    <el-form
       :label-width="120"
+      :model="strategyConfigStore.$state"
     >
-      <n-form-item>
-        <n-space>
-          <n-button type="warning" @click="handleReset">
+      <el-form-item label-width="0">
+        <el-space>
+          <el-button type="warning" @click="handleReset">
             重置
-          </n-button>
+          </el-button>
 
-          <n-button
-            type="info"
+          <el-button
+            type="primary"
             :disabled="!includes || !includes.length"
             @click="handlePreview"
           >
             预览生成的数据
-          </n-button>
-        </n-space>
-      </n-form-item>
+          </el-button>
+        </el-space>
+      </el-form-item>
 
-      <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
-        <n-form-item-gi label="开启大写命名">
-          <n-radio-group v-model:value="strategyConfigStore.isCapitalMode">
-            <n-radio-button :value="true">
-              开启
-            </n-radio-button>
-            <n-radio-button :value="false">
-              关闭
-            </n-radio-button>
-          </n-radio-group>
-        </n-form-item-gi>
+      <el-row :gutter="24">
+        <el-col :md="12">
+          <el-form-item label="开启大写命名">
+            <el-radio-group v-model="strategyConfigStore.isCapitalMode">
+              <el-radio-button :label="true">
+                开启
+              </el-radio-button>
+              <el-radio-button :label="false">
+                关闭
+              </el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <el-col :md="12">
+          <el-form-item label="开启sql过滤">
+            <el-radio-group v-model="strategyConfigStore.enableSqlFilter">
+              <el-radio-button :label="true">
+                开启
+              </el-radio-button>
+              <el-radio-button :label="false">
+                关闭
+              </el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
 
-        <n-form-item-gi label="开启sql过滤">
-          <n-radio-group v-model:value="strategyConfigStore.enableSqlFilter">
-            <n-radio-button :value="true">
-              开启
-            </n-radio-button>
-            <n-radio-button :value="false">
-              关闭
-            </n-radio-button>
-          </n-radio-group>
-        </n-form-item-gi>
-        <n-form-item-gi label="开启Schema">
-          <n-radio-group v-model:value="strategyConfigStore.enableSchema">
-            <n-radio-button :value="true">
-              开启
-            </n-radio-button>
-            <n-radio-button :value="false">
-              关闭
-            </n-radio-button>
-          </n-radio-group>
-        </n-form-item-gi>
-      </n-grid>
+        <el-col :md="12">
+          <el-form-item label="开启Schema">
+            <el-radio-group v-model="strategyConfigStore.enableSchema">
+              <el-radio-button :label="true">
+                开启
+              </el-radio-button>
+              <el-radio-button :label="false">
+                关闭
+              </el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-      <n-form-item label="包含的表">
-        <n-select
-          v-model:value="includes"
+      <el-row>
+        <el-col :sm="18" :md="20">
+          <el-form-item label="包含的表">
+            <el-select
+              v-model="includes"
+              multiple
+              clearable
+              class="w-full"
+            >
+              <el-option
+                v-for="opt in options"
+                :key="opt.value"
+                :label="opt.label"
+                :value="opt.value"
+              >
+                {{ opt.label }}
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6" :md="4">
+          <el-button
+            type="primary"
+            :disabled="basicTableInfos.isEmpty"
+            @click="allSelect"
+          >
+            全选
+          </el-button>
+        </el-col>
+      </el-row>
+
+      <el-form-item label="排除的表">
+        <el-select
+          v-model="excludes"
           multiple
-          :options="options"
           clearable
-          :render-tag="renderTag"
-          :render-label="renderLabel"
-        />
-        <n-button type="info" :disabled="basicTableInfos.isEmpty" @click="allSelect">
-          全选
-        </n-button>
-      </n-form-item>
-      <n-form-item label="排除的表">
-        <n-select
-          v-model:value="excludes"
-          :options="excludeOptions"
-          multiple
-          clearable
-          :render-tag="renderTag"
-          :render-label="renderLabel"
-        />
-      </n-form-item>
-    </n-form>
+          class="w-full"
+        >
+          <el-option
+            v-for="opt in excludeOptions"
+            :key="opt.value"
+            :label="opt.label"
+            :value="opt.value"
+          >
+            {{ opt.label }}
+          </el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
 
-    <n-tabs default-value="entity-config" type="card">
-      <n-tab-pane tab="Entity配置" name="entity-config">
+    <el-tabs v-model="active" type="border-card">
+      <el-tab-pane label="Entity配置" name="entity-config">
         <EntityConfig />
-      </n-tab-pane>
-      <n-tab-pane tab="Controller配置" name="controller-config">
+      </el-tab-pane>
+      <el-tab-pane label="Controller配置" name="controller-config">
         <ControllerConfig />
-      </n-tab-pane>
-      <n-tab-pane tab="Service配置" name="service-config">
+      </el-tab-pane>
+      <el-tab-pane label="Service配置" name="service-config">
         <ServiceConfig />
-      </n-tab-pane>
-      <n-tab-pane tab="Mapper配置" name="mapper-config">
+      </el-tab-pane>
+      <el-tab-pane label="Mapper配置" name="mapper-config">
         <MapperConfig />
-      </n-tab-pane>
-    </n-tabs>
+      </el-tab-pane>
+    </el-tabs>
 
-    <NModal
-      v-model:show="showPreview"
+    <el-dialog
+      v-model="showPreview"
       title="查看生成预览的数据"
-      style="width: 80%;height: 90vh;"
+      style="width: 80%;"
     >
-      <NCard title="查看生成预览的数据">
-        <MonacoEditor
-          v-model:value="contextData"
-          height="100%"
-          theme="vs-dark"
-          language="json"
-          :options="editorOptions"
-        />
-        <template #footer>
-          <n-button type="info" @click="copyContextData">
-            复制
-          </n-button>
-        </template>
-      </NCard>
-    </NModal>
+      <MonacoEditor
+        v-model:value="contextData"
+        height="100%"
+        width="100%"
+        theme="vs-dark"
+        language="json"
+        :options="editorOptions"
+      />
+      <template #footer>
+        <el-button type="primary" @click="copyContextData">
+          复制
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
