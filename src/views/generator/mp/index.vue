@@ -3,7 +3,7 @@ import { useStrategyConfigStore } from '@/store/mp/strategyconfig'
 import DatasourceConfig from './DatasourceConfig.vue'
 import GenerateConfig from './GenerateConfig.vue'
 import mybatisIcon from '@/assets/mybatis.svg'
-import { BasicTableInfo, MpConfig } from '@/types/type'
+import { MpConfig } from '@/types/type'
 import { invoke } from '@tauri-apps/api'
 import { useDatasourceStore } from '@/store/mp/datasource'
 import { useGlobalConfigStore } from '@/store/mp/globalconfig'
@@ -12,7 +12,6 @@ import { useTemplateConfigStore } from '@/store/mp/templateconfig'
 import { useInjectConfigStore } from '@/store/mp/injectConfig'
 import PageLayout from '@/components/PageLayout/index.vue'
 
-const message = useMessage()
 const datasourceConfigStore = useDatasourceStore()
 const globalConfigStore = useGlobalConfigStore()
 const packageConfigStore = usePackageConfigStore()
@@ -32,9 +31,9 @@ const handleMpGenerate = async () => {
       injection: injectConfigStore.$state,
     }
     await invoke('mp_codegen', { config })
-    message.success('代码生成成功！')
+    ElMessage.success('代码生成成功！')
   } catch (error) {
-    message.error(error as string)
+    ElMessage.error(error as string)
   }
 }
 </script>

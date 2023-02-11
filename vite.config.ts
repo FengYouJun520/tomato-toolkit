@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { NaiveUiResolver, ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,14 +22,6 @@ export default defineConfig({
         'pinia',
         'vue-router',
         '@vueuse/core',
-        {
-          'naive-ui': [
-            'useDialog',
-            'useMessage',
-            'useNotification',
-            'useLoadingBar',
-          ],
-        },
       ],
       eslintrc: {
         enabled: true,
@@ -39,7 +31,7 @@ export default defineConfig({
     }),
     Components({
       dts: false,
-      resolvers: [NaiveUiResolver(), ElementPlusResolver()],
+      resolvers: [ElementPlusResolver()],
     })],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`

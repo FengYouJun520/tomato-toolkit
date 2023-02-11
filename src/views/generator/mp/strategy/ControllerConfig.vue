@@ -14,9 +14,9 @@ const handleReset = () => {
     :model="strategyconfigStore.controller"
   >
     <el-form-item label-width="0">
-      <n-button type="warning" @click="handleReset">
+      <el-button type="warning" @click="handleReset">
         重置
-      </n-button>
+      </el-button>
     </el-form-item>
 
     <el-row :gutter="24">

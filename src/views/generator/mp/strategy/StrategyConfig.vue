@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useStrategyConfigStore } from '@/store/mp/strategyconfig'
-import { NTag, SelectOption, SelectRenderLabel, SelectRenderTag, NModal, NCard } from 'naive-ui'
 import EntityConfig from './EntityConfig.vue'
 import ControllerConfig from './ControllerConfig.vue'
 import ServiceConfig from './ServiceConfig.vue'
@@ -66,37 +65,6 @@ const excludeOptions = computed(() => {
     comment: table.comment,
   }))
 })
-
-const renderLabel: SelectRenderLabel = option => h(
-  NTag,
-  { type: 'info', bordered: false },
-  {
-    default: () => h(
-      'div',
-      { class: 'flex justify-between items-center space-x-2' },
-      {
-        default: () => [
-          h(
-            'span',
-            null,
-            { default: () => option.label }
-          ),
-          h(
-            'span',
-            null,
-            { default: () => option.comment }
-          ),
-        ],
-      }
-    ),
-  }
-)
-
-const renderTag: SelectRenderTag = ({ option, handleClose }) => h(
-  NTag,
-  { type: 'info', bordered: false, closable: true, onClose: handleClose },
-  { default: () => option.label }
-)
 
 const showPreview = ref(false)
 const contextData = ref('')

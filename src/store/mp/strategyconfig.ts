@@ -66,6 +66,19 @@ export const useStrategyConfigStore = defineStore('strategyConfigState', {
     service: { ...defaultService },
   }),
   actions: {
+    appendInitTableFill() {
+      this.entity.tableFillList.push({
+        propertyName: '',
+        fieldFill: 'DEFAULT',
+      })
+    },
+    removeFillTable(index: number) {
+      if (index < 0 || index >= this.entity.tableFillList.length) {
+        return
+      }
+
+      this.entity.tableFillList.splice(index, 1)
+    },
     resetEntity() {
       this.entity = { ...defaultEntity }
     },

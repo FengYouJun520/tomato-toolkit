@@ -2,7 +2,6 @@
 import { useTemplateConfigStore } from '@/store/mp/templateconfig'
 import { shell, path } from '@tauri-apps/api'
 
-const message = useMessage()
 const templateConfigStore = useTemplateConfigStore()
 
 const handleReset = () => {
@@ -14,7 +13,7 @@ const handleOpenTempelate = async () => {
     const resourcePath = await path.resolveResource('templates')
     shell.open(resourcePath)
   } catch (error) {
-    message.error(error as string)
+    ElMessage.error(error as string)
   }
 }
 </script>

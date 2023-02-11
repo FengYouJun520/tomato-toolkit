@@ -1,5 +1,4 @@
 import { CustomFile, InjectConfig } from '@/types/type'
-import { logDark } from 'naive-ui'
 
 export const useInjectConfigStore = defineStore('injectConfigState', {
   state: (): InjectConfig => ({
