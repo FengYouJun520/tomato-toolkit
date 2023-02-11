@@ -3,20 +3,10 @@ import { useInjectConfigStore } from '@/store/mp/injectConfig'
 import { useGlobalConfigStore } from '@/store/mp/globalconfig'
 import { CustomFile } from '@/types/type'
 import { dialog, shell } from '@tauri-apps/api'
-import {
-  DataTableColumns,
-  FormRules,
-  NButton,
-  NForm,
-  NIcon,
-  NModal,
-  NPopconfirm,
-  NSpace,
-  NTag,
-} from 'naive-ui'
-import { EditOutlined, DeleteOutlined } from '@vicons/antd'
+import { Edit, Delete } from '@element-plus/icons-vue'
 import { v4 } from 'uuid'
 import MonacoEditor from 'monaco-editor-vue3'
+import { ElMessage, FormInstance } from 'element-plus'
 
 const initialModel: CustomFile = {
   id: '',
@@ -28,123 +18,15 @@ const initialModel: CustomFile = {
   addEntityPrefix: true,
 }
 
-const message = useMessage()
 const injectConfigStore = useInjectConfigStore()
 const globalConfigStore = useGlobalConfigStore()
 
 const data = computed(() => injectConfigStore.getCustomFiles)
-const columns: DataTableColumns<CustomFile> = [
-  {
-    title: '模板路径',
-    key: 'templatePath',
-    ellipsis: {
-      tooltip: true,
-    },
-  },
-  {
-    title: '输出路径',
-    key: 'filePath',
-    ellipsis: {
-      tooltip: true,
-    },
-    render: row => h(
-      NTag,
-      {
-        type: row.filePath ? 'success' : 'warning',
-      },
-      () => row.filePath || `${globalConfigStore.outputDir}（未填，默为输出目录）`
-    ),
-  },
-  {
-    title: '包名',
-    key: 'packageName',
-  },
-  {
-    title: '文件名',
-    key: 'fileName',
-  },
-  {
-    title: '是否覆盖',
-    key: 'fileOverride',
-    width: 80,
-    render: row => h(
-      NTag, { type: row.fileOverride ? 'success' : 'warning' },
-      () => row.fileOverride ? '是' : '否'
-    ),
-  },
-  {
-    title: 'entity前缀',
-    key: 'addEntityPrefix',
-    width: 100,
-    render: row => h(
-      NTag, { type: row.addEntityPrefix ? 'success' : 'warning' },
-      () => row.addEntityPrefix ? '添加' : '去除'
-    ),
-  },
-  {
-    key: 'actions',
-    title: '操作',
-    fixed: 'right',
-    render: row => h(
-      NSpace,
-      () => [
-        h(
-          NButton,
-          {
-            type: 'info',
-            size: 'tiny',
-            onClick: () => {
-              Object.assign(model, { ...row })
-              handleEditClick()
-            },
-          },
-          {
-            icon: () => h(
-              NIcon,
-              () => h(EditOutlined)
-            ),
-          }
-        ),
-        h(
-          NPopconfirm,
-          {
-            onPositiveClick: () => {
-              injectConfigStore.removeCustomFile(row.id)
-            },
-          },
-          {
-            default: () => `是否删除${row.fileName}？`,
-            trigger: () => h(
-              NButton,
-              { type: 'error', size: 'tiny' },
-              {
-                icon: () => h(
-                  NIcon,
-                  () => h(DeleteOutlined)
-                ),
-              }
-            ),
-          }
-        ),
-      ]
-    ),
-  },
-]
 
-const rules: FormRules = {
-  templatePath: {
-    required: true,
-    message: '模板路径必填',
-  },
-  fileName: {
-    required: true,
-    message: '文件名必填',
-  },
-}
 const title = ref('')
 const showModal = ref(false)
 const isEdit = ref(false)
-const formRef = ref<InstanceType<typeof NForm>|null>(null)
+const formRef = ref<FormInstance>()
 let model: CustomFile = reactive({ ...initialModel })
 const outputDir = computed(() => globalConfigStore.outputDir)
 
@@ -158,19 +40,16 @@ const handleNewClick = () => {
   title.value = '新建自定义文件'
 }
 
-const handleEditClick = () => {
+const handleEditClick = (row: CustomFile) => {
   showModal.value = true
   isEdit.value = true
   title.value = '编辑自定义文件'
-}
-
-
-const resetModel = () => {
-  Object.assign(model, { ...initialModel })
+  Object.assign(model, row)
 }
 
 const handleCloseModal = () => {
-  resetModel()
+  Object.assign(model, { ...initialModel })
+  formRef.value?.clearValidate()
 }
 
 const selectTemplatePath = async () => {
@@ -192,9 +71,16 @@ const selectFilePath = async () => {
 }
 
 
-const handleConfirm = () => {
-  formRef.value?.validate(errors => {
-    if (errors) {
+const handleConfirm = async (formEl?: FormInstance) => {
+  if (!formEl) {
+    return
+  }
+
+  await formEl.validate((valid, fields) => {
+    console.log(valid, fields)
+
+    if (!valid) {
+      ElMessage.error('校验失败')
       return
     }
 
@@ -207,7 +93,7 @@ const handleConfirm = () => {
     }
 
     // 添加
-    message.success(unref(isEdit) ? '编辑成功' : '添加成功')
+    ElMessage.success(unref(isEdit) ? '编辑成功' : '添加成功')
     showModal.value = false
   })
 }
@@ -229,126 +115,248 @@ const handleSaveCustomMap = () => {
 <template>
   <div class="space-y-5">
     <div class="flex justify-between items-center">
-      <NSpace>
-        <NButton type="primary" @click="handleNewClick">
+      <el-space>
+        <el-button type="primary" @click="handleNewClick()">
           新建
-        </NButton>
-        <NButton type="primary" @click="handleAddCustomDataClick">
+        </el-button>
+        <el-button type="primary" @click="handleAddCustomDataClick">
           添加数据
-        </NButton>
-      </NSpace>
+        </el-button>
+      </el-space>
 
       <div>
-        <NButton type="success" ghost @click="handleViewTemplateSyntax">
+        <el-button text bg @click="handleViewTemplateSyntax">
           查看模板语法
-        </NButton>
+        </el-button>
       </div>
     </div>
 
-    <n-data-table
-      striped
-      :single-line="false"
-      :columns="columns"
+    <el-table
       :data="data"
-      :max-height="250"
-    />
+      stripe
+      border
+      :max-height="300"
+    >
+      <el-table-column
+        label="模板路径"
+        prop="templatePath"
+        show-overflow-tooltip
+      />
+
+      <el-table-column
+        label="输出路径"
+        prop="filePath"
+        show-overflow-tooltip
+      >
+        <template #default="scope">
+          <span v-if="scope.row.filePath">{{ scope.row.filePath }}</span>
+          <el-tag type="warning">
+            {{ `${globalConfigStore.outputDir}（未填写，使用outputDir）` }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="包名"
+        prop="packageName"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="文件名"
+        prop="fileName"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="是否覆盖"
+        prop="fileOverride"
+      >
+        <template #default="scope">
+          <el-tag :type="scope.row.fileOverride ? 'success' : 'info'">
+            {{ scope.row.fileOverride ? '是' : '否' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="entity前缀"
+        prop="addEntityPrefix"
+      >
+        <template #default="scope">
+          <el-tag :type="scope.row.addEntityPrefix ? 'success' : 'info'">
+            {{ scope.row.addEntityPrefix ? '添加' : '去除' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="操作"
+        fixed="right"
+      >
+        <template #default="scope">
+          <el-space size="small" wrap>
+            <el-button
+              size="small"
+              text
+              type="primary"
+              @click="handleEditClick(scope.row)"
+            >
+              <template #icon>
+                <el-icon>
+                  <Edit />
+                </el-icon>
+              </template>
+            </el-button>
+            <el-popconfirm
+              title="是否删除该模板？"
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              @confirm="injectConfigStore.removeCustomFile(scope.row.id)"
+            >
+              <template #reference>
+                <el-button size="small" text type="danger">
+                  <template #icon>
+                    <el-icon>
+                      <Delete />
+                    </el-icon>
+                  </template>
+                </el-button>
+              </template>
+            </el-popconfirm>
+          </el-space>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 
-  <NModal
-    :show="showModal"
+  <el-dialog
+    v-model="showModal"
     :title="title"
-    style="width: 70%;"
-    preset="dialog"
-    positive-text="确定"
-    negative-text="取消"
-    @positive-click="handleConfirm"
-    @negative-click="showModal = false"
-    @esc="showModal = false"
-    @close="showModal = false"
-    @mask-click="showModal = false"
-    @after-leave="handleCloseModal"
+    width="80%"
+    @closed="handleCloseModal"
   >
-    <NForm
+    <el-form
       ref="formRef"
-      label-placement="top"
+      label-position="top"
       :model="model"
-      :rules="rules"
+      status-icon
     >
-      <n-grid cols="1 m:2" :x-gap="24" responsive="screen">
-        <n-form-item-gi label="模板路径" path="templatePath">
-          <n-input
-            v-model:value="model.templatePath"
-            placeholder="例如：D:\custom\entity.java"
-          />
-          <NButton type="info" @click="selectTemplatePath">
-            选择
-          </NButton>
-        </n-form-item-gi>
-        <n-form-item-gi label="输出文件路径" path="filePath">
-          <n-input
-            v-model:value="model.filePath"
-            placeholder="例如：D:\custom，默认为outputDir路径"
-          />
-          <NButton type="info" @click="selectFilePath">
-            选择
-          </NButton>
-        </n-form-item-gi>
+      <el-row :gutter="24">
+        <el-col :md="12">
+          <el-form-item
+            label="模板路径"
+            prop="templatePath"
+            :rules="{
+              required: true,
+              message: '模板路径必填',
+              trigger: 'blur',
+            }"
+          >
+            <el-input
+              v-model="model.templatePath"
+              placeholder="例如：D:\custom\entity.java"
+            >
+              <template #append>
+                <el-button type="primary" @click="selectTemplatePath">
+                  选择
+                </el-button>
+              </template>
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :md="12">
+          <el-form-item label="输出路径" prop="filePath">
+            <el-input
+              v-model="model.filePath"
+              placeholder="例如：D:\custom"
+            >
+              <template #append>
+                <el-button type="primary" @click="selectFilePath">
+                  选择
+                </el-button>
+              </template>
+            </el-input>
+          </el-form-item>
+        </el-col>
 
-        <n-form-item-gi label="自定义包名" path="packageName">
-          <n-input
-            v-model:value="model.packageName"
-            placeholder="例如：module"
-          />
-        </n-form-item-gi>
-        <n-form-item-gi label="文件名" path="fileName">
-          <n-input
-            v-model:value="model.fileName"
-            placeholder="例如：Entity.java"
-          />
-        </n-form-item-gi>
+        <el-col :md="12">
+          <el-form-item label="包名" prop="packageName">
+            <el-input
+              v-model="model.packageName"
+              placeholder="例如：com.dto"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :md="12">
+          <el-form-item
+            label="文件名"
+            prop="fileName"
+            :rules="{
+              required: true,
+              message: '文件名必填',
+              trigger: 'blur',
+            }"
+          >
+            <el-input
+              v-model="model.fileName"
+              placeholder="例如：Entity.java"
+            />
+          </el-form-item>
+        </el-col>
 
-        <n-form-item-gi label="是否覆盖" path="fileOverride">
-          <n-radio-group v-model:value="model.fileOverride">
-            <n-radio-button label="开启" :value="true" />
-            <n-radio-button label="关闭" :value="false" />
-          </n-radio-group>
-        </n-form-item-gi>
-        <n-form-item-gi label="是否添加entity前缀" path="addEntityPrefix">
-          <n-radio-group v-model:value="model.addEntityPrefix">
-            <n-radio-button label="开启" :value="true" />
-            <n-radio-button label="关闭" :value="false" />
-          </n-radio-group>
-        </n-form-item-gi>
-      </n-grid>
-    </NForm>
-  </NModal>
+        <el-col :md="12">
+          <el-form-item label="是否覆盖" prop="fileOverride">
+            <el-radio-group v-model="model.fileOverride">
+              <el-radio-button :label="true">
+                开启
+              </el-radio-button>
+              <el-radio-button :label="false">
+                关闭
+              </el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <el-col :md="12">
+          <el-form-item label="是否添加entity前缀" prop="addEntityPrefix">
+            <el-radio-group v-model="model.addEntityPrefix">
+              <el-radio-button :label="true">
+                开启
+              </el-radio-button>
+              <el-radio-button :label="false">
+                关闭
+              </el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
 
-  <NModal
-    v-model:show="showCustomMap"
-    style="width: 80%;height: 90vh;"
+    <template #footer>
+      <el-button text bg @click="showModal = false">
+        取消
+      </el-button>
+      <el-button type="primary" @click="handleConfirm(formRef)">
+        确定
+      </el-button>
+    </template>
+  </el-dialog>
+
+  <el-dialog
+    v-model="showCustomMap"
+    width="80%"
   >
-    <NCard title="添加自定义数据">
-      <MonacoEditor
-        v-model:value="customMap"
-        height="100%"
-        theme="vs-dark"
-        language="json"
-        :options="{
-          fontSize: 18,
-        }"
-      />
-      <template #footer>
-        <NButton type="info" class="flex content-end" @click="handleSaveCustomMap">
-          确定
-        </NButton>
-      </template>
-    </NCard>
-  </NModal>
+    <MonacoEditor
+      v-model:value="customMap"
+      height="100%"
+      theme="vs-dark"
+      language="json"
+      :options="{
+        fontSize: 18,
+      }"
+    />
+    <template #footer>
+      <el-button type="primary" @click="handleSaveCustomMap">
+        确定
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <style lang="css" scoped>
-.monaco-editor {
-  height: calc(90vh - 120px);
-  width: 100%
-}
 </style>
