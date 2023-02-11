@@ -8,11 +8,12 @@ import userIcon from '@/assets/user.png'
 import lockIcon from '@/assets/lock.png'
 import { invoke } from '@tauri-apps/api'
 import rocketIcon from '@/assets/rocket.svg'
-import { useDatasourceStore } from '@/store/modules/mp/datasource'
-import { useTables } from './useTables'
+import { useDatasourceStore } from '@/store/mp/datasource'
+import { useBasicTableInfosStore } from '@/store/mp/basicTable'
 import { BasicTableInfo } from '@/types/type'
+import { ElMessage } from 'element-plus'
 
-const tablesContext = useTables()
+const basicTableInfos = useBasicTableInfosStore()
 const message = useMessage()
 const datasourceConfigStore = useDatasourceStore()
 
@@ -83,10 +84,10 @@ const handleTestConnection = async () => {
   testLoading.value = true
   try {
     const tables = await invoke<BasicTableInfo[]>('test_connection', { config: datasourceConfigStore.$state })
-    tablesContext.tables.value = tables
-    message.success('测试连接成功')
+    basicTableInfos.setBasicTables(tables)
+    ElMessage.success('测试连接成功，请到策略配置选择要生成的表')
   } catch (error) {
-    message.error(error as string)
+    ElMessage.error(error as string)
   }
   testLoading.value = false
 }

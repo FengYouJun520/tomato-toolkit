@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useStrategyConfigStore } from '@/store/modules/mp/strategyconfig'
+import { useStrategyConfigStore } from '@/store/mp/strategyconfig'
 import { NTag, SelectRenderTag } from 'naive-ui'
 
 

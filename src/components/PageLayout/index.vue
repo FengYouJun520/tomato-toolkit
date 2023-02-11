@@ -5,20 +5,19 @@
 
 <template>
   <el-card>
-    <slot name="default" class="page-layout-content" />
+    <template v-if="$slots.header" #header>
+      <slot name="header" />
+    </template>
+    <slot name="default" />
+    <div v-if="$slots.footer" class="flex justify-center items-center">
+      <slot name="footer" />
+    </div>
   </el-card>
 </template>
 
 <style lang="css" scoped>
 .el-card {
   position: relative;
-}
-.el-card, :deep(.el-card__body) {
-  height: calc(100vh - 105px);
-}
-
-.page-layout-content {
-  height: 100%;
-  width: 100%;
+  min-height: calc(100vh - 105px);
 }
 </style>

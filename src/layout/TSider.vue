@@ -13,9 +13,10 @@ const asideWidth = computed(() => uiState.collapse ? 64 : uiState.asideWidth)
     <el-scrollbar style="height: 100%;">
       <el-menu
         class="h-full w-full"
-        router
         :collapse="uiState.collapse"
+        :default-openeds="$route.matched.map(r => r.path)"
         :default-active="$route.fullPath"
+        router
       >
         <TMenu :routes="routes" />
       </el-menu>
@@ -26,7 +27,6 @@ const asideWidth = computed(() => uiState.collapse ? 64 : uiState.asideWidth)
 <style lang="css" scoped>
 .el-aside {
   transition: width 0.2s;
-  border-right: 1px solid var(--el-border-color);
 }
 
 .el-menu {

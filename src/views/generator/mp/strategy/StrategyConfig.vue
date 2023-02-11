@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { useStrategyConfigStore } from '@/store/modules/mp/strategyconfig'
+import { useStrategyConfigStore } from '@/store/mp/strategyconfig'
 import { NTag, SelectOption, SelectRenderLabel, SelectRenderTag, NModal, NCard } from 'naive-ui'
-import { useTables } from '../useTables'
 import EntityConfig from './EntityConfig.vue'
 import ControllerConfig from './ControllerConfig.vue'
 import ServiceConfig from './ServiceConfig.vue'
 import MapperConfig from './MapperConfig.vue'
 import { MpConfig } from '@/types/type'
-import { useGlobalConfigStore } from '@/store/modules/mp/globalconfig'
-import { usePackageConfigStore } from '@/store/modules/mp/packageconfig'
-import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
-import { useDatasourceStore } from '@/store/modules/mp/datasource'
+import { useGlobalConfigStore } from '@/store/mp/globalconfig'
+import { usePackageConfigStore } from '@/store/mp/packageconfig'
+import { useTemplateConfigStore } from '@/store/mp/templateconfig'
+import { useDatasourceStore } from '@/store/mp/datasource'
 import { clipboard, invoke } from '@tauri-apps/api'
 import MonacoEditor from 'monaco-editor-vue3'
 import editor from 'monaco-editor/esm/vs/editor/editor.api'
-import { useInjectConfigStore } from '@/store/modules/mp/injectConfig'
+import { useInjectConfigStore } from '@/store/mp/injectConfig'
+import { useBasicTableInfosStore } from '@/store/mp/basicTable'
 
 const message = useMessage()
 const datasourceConfigStore = useDatasourceStore()
@@ -23,7 +23,7 @@ const packageConfigStore = usePackageConfigStore()
 const templateConfigStore = useTemplateConfigStore()
 const strategyConfigStore = useStrategyConfigStore()
 const injectConfigStore = useInjectConfigStore()
-const tablesContext = useTables()
+const basicTableInfos = useBasicTableInfosStore()
 
 const editorOptions: editor.editor.IStandaloneEditorConstructionOptions = {
   fontSize: 18,
@@ -32,8 +32,6 @@ const editorOptions: editor.editor.IStandaloneEditorConstructionOptions = {
 
 const includes = ref<string[]>([])
 const excludes = ref<string[]>([])
-
-const disabledAllSelect = computed(() => !tablesContext.tables.value.length)
 
 watch(includes, () => {
   strategyConfigStore.include = includes.value
@@ -46,21 +44,21 @@ watch(excludes, () => {
 
 
 const allSelect = () => {
-  includes.value = tablesContext.tables.value.map(table => table.name)
+  includes.value = basicTableInfos.basicTables.map(table => table.name)
 }
 
 const handleReset = () => {
   strategyConfigStore.$reset()
 }
 
-const options = computed<SelectOption[]>(() => tablesContext.tables.value.map(table => ({
+const options = computed<SelectOption[]>(() => basicTableInfos.basicTables.map(table => ({
   label: table.name,
   value: table.name,
   comment: table.comment,
 })))
 
 const excludeOptions = computed<SelectOption[]>(() => {
-  const result = tablesContext.tables.value.filter(table => includes.value.every(value => value !== table.name))
+  const result = basicTableInfos.basicTables.filter(table => includes.value.every(value => value !== table.name))
   return result.map(table=>({
     label: table.name,
     value: table.name,
@@ -196,7 +194,7 @@ const copyContextData = async () => {
           :render-tag="renderTag"
           :render-label="renderLabel"
         />
-        <n-button type="info" :disabled="disabledAllSelect" @click="allSelect">
+        <n-button type="info" :disabled="basicTableInfos.isEmpty" @click="allSelect">
           全选
         </n-button>
       </n-form-item>

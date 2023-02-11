@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usePackageConfigStore } from '@/store/modules/mp/packageconfig'
+import { usePackageConfigStore } from '@/store/mp/packageconfig'
 
 const packageConfigStore = usePackageConfigStore()
 

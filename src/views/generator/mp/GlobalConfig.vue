@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useGlobalConfigStore } from '@/store/modules/mp/globalconfig'
+import { useGlobalConfigStore } from '@/store/mp/globalconfig'
 import { dialog } from '@tauri-apps/api'
 
 

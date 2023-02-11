@@ -14,7 +14,7 @@ onMounted(async () => {
 
 <template>
   <PageLayout>
-    <div class="flex h-full flex-col space-y-5 items-center justify-center">
+    <div class="dashboard flex flex-col space-y-5 items-center justify-center">
       <el-image
         :src="tomatoIcon"
         fit="cover"
@@ -34,4 +34,10 @@ onMounted(async () => {
 </template>
 
 <style lang="css" scoped>
+.dashboard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 </style>

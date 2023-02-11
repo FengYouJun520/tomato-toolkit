@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
+import { useTemplateConfigStore } from '@/store/mp/templateconfig'
 import { shell, path } from '@tauri-apps/api'
 
 const message = useMessage()

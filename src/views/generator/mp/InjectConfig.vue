@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useInjectConfigStore } from '@/store/modules/mp/injectConfig'
-import { useGlobalConfigStore } from '@/store/modules/mp/globalconfig'
+import { useInjectConfigStore } from '@/store/mp/injectConfig'
+import { useGlobalConfigStore } from '@/store/mp/globalconfig'
 import { CustomFile } from '@/types/type'
 import { dialog, shell } from '@tauri-apps/api'
 import {

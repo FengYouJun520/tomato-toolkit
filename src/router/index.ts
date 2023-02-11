@@ -17,7 +17,7 @@ export const routes: RouteRecordRaw[] = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index.vue'),
         meta: {
-          title: '首页',
+          title: 'Dashboard',
           icon: Monitor,
         },
       },

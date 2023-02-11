@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useStrategyConfigStore } from '@/store/modules/mp/strategyconfig'
+import { useStrategyConfigStore } from '@/store/mp/strategyconfig'
 import DatasourceConfig from './DatasourceConfig.vue'
 import GenerateConfig from './GenerateConfig.vue'
 import mybatisIcon from '@/assets/mybatis.svg'
-import { createTableContext } from './useTables'
 import { BasicTableInfo, MpConfig } from '@/types/type'
 import { invoke } from '@tauri-apps/api'
-import { useDatasourceStore } from '@/store/modules/mp/datasource'
-import { useGlobalConfigStore } from '@/store/modules/mp/globalconfig'
-import { usePackageConfigStore } from '@/store/modules/mp/packageconfig'
-import { useTemplateConfigStore } from '@/store/modules/mp/templateconfig'
-import { useInjectConfigStore } from '@/store/modules/mp/injectConfig'
+import { useDatasourceStore } from '@/store/mp/datasource'
+import { useGlobalConfigStore } from '@/store/mp/globalconfig'
+import { usePackageConfigStore } from '@/store/mp/packageconfig'
+import { useTemplateConfigStore } from '@/store/mp/templateconfig'
+import { useInjectConfigStore } from '@/store/mp/injectConfig'
+import PageLayout from '@/components/PageLayout/index.vue'
 
 const message = useMessage()
 const datasourceConfigStore = useDatasourceStore()
@@ -20,10 +20,6 @@ const templateConfigStore = useTemplateConfigStore()
 const strategyConfigStore = useStrategyConfigStore()
 const injectConfigStore = useInjectConfigStore()
 const disabled = computed(() => strategyConfigStore.include.length <= 0)
-
-const tables = ref<BasicTableInfo[]>([])
-
-createTableContext(tables)
 
 const handleMpGenerate = async () => {
   try {
@@ -44,27 +40,30 @@ const handleMpGenerate = async () => {
 </script>
 
 <template>
-  <n-card>
+  <PageLayout>
     <template #header>
       <div class="flex items-center space-x-2">
-        <n-image
+        <el-image
           :src="mybatisIcon"
-          :width="64"
-          :height="64"
-          preview-disabled
+          style="width: 64px; height: 64px;"
         />
-        <h1>MyBatisPlus代码生成器</h1>
+        <span class="text-xl">MyBatisPlus代码生成器</span>
       </div>
     </template>
     <DatasourceConfig />
     <GenerateConfig class="mt-5" />
 
     <template #footer>
-      <n-button block type="primary" :disabled="disabled" @click="handleMpGenerate">
+      <el-button
+        type="primary"
+        class="w-full"
+        :disabled="disabled"
+        @click="handleMpGenerate"
+      >
         生成
-      </n-button>
+      </el-button>
     </template>
-  </n-card>
+  </PageLayout>
 </template>
 
 <style lang="css" scoped>
