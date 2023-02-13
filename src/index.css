@@ -9,3 +9,14 @@ html,body,#app {
   width: 100%;
   height: 100%;
 }
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(50px);
+  opacity: 0;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 300ms;
+}

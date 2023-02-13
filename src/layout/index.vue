@@ -10,7 +10,13 @@ import TSider from './TSider.vue'
       <THeader />
       <el-main class="relative">
         <el-scrollbar>
-          <router-view />
+          <router-view v-slot="{ route, Component }">
+            <Transition name="slide-fade" appear :duration="300">
+              <KeepAlive>
+                <component :is="Component" :key="route.path" />
+              </KeepAlive>
+            </Transition>
+          </router-view>
         </el-scrollbar>
       </el-main>
     </el-container>
