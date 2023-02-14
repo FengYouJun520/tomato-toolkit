@@ -35,7 +35,7 @@ const Header: FC = () => {
       content: '是否清理缓存',
       onOk: () => {
         store.ui.setLoading(true)
-        if(import.meta.env) {
+        if(import.meta.env.DEV) {
           localStorage.clear()
         }else{
           localforage.clear()
