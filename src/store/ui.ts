@@ -5,6 +5,7 @@ export class UiState {
   asideWidth = 240
   collapse = false
   theme = 'system'
+  loading = false
 
   constructor() {
     makeAutoObservable(this, {}, {autoBind: true})
@@ -12,6 +13,10 @@ export class UiState {
       name: 'UiStore',
       properties: ['asideWidth', 'theme'],
     })
+  }
+
+  setLoading(loading: boolean) {
+    this.loading=loading
   }
 
   toggleCollapse() {
