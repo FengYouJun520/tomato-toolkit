@@ -12,6 +12,7 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '@/store'
 import Breadcrumb from './Breadcrumb'
 import './header.css'
+import localforage from 'localforage'
 
 const getTitle = (theme: string) => {
   switch(theme) {
@@ -34,7 +35,11 @@ const Header: FC = () => {
       content: '是否清理缓存',
       onOk: () => {
         store.ui.setLoading(true)
-        localStorage.clear()
+        if(import.meta.env) {
+          localStorage.clear()
+        }else{
+          localforage.clear()
+        }
         setTimeout(() => {
           store.ui.setLoading(false)
           location.reload()
