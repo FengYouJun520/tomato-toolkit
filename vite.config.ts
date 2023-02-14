@@ -1,37 +1,20 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
+import react from '@vitejs/plugin-react'
 import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: [
-      { find: '@', replacement: resolve(__dirname, 'src') },
+      { find: '@', replacement: path.resolve(__dirname, 'src') },
     ],
   },
   plugins: [
-    vue(),
+    react(),
     AutoImport({
-      dts: resolve(__dirname, 'src/types/auto-imports.d.ts'),
-      resolvers: [ElementPlusResolver()],
-      imports: [
-        'vue',
-        'pinia',
-        'vue-router',
-        '@vueuse/core',
-      ],
-      eslintrc: {
-        enabled: true,
-        filepath: resolve(__dirname, 'src/types/.eslintrc-auto-import.json'),
-        globalsPropValue: true,
-      },
-    }),
-    Components({
-      dts: false,
-      resolvers: [ElementPlusResolver()],
+      dts: path.resolve(__dirname, 'src/types/auto-imports.d.ts'),
+      imports: ['react', 'react-router-dom', 'mobx', 'mobx-react-lite'],
     })],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
@@ -47,7 +30,7 @@ export default defineConfig({
   envPrefix: ['VITE_', 'TAURI_'],
   build: {
     // Tauri supports es2021
-    target: process.env.TAURI_PLATFORM === 'windows' ? 'chrome105' : 'safari13',
+    target: process.env.TAURI_PLATFORM == 'windows' ? 'chrome105' : 'safari13',
     // don't minify for debug builds
     minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
     // produce sourcemaps for debug builds

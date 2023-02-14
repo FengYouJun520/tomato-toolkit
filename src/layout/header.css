@@ -1,0 +1,18 @@
+
+.custom-radio-card, .custom-radio-card-checked {
+  padding: 10px 16px;
+  border: 1px solid var(--color-border-2);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.custom-radio-card:hover,
+.custom-radio-card-checked,
+.custom-radio-card:hover,
+.custom-radio-card-checked  {
+  border-color: rgb(var(--primary-6));
+}
+
+.custom-radio-card-checked {
+  background-color: var(--color-primary-light-1);
+}

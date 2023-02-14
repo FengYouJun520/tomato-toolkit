@@ -1,6 +1,7 @@
 import { Controller, Entity, Mapper, Service, StrategyConfig } from '@/types/type'
+import { isHydrated, makePersistable } from 'mobx-persist-store'
 
-const defaultEntity: Entity = {
+export const defaultEntity: Entity = {
   superClass: '',
   superEntityColumns: [],
   ignoreColumns: [],
@@ -22,7 +23,7 @@ const defaultEntity: Entity = {
   fileOverride: false,
 }
 
-const defaultController: Controller = {
+export const defaultController: Controller = {
   superClass: '',
   restStyle: false,
   hyphenStyle: false,
@@ -30,7 +31,7 @@ const defaultController: Controller = {
   fileOverride: false,
 }
 
-const defaultMapper: Mapper = {
+export const defaultMapper: Mapper = {
   superClass: '',
   mapperAnnotation: false,
   baseResultMap: false,
@@ -40,7 +41,7 @@ const defaultMapper: Mapper = {
   fileOverride: false,
 }
 
-const defaultService: Service = {
+export const defaultService: Service = {
   superServiceClass: '',
   superServiceImplClass: '',
   formatServiceFilename: '{}IService',
@@ -48,70 +49,103 @@ const defaultService: Service = {
   fileOverride: false,
 }
 
-export const useStrategyConfigStore = defineStore('strategyConfigState', {
-  state: (): StrategyConfig => ({
-    isCapitalMode: false,
-    skipView: false,
-    tablePrefix: [],
-    tableSuffix: [],
-    fieldPrefix: [],
-    fieldSuffix: [],
-    include: [],
-    exclude: [],
-    enableSqlFilter: true,
-    enableSchema: false,
-    entity: { ...defaultEntity },
-    controller: { ...defaultController },
-    mapper: { ...defaultMapper },
-    service: { ...defaultService },
-  }),
-  actions: {
-    appendInitTableFill() {
-      this.entity.tableFillList.push({
-        propertyName: '',
-        fieldFill: 'DEFAULT',
-      })
-    },
-    removeFillTable(index: number) {
-      if (index < 0 || index >= this.entity.tableFillList.length) {
-        return
-      }
+export interface StrategyBaseConfig {
+  isCapitalMode: false,
+  skipView: false,
+  tablePrefix: [],
+  tableSuffix: [],
+  fieldPrefix: [],
+  fieldSuffix: [],
+  enableSqlFilter: true,
+  enableSchema: false,
+}
 
-      this.entity.tableFillList.splice(index, 1)
-    },
-    resetEntity() {
-      this.entity = { ...defaultEntity }
-    },
-    resetController() {
-      this.controller = { ...defaultController }
-    },
-    resetService() {
-      this.service = { ...defaultService }
-    },
-    resetMapper() {
-      this.mapper = { ...defaultMapper }
-    },
-  },
-  getters: {
-    getEntity: state => state.entity,
-    getController: state => state.controller,
-    getService: state => state.service,
-    getMapper: state => state.mapper,
-  },
-  persist: {
-    paths: [
-      'isCapitalMode',
-      'skipView',
-      'tablePrefix',
-      'tableSuffix',
-      'fieldPrefix',
-      'fieldSuffix',
-      'enableSqlFilter',
-      'enableSchema',
-      'entity',
-      'controller',
-      'mapper',
-      'service',
-    ],
-  },
-})
+export const initialStrategyBaseConfig: StrategyBaseConfig = {
+  isCapitalMode: false,
+  skipView: false,
+  tablePrefix: [],
+  tableSuffix: [],
+  fieldPrefix: [],
+  fieldSuffix: [],
+  enableSqlFilter: true,
+  enableSchema: false,
+}
+
+export class StrategyConfigStore {
+  strategyBase: StrategyBaseConfig = initialStrategyBaseConfig
+  include: string[] = []
+  exclude: string[] = []
+  entity: Entity = defaultEntity
+  controller: Controller = defaultController
+  service: Service = defaultService
+  mapper: Mapper = defaultMapper
+
+  constructor() {
+    makeAutoObservable(this, {}, {autoBind: true})
+    makePersistable(this, {
+      name: 'StrategyConfigStore',
+      properties: ['strategyBase', 'entity', 'controller', 'service', 'mapper'],
+    })
+  }
+
+  resetSelectTable() {
+    this.include = []
+    this.exclude = []
+  }
+
+  get isHydrated() {
+    return isHydrated(this)
+  }
+
+  setStrategyBaseConfig(strategy: Partial<StrategyBaseConfig>) {
+    this.strategyBase = {
+      ...this.strategyBase,
+      ...strategy,
+    }
+  }
+
+  setEntityConfig(entity: Partial<Entity>) {
+    this.entity = {
+      ...this.entity,
+      ...entity,
+    }
+  }
+
+  setControllerConfig(controller: Partial<Controller>) {
+    this.controller = {
+      ...this.controller,
+      ...controller,
+    }
+  }
+
+  setServiceConfig(service: Partial<Service>) {
+    this.service = {
+      ...this.service,
+      ...service,
+    }
+  }
+
+  setMapperConfig(mapper: Partial<Mapper>) {
+    this.mapper = {
+      ...this.mapper,
+      ...mapper,
+    }
+  }
+
+  setTables(table: Partial<{include: string[], exclude: string[]}>) {
+    this.include = [...table.include || []]
+    this.exclude = [...table.exclude || []]
+  }
+
+  get strategyConfig(): StrategyConfig {
+    return {
+      ...this.strategyBase,
+      include: this.include,
+      exclude: this.exclude,
+      entity: this.entity,
+      controller: this.controller,
+      service: this.service,
+      mapper: this.mapper,
+    }
+  }
+}
