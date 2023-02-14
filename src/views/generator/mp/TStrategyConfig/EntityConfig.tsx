@@ -1,5 +1,5 @@
 import { useStore } from '@/store'
-import { defaultEntity } from '@/store/mp/strategyConfig'
+import { defaultEntity } from '@/store/mp/strategy'
 import { Entity } from '@/types/type'
 import { renderRadio } from '@/utils/renderRadio'
 import {

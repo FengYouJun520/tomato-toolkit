@@ -7,7 +7,7 @@ import {
 } from '@arco-design/web-react'
 import { PackageConfig } from '@/types/type'
 import { useStore } from '@/store'
-import { initialPackageConfig } from '@/store/mp/packageConfig'
+import { initialPackageConfig } from '@/store/mp/package'
 
 const TPackageConfig: FC = () => {
   const store = useStore()

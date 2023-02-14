@@ -9,7 +9,7 @@ import {
 } from '@arco-design/web-react'
 import { TemplateConfig } from '@/types/type'
 import { useStore } from '@/store'
-import { initialTemplateConfig } from '@/store/mp/templateConfig'
+import { initialTemplateConfig } from '@/store/mp/template'
 import { path, shell } from '@tauri-apps/api'
 
 const TTemplateConfig: FC = () => {

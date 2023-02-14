@@ -1,5 +1,5 @@
 import { useStore } from '@/store'
-import { defaultService } from '@/store/mp/strategyConfig'
+import { defaultService } from '@/store/mp/strategy'
 import { Service } from '@/types/type'
 import { renderRadio } from '@/utils/renderRadio'
 import {

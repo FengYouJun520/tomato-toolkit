@@ -11,7 +11,7 @@ import {
 import { GlobalConfig } from '@/types/type'
 import { renderRadio } from '@/utils/renderRadio'
 import { useStore } from '@/store'
-import { initialGlobalConfig } from '@/store/mp/globalConfig'
+import { initialGlobalConfig } from '@/store/mp/global'
 import { dialog } from '@tauri-apps/api'
 
 const dateTypeOptions = [

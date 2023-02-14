@@ -19,7 +19,6 @@ class RootStore {
     this.mp = new MyBaTisPlusStore()
   }
 
-
 }
 
 export const store = new RootStore()

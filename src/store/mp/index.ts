@@ -1,10 +1,10 @@
 import { BasicTableInfo, MpConfig } from '@/types/type'
 import { DataSourceConfigStore } from './datasource'
-import { GlobalConfigStore } from './globalConfig'
-import { InjectConfigStore } from './injectConfig'
-import { PackageConfigStore } from './packageConfig'
-import { StrategyConfigStore } from './strategyConfig'
-import { TemplateConfigStore } from './templateConfig'
+import { GlobalConfigStore } from './global'
+import { InjectConfigStore } from './inject'
+import { PackageConfigStore } from './package'
+import { StrategyConfigStore } from './strategy'
+import { TemplateConfigStore } from './template'
 
 export class MyBaTisPlusStore {
   dataSourceStore: DataSourceConfigStore

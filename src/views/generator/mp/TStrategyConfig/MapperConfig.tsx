@@ -1,5 +1,5 @@
 import { useStore } from '@/store'
-import { defaultMapper } from '@/store/mp/strategyConfig'
+import { defaultMapper } from '@/store/mp/strategy'
 import { Mapper } from '@/types/type'
 import { renderRadio } from '@/utils/renderRadio'
 import {

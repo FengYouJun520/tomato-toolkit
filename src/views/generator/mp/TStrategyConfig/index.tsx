@@ -12,7 +12,7 @@ import {
   Modal,
 } from '@arco-design/web-react'
 import { useStore } from '@/store'
-import { initialStrategyBaseConfig, StrategyBaseConfig } from '@/store/mp/strategyConfig'
+import { initialStrategyBaseConfig, StrategyBaseConfig } from '@/store/mp/strategy'
 import { renderRadio } from '@/utils/renderRadio'
 import EntityConfig from './EntityConfig'
 import ControllerConfig from './ControllerConfig'

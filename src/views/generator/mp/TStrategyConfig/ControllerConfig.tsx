@@ -1,5 +1,5 @@
 import { useStore } from '@/store'
-import { defaultController } from '@/store/mp/strategyConfig'
+import { defaultController } from '@/store/mp/strategy'
 import { Controller } from '@/types/type'
 import { renderRadio } from '@/utils/renderRadio'
 import {
