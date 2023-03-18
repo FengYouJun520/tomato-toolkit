@@ -12,6 +12,8 @@ const Breadcrumb: FC = () => {
   }
   let breadcrumbs = useMatches()
     .map(match => ({ ...match, path: match.pathname } as RouteMenu))
+  console.log(breadcrumbs)
+
   if(breadcrumbs.every(crumb => crumb.path !== '/')) {
     breadcrumbs= [Home].concat(breadcrumbs)
   }
@@ -20,7 +22,7 @@ const Breadcrumb: FC = () => {
     <ArcoBreadcrumb className="flex-1 ml-5">
       {breadcrumbs.map(breadcrumb => (
         <BreadcrumbItem
-          key={breadcrumb.handle.title}
+          key={breadcrumb.handle.name}
         >
           <div className="flex items-center space-x-2">
             {breadcrumb.handle.icon && breadcrumb.handle.icon}

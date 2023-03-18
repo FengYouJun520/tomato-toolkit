@@ -8,16 +8,19 @@ import {
   IconDashboard,
   IconCodeSandbox,
   IconCodeBlock,
+  IconLock,
 } from '@arco-design/web-react/icon'
 import Layout from '@/layout'
 import Dashboard from '@/views/dashboard'
 import MpGenerator from '@/views/generator/mp'
 import { RouteMenu } from './type'
+import EnDecoder from '@/views/endecoer'
 
 export const Home: RouteMenu = {
   path: '/',
   element: <Layout />,
   handle: {
+    name: 'Home',
     title: '首页',
     icon: <IconHome />,
     submenu: true,
@@ -32,6 +35,7 @@ export const routes: RouteMenu[] = [
         index: true,
         element: <Dashboard />,
         handle: {
+          name: 'Dashboard',
           title: 'Dashboard',
           icon: <IconDashboard />,
         },
@@ -42,6 +46,7 @@ export const routes: RouteMenu[] = [
     path: '/generator',
     element: <Layout />,
     handle: {
+      name: 'Generator',
       title: '代码生成器',
       icon: <IconCodeSandbox />,
       submenu: true,
@@ -50,10 +55,30 @@ export const routes: RouteMenu[] = [
       {
         path: 'mp',
         handle: {
+          name: 'MyBatisPlusGenerator',
           title: 'MyBatisPlus生成器',
           icon: <IconCodeBlock />,
         },
         element: <MpGenerator />,
+      },
+    ],
+  },
+  {
+    path: '/endecoder',
+    element: <Layout />,
+    handle: {
+      name: 'Endecoder',
+      title: '编解码',
+      icon: <IconLock />,
+    },
+    children: [
+      {
+        index: true,
+        element: <EnDecoder />,
+        handle: {
+          name: 'Encoder',
+          title: '编解码',
+        },
       },
     ],
   },
