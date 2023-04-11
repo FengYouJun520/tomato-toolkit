@@ -12,7 +12,6 @@ const Breadcrumb: FC = () => {
   }
   let breadcrumbs = useMatches()
     .map(match => ({ ...match, path: match.pathname } as RouteMenu))
-  console.log(breadcrumbs)
 
   if(breadcrumbs.every(crumb => crumb.path !== '/')) {
     breadcrumbs= [Home].concat(breadcrumbs)
