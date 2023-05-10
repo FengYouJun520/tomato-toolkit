@@ -5,12 +5,17 @@ export function useTheme() {
 
   useEffect(() => {
     const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
-    darkThemeMq.addEventListener('change',e => {
+
+    const changeEvent = (e: MediaQueryListEvent) => {
       if(store.ui.theme !== 'system') {
         return
       }
       changeTheme(e.matches ? 'dark' : 'light')
-    })
+    }
+    darkThemeMq.addEventListener('change',changeEvent)
+    return () => {
+      darkThemeMq.removeEventListener('change', changeEvent)
+    }
   }, [store.ui.theme])
 
   autorun(() => {
@@ -20,9 +25,9 @@ export function useTheme() {
       if(isDark.matches) {
         theme = 'dark'
       }
-    }else if(store.ui.theme === 'dark') {
+    }   else if (store.ui.theme === 'dark') {
       theme = 'dark'
-    }else{
+    } else {
       theme = 'light'
     }
 

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import { store, StoreContext } from './store'
 import '@arco-design/web-react/dist/css/arco.css'
+import 'tdesign-react/es/style/index.css'
 import 'overlayscrollbars/overlayscrollbars.css'
 import './index.css'
 
