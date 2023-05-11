@@ -70,9 +70,9 @@ const Header: FC = () => {
             onClick={store.ui.toggleCollapse}
             icon={store.ui.collapse
               ?
-              <IconMenuUnfold fontSize={20} />
+              <IconMenuUnfold />
               :
-              <IconMenuFold fontSize={20} />}
+              <IconMenuFold />}
           />
 
           <Breadcrumb />
@@ -80,7 +80,7 @@ const Header: FC = () => {
 
         <Button
           type="text"
-          icon={<IconSettings fontSize={20} />}
+          icon={<IconSettings  />}
           className="!text-[var(--color-text-2)]"
           onClick={() => setVisibleSetting(true)}
         />
