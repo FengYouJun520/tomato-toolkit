@@ -1,10 +1,11 @@
+import { Card } from '@arco-design/web-react'
 import { FC } from 'react'
 
 const EnDecoder: FC = () => {
   return (
-    <div className="h-full">
+    <Card style={{height: 'calc(100vh - 104px)'}} bodyStyle={{height: '100%'}}>
       编解码功能
-    </div>
+    </Card>
   )
 }
 

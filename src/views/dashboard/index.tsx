@@ -4,12 +4,12 @@ import { FC } from 'react'
 import tomatoIcon from '@/assets/tomato.svg'
 
 const Dashboard: FC = () => {
-  const [version, setVersion] = useState('')
-  const [projectName, setProjectName] = useState('')
+  const [appVersion, setAppVersion] = useState('')
+  const [appName, setAppName] = useState('')
 
   useEffect(() => {
-    app.getVersion().then(v => setVersion(v))
-    app.getName().then(name => setProjectName(name))
+    app.getVersion().then(v => setAppVersion(v))
+    app.getName().then(name => setAppName(name))
   })
   return (
     <Card style={{height: 'calc(100vh - 104px)'}} bodyStyle={{height: '100%'}}>
@@ -19,14 +19,14 @@ const Dashboard: FC = () => {
         <div>
           <Typography.Title heading={6}>
             Version:&nbsp;&nbsp;&nbsp;&nbsp;
-            <Tag size="large" color="rgba(0,180,42)">
-              {version}
+            <Tag size="large" color="#059465">
+              {appVersion}
             </Tag>
           </Typography.Title>
           <Typography.Title heading={6}>
             project:&nbsp;&nbsp;&nbsp;&nbsp;
-            <Tag size="large" color="rgba(0,180,42)">
-              {projectName}
+            <Tag size="large" color="#059465">
+              {appName}
             </Tag>
           </Typography.Title>
         </div>

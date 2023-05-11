@@ -70,14 +70,16 @@ export const routes: RouteMenu[] = [
       name: 'Endecoder',
       title: '编解码',
       icon: <IconLock />,
+      submenu: true,
     },
     children: [
       {
-        index: true,
+        path: 'en',
         element: <EnDecoder />,
         handle: {
           name: 'Encoder',
-          title: '编解码',
+          title: '编码',
+          icon: <IconLock />,
         },
       },
     ],

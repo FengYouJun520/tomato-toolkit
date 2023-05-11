@@ -17,7 +17,7 @@ const Layout: FC = () => {
       <ArcoLayout
         className="h-full"
         style={{
-          paddingLeft: store.ui.collapse ? 48 : store.ui.asideWidth,
+          paddingLeft: store.ui.headerWidth,
           transition: 'padding-left .2s cubic-bezier(0.34, 0.69, 0.1, 1)',
         }}
       >

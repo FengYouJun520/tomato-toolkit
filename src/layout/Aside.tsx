@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '@/store'
 import { routes } from '@/router'
 import { RouteMenu } from '@/router/type'
-import { useLocation, useMatches, useNavigate } from 'react-router-dom'
+import { resolvePath, useLocation, useMatches, useNavigate } from 'react-router-dom'
 import './aside.css'
 
 export type AsideProps = SiderProps
@@ -21,9 +21,9 @@ const Aside: FC<AsideProps> = (props) => {
   }, [location])
 
 
-  const generateMenu = (routes: RouteMenu[], parent = '', level = 1) => {
+  const generateMenu = (routes: RouteMenu[], parent = '') => {
     return routes.map(route => {
-      const key = route.index ? parent : level === 1 ? `${parent}${route.path}` : `${parent}/${route.path}`
+      const key = resolvePath({pathname: route.path}, parent).pathname
 
       return route.children
         ?
@@ -35,7 +35,7 @@ const Aside: FC<AsideProps> = (props) => {
             {route.handle.title}
           </>}
         >
-          {generateMenu(route.children, key, level+1)}
+          {generateMenu(route.children, key)}
         </Menu.SubMenu>
         :
         <Menu.Item
@@ -55,11 +55,10 @@ const Aside: FC<AsideProps> = (props) => {
   return (
     <Layout.Sider
       {...props}
-      width={store.ui.asideWidth}
       collapsed={store.ui.collapse}
       className="h-full fixed"
       style={{
-        width: store.ui.collapse ? 48 : store.ui.asideWidth,
+        width: store.ui.headerWidth,
       }}
     >
       <Menu

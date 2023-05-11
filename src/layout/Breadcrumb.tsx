@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Breadcrumb as ArcoBreadcrumb } from '@arco-design/web-react'
 import { RouteMenu } from '@/router/type'
-import { Link, useMatches } from 'react-router-dom'
+import { Link, resolvePath, useMatches } from 'react-router-dom'
 import { Home } from '@/router'
 
 const BreadcrumbItem = ArcoBreadcrumb.Item
@@ -26,7 +26,8 @@ const Breadcrumb: FC = () => {
           <div className="flex items-center space-x-2">
             {breadcrumb.handle.icon && breadcrumb.handle.icon}
             {
-              isHome(breadcrumb) || (!breadcrumb.handle.submenu && breadcrumb.path !== location.pathname)
+              isHome(breadcrumb) || (!breadcrumb.handle.submenu &&
+                resolvePath({pathname: breadcrumb.path}).pathname !== location.pathname)
                 ?
                 <Link to={{pathname: breadcrumb.path || '/'}}>
                   {breadcrumb.handle.title}
