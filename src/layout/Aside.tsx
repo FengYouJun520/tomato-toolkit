@@ -23,24 +23,24 @@ const Aside: FC<AsideProps> = (props) => {
 
   const generateMenu = (routes: RouteMenu[], parent = '') => {
     return routes.map(route => {
-      const key = resolvePath({pathname: route.path}, parent).pathname
+      const { pathname } = resolvePath({pathname: route.path}, parent)
 
       return route.children
         ?
         <Menu.SubMenu
-          _key={key}
-          key={key}
+          _key={pathname}
+          key={pathname}
           title={<>
             {route.handle.icon && route.handle.icon}
             {route.handle.title}
           </>}
         >
-          {generateMenu(route.children, key)}
+          {generateMenu(route.children, pathname)}
         </Menu.SubMenu>
         :
         <Menu.Item
-          _key={key}
-          key={key}
+          _key={pathname}
+          key={pathname}
         >
           {route.handle.icon && route.handle.icon}
           {route.handle.title}

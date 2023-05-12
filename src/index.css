@@ -25,3 +25,8 @@ html, body {
 .fade-exit-active {
   transition: all .2s;
 }
+
+/* 解决FormItem为require时样式错乱的问题 */
+.arco-form-item-symbol svg {
+  display: inherit;
+}
