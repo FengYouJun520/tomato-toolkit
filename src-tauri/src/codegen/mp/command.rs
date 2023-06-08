@@ -13,9 +13,7 @@ pub struct BasicTableInfo {
     pub comment: String,
 }
 
-// TODO: 添加在线预览、编辑、添加自定义文件功能
-// TOTO: 查看生成的数据（方便自定义文件）
-
+// 测试连接
 #[tauri::command]
 pub async fn test_connection(config: DataSourceConfig) -> Result<Vec<BasicTableInfo>> {
     let mut conn = config.connect().await?;
